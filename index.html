@@ -289,6 +289,7 @@ body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none
     <div class="res-badge" id="rBadge">你的中式人格</div>
     <div class="res-type" id="rType">-</div>
     <div class="res-name" id="rName">-</div>
+    <div class="res-quote" id="rQuote" style="display:none;margin:14px auto 20px;max-width:500px;background:linear-gradient(135deg,rgba(255,107,107,.1),rgba(255,165,2,.1));border-left:4px solid var(--accent2);border-radius:0 10px 10px 0;padding:12px 16px;font-size:14px;color:var(--text2);line-height:1.7;text-align:left;font-style:italic"></div>
     <div class="res-age-tag" id="rAgeTag" style="display:none;margin-bottom:4px;font-size:12px;color:var(--accent2);font-weight:600;letter-spacing:1px"></div>
     <div class="res-sub" id="rSub">-</div>
 
@@ -343,11 +344,11 @@ body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none
     </div>
 
     <div class="res-act">
-      <button class="act-btn" onclick="copyShareLink()">🔗 复制分享链接</button>
+      <button class="act-btn" id="btnCopyLink" onclick="copyShareLink()">🔗 复制分享链接</button>
       <button class="act-btn" onclick="share('pyq')">🧑‍🤝‍🧑 朋友圈</button>
     </div>
     <div style="margin-top:8px;font-size:12px;color:var(--text3)">📢 分享后，好友点开链接可直接看到你的结果，无需重测</div>
-    <button class="rt-btn" onclick="restart()">🔄 重新测试</button>
+    <button class="rt-btn" style="font-size:12px;padding:8px 20px" onclick="doRestart()">🔄 重新测试</button>
   </div>
 </div>
 
@@ -381,9 +382,19 @@ function copyShareLink(){
   const dims=calc();
   const pt=matchType(dims,parseInt(window.sAge||25));
   const url=getShareUrl(pt,'copy');
-  const txt=`我测出了「${pt.name} · ${pt.cn}」！ ${pt.s}\n\n测试地址：${url}\n\n#中式人格测试`;
+  const txt=`我测出了「${pt.name} · ${pt.cn}」！ ${pt.s}\n\n测试地址：${url}\n\n#中式命格测试`;
   navigator.clipboard.writeText(txt).then(()=>{
-    const btn=document.getElementById('btnCopy');
+    const btn=document.getElementById('btnCopyLink');
+    if(btn){const old=btn.innerHTML;btn.innerHTML='✅ 已复制！';setTimeout(()=>btn.innerHTML=old,2000);}
+  }).catch(()=>{
+    // fallback
+    const ta=document.createElement('textarea');
+    ta.value=txt;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const btn=document.getElementById('btnCopyLink');
     if(btn){const old=btn.innerHTML;btn.innerHTML='✅ 已复制！';setTimeout(()=>btn.innerHTML=old,2000);}
   });
 }
@@ -737,7 +748,7 @@ const TYPES = {
 
   // ── 社牛系 ──
   S1:{n:"社牛之王",cn:"社交王者",t:"SOC-K",s:"人来疯，人越多越嗨",
-    d:"你是那种在KTV连唱3小时不休息、在饭局永远是话题制造机的人。亲戚问你有没有对象，你直接反问人家退休金多少。你的社交能量，仿佛核反应堆，取之不尽用之不竭。跟你吃饭，永远不会冷场，因为你会自带BGM、自带话题、自带气氛组。",
+    d:"你是那种在KTV连唱3小时不休息、在饭局永远是话题制造机的人。亲戚问你有没有对象，你直接反问人家退休金多少。你的社交能量，仿佛核反应堆，取之不尽用之不竭。跟你吃饭，永远不会冷场，因为你会自带BGM、自带话题、自带气氛组。<br><br>据说你是天选e人，充电方式靠人群，电量低于50%就开始找人聊天。如果把你一个人关小黑屋，你会跟墙壁聊出感情。",
     personal:"你的内心其实很需要被关注，只是你用外向的方式掩盖了这一点。独处时你可能会感到轻微的不安，但很快又能在人群中找回能量。你的乐观有感染力，但也要学会面对独处时的真实自我。",
     relation:"你是天然的社交中心，朋友多、人脉广。但要注意：不要让社交成为逃避内心问题的工具。学会在热闹之后给自己留点独处时间，真正的朋友不需要那么多，但需要深。",
     career:"适合需要大量人际互动的工作：销售、公关、活动策划、主持人。你的社交天赋能让你快速建立信任，但也容易因为过度社交而分散精力。建议选择一个方向深耕，而不是什么领域都沾。",
@@ -793,7 +804,7 @@ const TYPES = {
 
   // ── 搞钱系 ──
   M1:{n:"搞钱狂魔",cn:"财富猎手",t:"MNY-K",s:"赚钱是信仰，省钱是本能",
-    d:"你的微信账单永远比工资条长。你会用红包的奥义省下每一分钱，会在直播间蹲守最优价格。你的人生信条：「钱不是省出来的，是赚出来的；也是省出来的。」你订阅了8个省钱博主，每个月复盘自己的收支表。",
+    d:"你的微信账单永远比工资条长。你会用红包的奥义省下每一分钱，会在直播间蹲守最优价格。你的人生信条：「钱不是省出来的，是赚出来的；也是省出来的。」你订阅了8个省钱博主，每个月复盘自己的收支表。<br><br>你的购物车里永远有「凑单」商品，你的钱包永远比脸干净。如果有商家说「限时特价」，你会比收到情书还激动；如果有人说「免费送」，你会立刻放下筷子。",
     personal:"你对金钱的执念可能源于某种不安全感——可能是小时候物质匮乏的记忆，可能是对未来的焦虑。钱确实能带来安全感，但你也要知道：钱不是全部。",
     relation:"你可能会被认为「太算计」，朋友约会你总是找便宜的地方。你的伴侣可能理解你的理财观，但也可能觉得你不够大方。试着在「省钱」和「生活品质」之间找平衡。",
     career:"你天生有商业嗅觉，适合：创业、投资、电商、金融。你对数字敏感，对趋势有判断。但要小心：不要让赚钱成为唯一的目标，而忘了为什么赚钱。",
@@ -849,7 +860,7 @@ const TYPES = {
 
   // ── 躺平系 ──
   Z1:{n:"佛系隐士",cn:"道心安然",t:"ZEN-M",s:"跳出三界外，不在五行中",
-    d:"你是那种「都行、可以、没关系」的佛系大师，已臻「无欲则刚」的境界。红包抢不抢都行，群里发不发都行，人生最大的追求就是——别来烦我。升职加薪？随缘。世间纷纷扰扰，与我何干？你已经达到了「不以物喜，不以己悲」的人生境界，妥妥的躺平修仙党。",
+    d:"你是那种「都行、可以、没关系」的佛系大师，已臻「无欲则刚」的境界。红包抢不抢都行，群里发不发都行，人生最大的追求就是——别来烦我。升职加薪？随缘。世间纷纷扰扰，与我何干？你已经达到了「不以物喜，不以己悲」的人生境界，妥妥的躺平修仙党。<br><br>你的微信签名可能是「一切随缘」，但你内心OS是「别找我」。如果有人问你「在吗」，你的回复永远是「在的，怎么了」然后祈祷对方只是群发祝福。",
     personal:"你的佛系可能源于看透，也可能源于懒。你不需要太多就能满足，这是优点，但也是陷阱。没有欲望就没有动力，没有动力就没有成长。试着找一件能让你「不佛」的事，哪怕只是一点点。",
     relation:"你是朋友中最好相处的人——不争、不抢、不计较。但这种态度可能让人觉得你没有立场。适当表达喜好，是对自己负责。",
     career:"适合稳定的、不需要太多竞争的工作：技术、创作、学术。你的淡定让你在这些领域很专注，但也可能让你错过机会。",
@@ -905,7 +916,7 @@ const TYPES = {
 
   // ── 数码系 ──
   D1:{n:"数码僵尸",cn:"手机依存",t:"DIG-Z",s:"手机是器官，我是它的宿主",
-    d:"你是那种手机电量低于20%就开始焦虑的人，是那种睡前最后一秒还在刷、起床第一秒又在摸手机的人。屏幕使用时间每日破10小时，脖子越来越酸，眼睛越来越差，但就是停不下来。",
+    d:"你是那种手机电量低于20%就开始焦虑的人，是那种睡前最后一秒还在刷、起床第一秒又在摸手机的人。屏幕使用时间每日破10小时，脖子越来越酸，眼睛越来越差，但就是停不下来。<br><br>据说你是「手机本体」，睡前最后一件事是放下手机，早上第一件事是拿起手机。你跟手机的关系比跟任何人都亲密——手机知道你所有的秘密，你所有的浏览记录，但手机从不出卖你。",
     personal:"你对手机的依赖可能掩盖了更深层的问题——也许是孤独，也许是焦虑。手机是逃避现实的工具，但不是解决方案。试着问问自己：我在逃避什么？",
     relation:"你可能是那种「人在心不在」的陪伴者——和朋友在一起，却一直刷手机。这种陪伴是假的，会伤害关系。约定时间放下手机，专注陪伴。",
     career:"你适合需要紧跟互联网趋势的工作：新媒体运营、社群运营、自媒体。但要学会控制使用时间，不然工作效率会很低。",
@@ -1033,30 +1044,54 @@ function calc(){
   fin.c=Math.min(100,dims.c+dims.h*0.3);
   fin.g=Math.min(100,dims.g+dims.t*0.2);
 
-  // ── 相反属性互斥处理 ──
-  // 上进(a) vs 佛系(z)：若两者都偏高，压低较低的那个
-  if(fin.a>=60 && fin.z>=60){
+  // ── 相反属性强互斥处理 ──
+  // 上进(a) vs 佛系(z)：不能同时过高
+  if(fin.a>=55 && fin.z>=55){
     const diff=Math.abs(fin.a-fin.z);
-    if(diff<25){
-      // 差值小于25，互相削弱
-      const reduce=diff<15?10:5;
-      if(fin.a>fin.z)fin.a=Math.max(fin.a-reduce,55);
-      else fin.z=Math.max(fin.z-reduce,55);
+    if(diff<20){
+      // 差值小则大幅削弱较低项
+      const reduce=diff<10?18:12;
+      if(fin.a>fin.z)fin.a=Math.max(fin.a-reduce,50);
+      else fin.z=Math.max(fin.z-reduce,50);
+    } else {
+      // 差值中等则小幅削弱
+      if(fin.a>fin.z)fin.a=Math.max(fin.a-5,52);
+      else fin.z=Math.max(fin.z-5,52);
     }
   }
-  // 社交(s) vs 内向(i)：两者互斥
-  if(fin.s>=70 && dims.i>=20){
-    fin.s=Math.min(fin.s,dims.i+30);
+  // 社交(s) vs 内向(i)：互斥
+  if(fin.s>=60 && dims.i>=15){
+    fin.s=Math.min(fin.s,dims.i+25);
   }
-  // 搞事(c) vs 稳定(w)：两者互斥
-  if(fin.c>=70 && dims.w>=20){
-    fin.c=Math.min(fin.c,dims.w+30);
+  if(dims.i>=60 && fin.s>=60){
+    dims.i=Math.min(dims.i,fin.s-15);
   }
-  // 熬夜(h) vs 自律(w)：互斥
-  if(dims.h>=25 && dims.w>=25){
-    const reduce=(dims.h+dims.w>90)?15:8;
-    if(dims.h>dims.w)fin.g=Math.max(fin.g-reduce,40);
-    else fin.g=Math.max(fin.g-reduce,50);
+  // 搞事(c) vs 稳定(w)：互斥
+  if(fin.c>=60 && dims.w>=20){
+    fin.c=Math.min(fin.c,dims.w+20);
+  }
+  if(dims.w>=60 && fin.c>=60){
+    dims.w=Math.min(dims.w,fin.c-15);
+  }
+  // 熬夜(h) vs 自律(w)：强互斥
+  if(dims.h>=20 && dims.w>=20){
+    const reduce=(dims.h+dims.w>80)?20:12;
+    if(dims.h>dims.w)fin.g=Math.max(fin.g-reduce,35);
+    else fin.g=Math.max(fin.g-reduce,45);
+  }
+  // 记仇(r) vs 大度(w)：互斥
+  if(dims.r>=25 && dims.w>=25){
+    const reduce=Math.min(dims.r,dims.w)-10;
+    if(reduce>0){
+      if(dims.r>dims.w)dims.r=Math.max(dims.r-reduce,20);
+      else dims.w=Math.max(dims.w-reduce,20);
+    }
+  }
+  // 冲动(d) vs 谨慎(w)：互斥
+  if(dims.d>=25 && dims.w>=25){
+    const reduce=8;
+    if(dims.d>dims.w)dims.d=Math.max(dims.d-reduce,20);
+    else dims.w=Math.max(dims.w-reduce,20);
   }
 
   return fin;
@@ -1193,6 +1228,27 @@ function showResult(){
   document.getElementById('rType').textContent=pt.t;
   document.getElementById('rName').textContent=pt.name + (pt.cn ? " · " + pt.cn : "");
   document.getElementById('rSub').textContent=pt.s;
+  const quotes=[
+    "你这种人，就算躺平也要躺出躺平的姿势。",
+    "你的灵魂里写着「莫挨老子」，但身体很诚实。",
+    "你不是在生活，你是在给社会交作业。",
+    "别人的人生是剧本，你的人生是即兴喜剧。",
+    "你最大的优点是找不到缺点，你最大的缺点是找不到优点。",
+    "你的手机比你妈更了解你，但手机不告诉你。",
+    "你的人生信条：能躺着绝不坐着，能坐着绝不站着。",
+    "别人焦虑是因为想太多，你焦虑是因为钱不够。",
+    "你的人生哲学就一个字：随缘。两个字：算了吧。",
+    "你这种人，就是传说中「嘴上说不要，身体很诚实」的典范。",
+    "你的命格里写着：能偷懒就偷懒，不能偷懒创造条件也要偷懒。",
+    "别人在奋斗，你在养生；别人在内卷，你在摸鱼。",
+    "你的淡定程度已经可以下山开课了。",
+    "你这种性格，阎王爷见了都要让你三分。",
+    "你的能量守恒定律：社交消耗的能量 = 回家躺平的时长。"
+  ];
+  const qi=(pt.t.charCodeAt(0)+pt.t.charCodeAt(1)+pt.t.charCodeAt(2))%quotes.length;
+  const qel=document.getElementById('rQuote');
+  qel.textContent='💬 '+quotes[qi];
+  qel.style.display='block';
   document.getElementById('rDesc').innerHTML=pt.d;
   document.getElementById('rPersonal').innerHTML=pt.personal||pt.d;
   document.getElementById('rRelation').innerHTML=pt.relation||pt.d;
@@ -1204,7 +1260,7 @@ function showResult(){
   // bars
   let bh='';let i=0;
   for(const[k,l]of Object.entries(DLABELS)){
-    const v=Math.min(100,Math.max(3,dims[k]||0));
+    const v=Math.round(Math.min(100,Math.max(3,dims[k]||0)));
     bh+=`<div class="srow"><div class="slbl">${l}</div><div class="sbarbg"><div class="sbarfill" id="bar${k}" style="width:0%;background:${DCOLORS[i]}"></div></div><div class="sval">${v}</div></div>`;i++;
   }
   document.getElementById('rBars').innerHTML=bh;
@@ -1234,7 +1290,7 @@ function showResult(){
   setTimeout(()=>{
     let i=0;
     for(const k of Object.keys(DLABELS)){
-      document.getElementById('bar'+k).style.width=(Math.min(100,Math.max(3,dims[k]||0)))+'%';
+      document.getElementById('bar'+k).style.width=Math.round(Math.min(100,Math.max(3,dims[k]||0)))+'%';
     }
   },100);
 }
@@ -1292,11 +1348,15 @@ function share(p){
   }catch(e){}
 })();
 
-function restart(){
+function doRestart(){
+  const ok=confirm('真的要重新测试吗？当前结果就不见啦 😢');
+  if(!ok)return;
   ci=0;answers=[];window.sZodiac='';window.sStar='';window.sGender='';
   document.getElementById('fAge').value='';
+  document.getElementById('fBirth').value='';
   document.querySelectorAll('.rg-opt,.zg-opt,.sg-opt').forEach(o=>o.classList.remove('sel'));
   document.getElementById('prog').classList.remove('show');
+  document.body.classList.remove('nosel');
   show('sHero');
 }
 </script>
