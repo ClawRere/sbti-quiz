@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded',function(){
       <span class="hero-icon">🌙 夜猫精元</span>
       <span class="hero-icon">😤 记仇修为</span>
     </div>
-    <button class="btn" type="button" onclick="show('sInfo')">开始测试 →</button>
+    <button class="btn" type="button" onclick="(function(){var el=document.getElementById('sInfo');if(el){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});el.classList.add('active');}}())">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
   </div>
 </div>
@@ -1357,7 +1357,7 @@ function matchType(dims,age){
 // ═══════════════════════════════════════════════
 let ci=0,answers=[];
 window.sZodiac='';window.sStar='';window.sGender='';
-function show(id){try{const el=document.getElementById(id);if(!el){alert('元素#'+id+'不存在');return}document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));el.classList.add('active');}catch(e){alert('show错误:'+e.message)}}
+window._show=function(id){try{var el=document.getElementById(id);if(!el){alert('元素#'+id+'不存在');return}var ss=document.querySelectorAll('.screen');for(var i=0;i<ss.length;i++)ss[i].classList.remove('active');el.classList.add('active');}catch(e){alert('show错误:'+e.message)}};
 
 function pick(el,type,val){
   const g=document.getElementById(type==='gender'?'fGender':type==='zodiac'?'fZodiac':'fStar');
@@ -1381,7 +1381,7 @@ function beginQuiz(){
   document.getElementById('fAge').style.borderColor='';
   window.sAge=age;
   ci=0;answers=[];
-  show('sQuiz');
+  window._show('sQuiz');
   document.getElementById('prog').classList.add('show');
   document.getElementById('qT').textContent=QS.length;
   rq();
@@ -1413,7 +1413,7 @@ function sel(i){
   // 立即自动跳转下一题
   setTimeout(()=>{
     ci++;
-    if(ci>=QS.length){show('sLoad');document.getElementById('prog').classList.remove('show');setTimeout(showResult,2500);}
+    if(ci>=QS.length){window._show('sLoad');document.getElementById('prog').classList.remove('show');setTimeout(showResult,2500);}
     else rq();
   },200);
 }
@@ -1427,7 +1427,7 @@ function prevQ(){
 function nextQ(){
   if(answers[ci]===undefined)return;
   ci++;
-  if(ci>=QS.length){show('sLoad');document.getElementById('prog').classList.remove('show');setTimeout(showResult,2500);}
+  if(ci>=QS.length){window._show('sLoad');document.getElementById('prog').classList.remove('show');setTimeout(showResult,2500);}
   else rq();
 }
 
@@ -1495,7 +1495,7 @@ function showResult(){
   if(window.sStar)th+=`<span class="rtag">☀️ ${window.sStar}宫</span>`;
   document.getElementById('rTags').innerHTML=th;
 
-  show('sRes');
+  window._show('sRes');
   window.scrollTo({top:0,behavior:'smooth'});
   document.body.classList.add('nosel');
   // 显示水印
@@ -1559,7 +1559,7 @@ function showResult(){
       wm.classList.add('show');
       // 隐藏分享按钮区，显示"我也测一个"
       document.querySelector('.res-act').innerHTML='<button class="btn" onclick="location.href=location.pathname" style="font-size:14px;padding:13px 36px">🎯 我也要测！</button>';
-      show('sRes');
+      window._show('sRes');
       // 反爬虫：结果页禁止选字
       document.body.classList.add('nosel');
       return;
@@ -1584,7 +1584,7 @@ function doRestart(){
   document.querySelectorAll('.rg-opt,.zg-opt,.sg-opt').forEach(o=>o.classList.remove('sel'));
   document.getElementById('prog').classList.remove('show');
   document.body.classList.remove('nosel');
-  show('sHero');
+  window._show('sHero');
 }
 </script>
 </body>
