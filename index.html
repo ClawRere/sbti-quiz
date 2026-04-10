@@ -188,7 +188,7 @@ body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none
       <span class="hero-icon">🌙 夜猫精元</span>
       <span class="hero-icon">😤 记仇修为</span>
     </div>
-    <button class="btn" type="button" onclick="alert('点击了！正在跳转...');show('sInfo')">开始测试 →</button>
+    <button class="btn" type="button" onclick="debugShow()">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
   </div>
 </div>
@@ -1355,7 +1355,8 @@ function matchType(dims,age){
 let ci=0,answers=[];
 window.sZodiac='';window.sStar='';window.sGender='';
 
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function show(id){try{const el=document.getElementById(id);if(!el){alert('元素#'+id+'不存在');return}document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));el.classList.add('active');}catch(e){alert('show错误:'+e.message)}}
+function debugShow(){alert('开始切换到sInfo');show('sInfo');}
 
 function pick(el,type,val){
   const g=document.getElementById(type==='gender'?'fGender':type==='zodiac'?'fZodiac':'fStar');
