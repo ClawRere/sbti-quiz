@@ -135,29 +135,32 @@ body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none
 <body>
 <div class="stars" id="stars"></div>
 <script>
+document.addEventListener('DOMContentLoaded',function(){
 // ══ 主题自适应：19点前白色，19点后到次日7点黑色 ══
 (function(){
   function setTheme(){
     const h=new Date().getHours();
     const dark=h>=19||h<7;
     document.documentElement.setAttribute('data-theme',dark?'dark':'light');
-    document.getElementById('stars').classList[dark?'add':'remove']('show');
-    document.querySelector('.prog').style.setProperty('--prog-bg',dark?'#08080fdd':'#fff');
+    const starsEl=document.getElementById('stars');
+    if(starsEl) starsEl.classList[dark?'add':'remove']('show');
+    const progEl=document.querySelector('.prog');
+    if(progEl) progEl.style.setProperty('--prog-bg',dark?'#08080fdd':'#fff');
   }
   setTheme();
-  // 每分钟检查一次
   setInterval(setTheme,60000);
 })();
-
 // ══ 星空生成 ══
 (function(){
   const s=document.getElementById('stars');
+  if(!s)return;
   for(let i=0;i<90;i++){
     const d=document.createElement('div');d.className='star';
     d.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()*2+1}px;height:${Math.random()*2+1}px;--d:${Math.random()*3+1.5}s;animation-delay:${Math.random()*3}s`;
     s.appendChild(d);
   }
 })();
+});
 </script>
 
 <!-- 水印 -->
@@ -188,7 +191,7 @@ body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none
       <span class="hero-icon">🌙 夜猫精元</span>
       <span class="hero-icon">😤 记仇修为</span>
     </div>
-    <button class="btn" type="button" onclick="window.debugShow()">开始测试 →</button>
+    <button class="btn" type="button" onclick="show('sInfo')">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
   </div>
 </div>
@@ -1352,8 +1355,6 @@ function matchType(dims,age){
 // ═══════════════════════════════════════════════
 // UI
 // ═══════════════════════════════════════════════
-window.onerror=function(m,s,l,c,e){alert('JS错误:\n'+m+'\n行:'+l+'\n列:'+c);return true};
-window.debugShow=function(){alert('A:'+document.getElementById('sInfo'));document.getElementById('sInfo').classList.add('active');};
 let ci=0,answers=[];
 window.sZodiac='';window.sStar='';window.sGender='';
 function show(id){try{const el=document.getElementById(id);if(!el){alert('元素#'+id+'不存在');return}document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));el.classList.add('active');}catch(e){alert('show错误:'+e.message)}}
