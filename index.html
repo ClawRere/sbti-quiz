@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中式人格测试 - 你的「中国式灵魂」是什么型号？</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;background:#08080f;color:#fff;min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+
+.stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d,3s) infinite ease-in-out}
+@keyframes twinkle{0%,100%{opacity:.15}50%{opacity:1}}
+
+.container{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:20px}
+.screen{display:none}
+.screen.active{display:block;animation:fadein .4s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Hero ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px 20px}
+.hero-badge{display:inline-block;background:linear-gradient(135deg,#ff6b6b22,#ffa50222);border:1px solid #ffa50255;color:#ffa502;font-size:11px;font-weight:700;padding:6px 18px;border-radius:20px;margin-bottom:20px;letter-spacing:3px}
+.hero-title{font-size:clamp(28px,8vw,52px);font-weight:900;line-height:1.25;margin-bottom:14px;background:linear-gradient(135deg,#fff,#f0e6ff 50%,#ffe0f0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:32px}
+.hero-icons{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:40px}
+.hero-icon{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:7px 14px;border-radius:14px;font-size:13px;color:rgba(255,255,255,.6)}
+.btn{background:linear-gradient(135deg,#ff6b6b,#ff4757);color:#fff;border:none;padding:15px 44px;font-size:17px;font-weight:700;border-radius:50px;cursor:pointer;transition:all .3s;box-shadow:0 4px 24px #ff475755}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px #ff475788}
+.hero-count{margin-top:24px;font-size:13px;color:rgba(255,255,255,.3)}
+
+/* ── Progress ── */
+.prog{position:fixed;top:0;left:0;width:100%;z-index:100;background:#08080fdd;backdrop-filter:blur(12px);padding:14px 20px 10px;display:none}
+.prog.show{display:block}
+.prog-row{display:flex;justify-content:space-between;max-width:600px;margin:0 auto;font-size:13px;color:rgba(255,255,255,.45)}
+.prog-row span{color:#ffa502;font-weight:700}
+.prog-bar{height:3px;background:rgba(255,255,255,.08);border-radius:4px;margin-top:8px;overflow:hidden;max-width:600px;margin-left:auto;margin-right:auto}
+.prog-fill{height:100%;background:linear-gradient(90deg,#ff6b6b,#ffa502);border-radius:4px;transition:width .35s ease}
+
+/* ── Info Form ── */
+.info-pg{padding-top:70px;padding-bottom:40px;min-height:100vh}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:28px 24px;margin-bottom:18px}
+.q-num{font-size:11px;color:#ffa502;font-weight:700;letter-spacing:2px;margin-bottom:10px}
+.q-text{font-size:19px;font-weight:700;line-height:1.5;margin-bottom:6px}
+.q-sub{font-size:12px;color:rgba(255,255,255,.35);font-style:italic;margin-bottom:20px}
+.form-row{margin-bottom:22px}
+.form-row label{display:block;font-size:15px;font-weight:600;margin-bottom:10px;color:rgba(255,255,255,.85)}
+.num-input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:13px 16px;font-size:16px;color:#fff;outline:none;transition:border .2s}
+.num-input:focus{border-color:#ffa502}
+.rg{display:flex;gap:8px;flex-wrap:wrap}
+.rg-opt{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 18px;font-size:14px;color:rgba(255,255,255,.7);cursor:pointer;transition:all .2s}
+.rg-opt:hover{border-color:#ffa50266}
+.rg-opt.sel{background:#ffa50218;border-color:#ffa502;color:#ffa502;font-weight:700}
+.zg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.zg-opt{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:9px 2px;text-align:center;cursor:pointer;transition:all .2s;font-size:13px;color:rgba(255,255,255,.65)}
+.zg-opt:hover{border-color:#ffa50266}
+.zg-opt.sel{background:#ffa50218;border-color:#ffa502;color:#ffa502;font-weight:700}
+.zg-opt .emoji{display:block;font-size:20px;margin-bottom:3px}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.sg-opt{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:8px 2px;text-align:center;cursor:pointer;transition:all .2s;font-size:12px;color:rgba(255,255,255,.65)}
+.sg-opt:hover{border-color:#ffa50266}
+.sg-opt.sel{background:#ffa50218;border-color:#ffa502;color:#ffa502;font-weight:700}
+.sg-opt .icon{display:block;font-size:16px;margin-bottom:2px}
+
+/* ── Quiz ── */
+.quiz-pg{padding-top:70px;padding-bottom:40px;min-height:100vh}
+.opt{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:15px 18px;margin-bottom:10px;cursor:pointer;transition:all .2s;font-size:14px;line-height:1.55;color:rgba(255,255,255,.8);text-align:left;width:100%;display:flex;gap:10px;align-items:flex-start}
+.opt:hover{background:#ffa50212;border-color:#ffa50244;transform:translateX(3px)}
+.opt.sel{background:#ffa5021e;border-color:#ffa502;color:#ffa502;font-weight:700}
+.opt-mark{width:22px;height:22px;border:2px solid rgba(255,255,255,.2);border-radius:50%;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s}
+.opt.sel .opt-mark{background:#ffa502;border-color:#ffa502;color:#fff}
+.next-wrap{margin-top:16px;display:none}
+.next-wrap.show{display:block}
+
+/* ── Loading ── */
+.load{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center}
+.load-spin{width:56px;height:56px;border:3px solid #ffa50218;border-top-color:#ffa502;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-txt{font-size:16px;color:rgba(255,255,255,.5);margin-top:22px;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+/* ── Result ── */
+.res{padding-top:60px;padding-bottom:60px;min-height:100vh;text-align:center}
+.res-badge{display:inline-block;background:linear-gradient(135deg,#ff6b6b18,#ffa50218);border:1px solid #ffa50244;color:#ffa502;font-size:11px;font-weight:700;padding:5px 16px;border-radius:20px;margin-bottom:14px;letter-spacing:2px}
+.res-type{font-size:clamp(30px,9vw,58px);font-weight:900;margin-bottom:6px;background:linear-gradient(135deg,#ff6b6b,#ffa502,#ffe0f0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200%;animation:shimmer 3s infinite}
+@keyframes shimmer{0%{background-position:0%}50%{background-position:100%}100%{background-position:0%}}
+.res-name{font-size:20px;font-weight:700;color:rgba(255,255,255,.9);margin-bottom:4px}
+.res-sub{font-size:13px;color:rgba(255,255,255,.4);font-style:italic;margin-bottom:28px}
+.rc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:left}
+.rst{font-size:11px;font-weight:700;color:#ffa502;letter-spacing:2px;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.rt{font-size:14px;line-height:1.8;color:rgba(255,255,255,.72);margin-bottom:10px}
+.sbars{}
+.srow{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.slbl{width:76px;font-size:12px;color:rgba(255,255,255,.45);text-align:right;flex-shrink:0}
+.sbarbg{flex:1;height:7px;background:rgba(255,255,255,.06);border-radius:8px;overflow:hidden}
+.sbarfill{height:100%;border-radius:8px;transition:width 1.2s ease}
+.sval{width:34px;font-size:11px;color:rgba(255,255,255,.35);text-align:left}
+.rtags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.rtag{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.2);color:#ff6b6b;padding:4px 13px;border-radius:20px;font-size:12px}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.ci{background:rgba(255,255,255,.04);border-radius:12px;padding:14px 10px;text-align:center}
+.ci-emo{font-size:26px;margin-bottom:5px}
+.ci-t{font-size:12px;font-weight:700;color:#fff;margin-bottom:3px}
+.ci-s{font-size:18px;font-weight:900}
+.ci-s.hi{color:#2ecc71}.ci-s.mi{color:#f39c12}.ci-s.lo{color:#e74c3c}
+.res-act{display:flex;gap:10px;justify-content:center;margin-top:20px;margin-bottom:24px;flex-wrap:wrap}
+.act-btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:11px 22px;font-size:13px;color:rgba(255,255,255,.65);cursor:pointer;transition:all .2s}
+.act-btn:hover{background:#ffa50212;border-color:#ffa50266;color:#ffa502}
+.rt-btn{background:transparent;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.4);padding:12px 30px;border-radius:50px;cursor:pointer;font-size:13px;transition:all .2s}
+.rt-btn:hover{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.8)}
+@media(max-width:480px){.zg,.sg{grid-template-columns:repeat(3,1fr)} .cg{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<script>
+(function(){
+  const s=document.getElementById('stars');
+  for(let i=0;i<90;i++){
+    const d=document.createElement('div');d.className='star';
+    d.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()*2+1}px;height:${Math.random()*2+1}px;--d:${Math.random()*3+1.5}s;animation-delay:${Math.random()*3}s`;
+    s.appendChild(d);
+  }
+})();
+</script>
+
+<!-- Progress -->
+<div class="prog" id="prog">
+  <div class="prog-row">第 <span id="qN">1</span> / <span id="qT">35</span> 题</div>
+  <div class="prog-bar"><div class="prog-fill" id="pFill" style="width:0%"></div></div>
+</div>
+
+<div class="container">
+
+<!-- Screen: Hero -->
+<div class="screen active" id="sHero">
+  <div class="hero">
+    <div class="hero-badge">🔥 中国专属人格测试</div>
+    <h1 class="hero-title">你是哪种<br>「中国式灵魂」？</h1>
+    <p class="hero-sub">星座 · 生肖 · 年龄 · 生活习惯<br>35道题，测出你刻在DNA里的中国人属性</p>
+    <div class="hero-icons">
+      <span class="hero-icon">🧧 红包观</span>
+      <span class="hero-icon">🐉 生肖加成</span>
+      <span class="hero-icon">📱 手机依赖</span>
+      <span class="hero-icon">🍜 外卖哲学</span>
+      <span class="hero-icon">🏠 亲戚Battle</span>
+      <span class="hero-icon">💰 搞钱灵魂</span>
+      <span class="hero-icon">🌙 夜猫作息</span>
+      <span class="hero-icon">😤 记仇程度</span>
+    </div>
+    <button class="btn" onclick="show('sInfo')">开始测试 →</button>
+    <div class="hero-count">已有 128,739 人测出人格型号</div>
+  </div>
+</div>
+
+<!-- Screen: Info -->
+<div class="screen" id="sInfo">
+  <div class="info-pg">
+    <div class="card" style="animation:none">
+      <div class="q-num">基本信息</div>
+      <div class="q-text">先告诉我你是谁</div>
+      <div class="q-sub">保证测试结果更精准（认真脸）</div>
+
+      <div class="form-row">
+        <label>🎂 你的年龄</label>
+        <input class="num-input" id="fAge" type="number" placeholder="比如：28" min="1" max="120">
+      </div>
+
+      <div class="form-row">
+        <label>⚧ 性别</label>
+        <div class="rg" id="fGender">
+          <div class="rg-opt" onclick="pick(this,'gender')">🙋‍♂️ 男</div>
+          <div class="rg-opt" onclick="pick(this,'gender')">🙋‍♀️ 女</div>
+          <div class="rg-opt" onclick="pick(this,'gender')">🤖 武装直升机</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>🐉 生肖</label>
+        <div class="zg" id="fZodiac">
+          <div class="zg-opt" onclick="pick(this,'zodiac','鼠')"><span class="emoji">🐀</span>鼠</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','牛')"><span class="emoji">🐂</span>牛</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','虎')"><span class="emoji">🐅</span>虎</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','兔')"><span class="emoji">🐇</span>兔</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','龙')"><span class="emoji">🐉</span>龙</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','蛇')"><span class="emoji">🐍</span>蛇</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','马')"><span class="emoji">🐎</span>马</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','羊')"><span class="emoji">🐑</span>羊</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','猴')"><span class="emoji">🐒</span>猴</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','鸡')"><span class="emoji">🐓</span>鸡</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','狗')"><span class="emoji">🐕</span>狗</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','猪')"><span class="emoji">🐖</span>猪</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>♈ 星座</label>
+        <div class="sg" id="fStar">
+          <div class="sg-opt" onclick="pick(this,'star','白羊')"><span class="icon">♈</span>白羊</div>
+          <div class="sg-opt" onclick="pick(this,'star','金牛')"><span class="icon">♉</span>金牛</div>
+          <div class="sg-opt" onclick="pick(this,'star','双子')"><span class="icon">♊</span>双子</div>
+          <div class="sg-opt" onclick="pick(this,'star','巨蟹')"><span class="icon">♋</span>巨蟹</div>
+          <div class="sg-opt" onclick="pick(this,'star','狮子')"><span class="icon">♌</span>狮子</div>
+          <div class="sg-opt" onclick="pick(this,'star','处女')"><span class="icon">♍</span>处女</div>
+          <div class="sg-opt" onclick="pick(this,'star','天秤')"><span class="icon">♎</span>天秤</div>
+          <div class="sg-opt" onclick="pick(this,'star','天蝎')"><span class="icon">♏</span>天蝎</div>
+          <div class="sg-opt" onclick="pick(this,'star','射手')"><span class="icon">♐</span>射手</div>
+          <div class="sg-opt" onclick="pick(this,'star','摩羯')"><span class="icon">♑</span>摩羯</div>
+          <div class="sg-opt" onclick="pick(this,'star','水瓶')"><span class="icon">♒</span>水瓶</div>
+          <div class="sg-opt" onclick="pick(this,'star','双鱼')"><span class="icon">♓</span>双鱼</div>
+        </div>
+      </div>
+
+      <button class="btn" style="width:100%;margin-top:8px" onclick="beginQuiz()">开始答题 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Screen: Quiz -->
+<div class="screen" id="sQuiz">
+  <div class="quiz-pg">
+    <div id="qBox"></div>
+    <div class="next-wrap" id="nWrap"><button class="btn" style="width:100%" onclick="nextQ()">下一题 →</button></div>
+  </div>
+</div>
+
+<!-- Screen: Loading -->
+<div class="screen" id="sLoad">
+  <div class="load">
+    <div class="load-spin"></div>
+    <div class="load-txt">正在分析你的中国式灵魂……</div>
+  </div>
+</div>
+
+<!-- Screen: Result -->
+<div class="screen" id="sRes">
+  <div class="res">
+    <div class="res-badge" id="rBadge">你的中式人格</div>
+    <div class="res-type" id="rType">-</div>
+    <div class="res-name" id="rName">-</div>
+    <div class="res-sub" id="rSub">-</div>
+
+    <div class="rc">
+      <div class="rst">📊 人格雷达</div>
+      <div class="sbars" id="rBars"></div>
+    </div>
+
+    <div class="rc">
+      <div class="rst">📝 深度解读</div>
+      <div class="rt" id="rDesc"></div>
+    </div>
+
+    <div class="rc">
+      <div class="rst">🎯 人生忠告</div>
+      <div class="rt" id="rAdvice"></div>
+    </div>
+
+    <div class="rc">
+      <div class="rst">💕 最佳CP</div>
+      <div class="cg" id="rCp"></div>
+    </div>
+
+    <div class="rc">
+      <div class="rst">🏷️ 人格标签</div>
+      <div class="rtags" id="rTags"></div>
+    </div>
+
+    <div class="res-act">
+      <button class="act-btn" onclick="share('wx')">💬 微信</button>
+      <button class="act-btn" onclick="share('pyq')">🧑‍🤝‍🧑 朋友圈</button>
+      <button class="act-btn" onclick="share('copy')">📋 复制</button>
+    </div>
+    <button class="rt-btn" onclick="restart()">🔄 重新测试</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const QS=[
+{q:"除夕夜，家庭群里发完祝福后……",sub:"（测你的春节社交模式）",o:[
+{o:"飞速发完红包雨然后秒消失",d:{s:2,c:2}},
+{o:"在群里跟亲戚Battle红包大小",d:{s:4,d:3}},
+{o:"默默潜水，只抢红包不说话",d:{z:4,i:2}},
+{o:"根本没看群，在刷短视频",d:{d:4}},
+{o:"群里发红包，手慢没抢到，气了一天",d:{a:3}},
+]},
+{q:"过年回家，七大姑八大姨围上来问你「工资多少/有对象了吗/什么时候生」，你的内心OS是：",sub:"（测你的亲戚Battle段位）",o:[
+{o:"「随缘」微微一笑，深藏功与名",d:{z:4,c:2}},
+{o:"反客为主：姨，您家孩子呢？房贷还完了吗？",d:{s:3,d:4}},
+{o:"当场编一个：分手了/在谈/明年结婚",d:{c:4}},
+{o:"掏出手机假装看消息",d:{d:3}},
+{o:"认真解释我在干什么工作",d:{a:3}},
+{o:"心里翻白眼，表面笑嘻嘻",d:{r:3}},
+]},
+{q:"你点外卖时的真实状态是：",sub:"（测你的消费哲学）",o:[
+{o:"先用红包，再用满减，最后货比三家",d:{m:4}},
+{o:"想吃什么就点什么，钱不是问题",d:{j:4}},
+{o:"纠结半小时，选了第一个",d:{a:3,w:2}},
+{o:"根本不用外卖，直接下楼吃",d:{s:2}},
+{o:"天天「再点最后一次就不点了」",d:{h:4}},
+{o:"省钱要紧，实在饿了就泡面",d:{m:3,z:2}},
+]},
+{q:"晚上躺在床上刷手机，你通常：",sub:"（测作息与自控力）",o:[
+{o:"说好11点睡，结果刷到凌晨1点",d:{h:3,d:3}},
+{o:"刷15分钟就强迫自己放下",d:{w:4}},
+{o:"根本没在刷，在加班/学习",d:{a:4,t:3}},
+{o:"开着手机睡着了，手机砸脸",d:{h:3,t:4}},
+{o:"跟朋友视频通话聊到深夜",d:{s:4}},
+{o:"想早睡，但失眠，躺到凌晨3点",d:{a:3}},
+]},
+{q:"微信消息来了，你会：",sub:"（测沟通风格）",o:[
+{o:"秒回，显得我很在意",d:{s:3,a:2}},
+{o:"过一会儿再回，显得我很忙",d:{c:3}},
+{o:"看到了但假装没看见",d:{i:3}},
+{o:"每条都回！不能让人等！",d:{s:4,a:3}},
+{o:"看心情回复，心情不好谁都不理",d:{c:2}},
+]},
+{q:"你去KTV唱歌，你的风格：",sub:"（测社交存在感）",o:[
+{o:"麦霸，一首接一首，霸占话筒",d:{s:3,d:4}},
+{o:"默默角落鼓掌，不抢风头",d:{i:4}},
+{o:"唱一首拿手的，然后消失去上厕所",d:{c:3}},
+{o:"拉着全场一起大合唱《朋友》",d:{s:4}},
+{o:"全程举手机拍抖音素材",d:{g:4}},
+{o:"不去，KTV太吵了在家待着",d:{i:3,z:2}},
+]},
+{q:"听说同事背后说你坏话，你第一反应是：",sub:"（测情绪管理与记仇程度）",o:[
+{o:"当面质问，非要掰扯清楚",d:{d:5}},
+{o:"无所谓，爱说说去",d:{z:5}},
+{o:"表面平静，内心已经写了800字小作文",d:{r:4,a:2}},
+{o:"找闺蜜/兄弟吐槽2小时",d:{s:3}},
+{o:"记仇，暗暗在内心拉黑此人",d:{r:5}},
+{o:"用行动证明自己，打脸对方",d:{w:3}},
+]},
+{q:"周末你的理想状态是：",sub:"（测生活态度）",o:[
+{o:"睡到自然醒，随便吃点",d:{z:4,j:2}},
+{o:"上午健身，下午学习，晚上社交",d:{w:4,a:2}},
+{o:"宅家刷剧吃零食，哪儿也不去",d:{g:3}},
+{o:"到处浪，不浪费好天气",d:{s:4,j:2}},
+{o:"加班，周末是给工作狂的礼物",d:{a:4,t:3}},
+{o:"回老家/陪家人",d:{l:4}},
+]},
+{q:"收到一条群发祝福消息，你会：",sub:"（测人情练达）",o:[
+{o:"礼貌回复同样群发祝福",d:{s:2}},
+{o:"不回，心里想「这也太敷衍」",d:{c:2}},
+{o:"写一条走心的回复",d:{l:4}},
+{o:"截图发朋友圈吐槽",d:{d:3,g:2}},
+{o:"直接拉黑这个人",d:{r:3}},
+]},
+{q:"你在公司食堂打饭，有人插队，你：",sub:"（测规则意识与勇气）",o:[
+{o:"默默不说话，自己等",d:{z:3}},
+{o:"轻声说：不好意思，要排队",d:{w:3}},
+{o:"直接喊：后面排队！",d:{d:4}},
+{o:"假装没看见，关我何事",d:{c:2}},
+{o:"内心翻白眼，面无表情",d:{r:3}},
+{o:"拍照发群里让大家评理",d:{g:3,d:2}},
+]},
+{q:"你看电影时最不能忍的行为是：",sub:"（测公共素养）",o:[
+{o:"旁边一直说话",d:{z:2}},
+{o:"开闪光灯拍照",d:{w:4}},
+{o:"熊孩子在前面踢椅子",d:{t:3}},
+{o:"迟到还打手电找座位",d:{c:3}},
+{o:"手机屏幕亮着不静音",d:{d:2}},
+]},
+{q:"每次回老家，朋友圈发的是：",sub:"（测社交表演）",o:[
+{o:"风景美食九宫格，配文「回家啦~」",d:{g:3,s:2}},
+{o:"什么都不发，潜水选手",d:{z:4,i:2}},
+{o:"一张爸妈做饭的照片",d:{l:4}},
+{o:"逃离北上广的表情包",d:{c:2}},
+{o:"发长文记录回家感受",d:{r:3,l:2}},
+{o:"根本不发朋友圈，发了谁看啊",d:{z:2,i:2}},
+]},
+{q:"朋友找你借钱，你说：",sub:"（测金钱与人情观）",o:[
+{o:"「行，要多少？」直接转",d:{l:4,s:2}},
+{o:"「等我发工资再说」拖延大法",d:{c:4}},
+{o:"「不好意思最近手头紧」",d:{m:3,c:2}},
+{o:"直接已读不回",d:{r:3}},
+{o:"借了，然后天天催他还",d:{d:3,r:3}},
+{o:"不借，但要帮他介绍兼职",d:{w:3,l:2}},
+]},
+{q:"你的闹钟通常设几个？",sub:"（测起床哲学）",o:[
+{o:"一个，响了就起，靠自律",d:{w:4}},
+{o:"三个，间隔5分钟层层递进",d:{a:3,h:2}},
+{o:"五个以上，响到自己都烦了才起",d:{h:4,t:2}},
+{o:"根本不用闹钟，睡到自然醒",d:{z:4}},
+{o:"手机+手表+室友叫，三保险",d:{a:3,h:3}},
+{o:"其实早就醒了，躺着不想起",d:{h:3,z:3}},
+]},
+{q:"你觉得人生最重要的是？",sub:"（灵魂拷问，请认真作答）",o:[
+{o:"快乐 —— 开心就好",d:{j:3,z:2}},
+{o:"搞钱 —— 经济基础决定一切",d:{m:4,a:2}},
+{o:"健康 —— 活着最重要",d:{z:3,w:2}},
+{o:"家人 —— 陪伴是最长情的告白",d:{l:4}},
+{o:"自由 —— 不被定义，做自己",d:{c:4}},
+{o:"面子 —— 不能让人看笑话",d:{d:3}},
+{o:"实现自我价值",d:{w:3,a:2}},
+{o:"有尊严地活着",d:{w:3,r:2}},
+]},
+{q:"相亲对象问你「你有什么缺点」，你说：",sub:"（测相亲生存智慧）",o:[
+{o:"「太认真/太善良」（反向凡尔赛）",d:{c:3}},
+{o:"「我比较追求完美」（正经回答）",d:{w:2}},
+{o:"「老实说，没什么大缺点」",d:{z:2}},
+{o:"「太帅/太优秀了算吗」",d:{d:3}},
+{o:"认真列举三条自己的不足",d:{l:3,w:2}},
+{o:"反问：你觉得我有什么缺点？",d:{c:3}},
+]},
+{q:"你的领导在群里发了一条明显有问题的通知，你会：",sub:"（测职场情商）",o:[
+{o:"私信委婉提醒领导",d:{w:3,l:2}},
+{o:"群里直接指出问题",d:{d:4}},
+{o:"等别人先说，我再跟",d:{c:3}},
+{o:"当作没看见，不关我事",d:{z:3}},
+{o:"在群里表态支持，暗地提醒",d:{w:3}},
+]},
+{q:"你买东西最看重什么？",sub:"（测消费价值观）",o:[
+{o:"价格 —— 性价比是真理",d:{m:4}},
+{o:"颜值 —— 好看比好用重要",d:{j:3}},
+{o:"品质 —— 一分钱一分货",d:{w:4}},
+{o:"品牌 —— 大牌子有面子",d:{d:3}},
+{o:"实用 —— 能用就行",d:{z:2}},
+{o:"心情 —— 今天高兴就买",d:{j:3}},
+]},
+{q:"深夜11点，你妈打电话来说「早点睡」，你会：",sub:"（测亲子关系）",o:[
+{o:"马上放下手机，立刻睡觉",d:{l:3,w:2}},
+{o:"嘴上说睡了，实际继续玩",d:{h:3}},
+{o:"「知道了妈」挂掉继续刷",d:{c:2}},
+{o:"根本没接，因为已经睡了",d:{z:3}},
+{o:"回拨过去聊半小时",d:{l:3,s:2}},
+]},
+{q:"你参加婚礼，通常随多少份子钱？",sub:"（测人情世故）",o:[
+{o:"看关系，一般500-1000",d:{l:3}},
+{o:"别人随多少我随多少，跟风",d:{c:3}},
+{o:"关系好就多随，不熟就少点",d:{l:2,w:2}},
+{o:"尽量不参加，发个微信祝福",d:{i:3}},
+{o:"太熟了不要钱，带礼物去",d:{l:4}},
+]},
+{q:"你的微信朋友圈对同事/老板是：",sub:"（测职场边界感）",o:[
+{o:"分组可见，发什么都很小心",d:{c:4}},
+{o:"全开放，反正没什么见不得人的",d:{s:2,z:2}},
+{o:"三天可见，不让人窥探生活",d:{r:3}},
+{o:"根本不发，朋友圈是过去的东西",d:{z:3}},
+{o:"仅聊天，不发也不看",d:{i:4}},
+]},
+{q:"你被老板当众批评了，你的反应是：",sub:"（测职场抗压）",o:[
+{o:"当场道歉，私下找领导沟通",d:{w:4,l:2}},
+{o:"表面接受，内心记下这笔账",d:{r:4}},
+{o:"当场反驳，我不是那样的人",d:{d:4}},
+{o:"无所谓，左耳进右耳出",d:{z:4}},
+{o:"深刻反省，是不是自己真有问题",d:{w:3}},
+]},
+{q:"你最近一次哭是因为什么？",sub:"（测泪点与情绪）",o:[
+{o:"看剧/电影哭的，太感人了",d:{r:3,j:2}},
+{o:"工作压力太大绷不住了",d:{a:3}},
+{o:"跟家人/恋人吵架",d:{l:2}},
+{o:"好久没哭过了，不记得",d:{z:3}},
+{o:"自己一个人扛太多，绷不住",d:{r:4,a:2}},
+{o:"感动的，不是难过的",d:{r:2,l:2}},
+]},
+{q:"周末朋友喊你出去，你通常：",sub:"（测社交能量）",o:[
+{o:"去！必须去！不能拒绝",d:{s:4}},
+{o:"看情况，不累就去，累了拒绝",d:{z:2}},
+{o:"犹豫半天，最后说不去了",d:{i:3}},
+{o:"找借口：加班/有事/不在家",d:{c:3}},
+{o:"已经约了别人了，不好意思",d:{c:3,s:2}},
+]},
+{q:"你的手机屏幕使用时间每天大约：",sub:"（测数字依赖）",o:[
+{o:"超过10小时，我是手机本机",d:{g:5}},
+{o:"6-10小时，正常水平",d:{g:3}},
+{o:"3-6小时，偶尔刷刷",d:{z:2}},
+{o:"3小时以内，我有自控力",d:{w:3}},
+{o:"不好意思看，怕被吓到",d:{g:3,h:2}},
+]},
+{q:"你最近一次跟朋友聊天超过2小时，是因为：",sub:"（测社交深度）",o:[
+{o:"吐槽工作/老板",d:{s:3,a:2}},
+{o:"聊人生理想未来规划",d:{w:2,r:2}},
+{o:"八卦某人的感情生活",d:{d:3,g:2}},
+{o:"就是闲聊，停不下来",d:{s:3}},
+{o:"没什么特别原因，聊天还需要理由？",d:{s:3}},
+]},
+{q:"你一个人吃火锅，会点什么？",sub:"（测孤独承受力）",o:[
+{o:"一个人也要点满一桌子！",d:{j:3}},
+{o:"就一个菜一碗饭，简单解决",d:{z:3,m:2}},
+{o:"不吃，回家叫外卖",d:{i:3}},
+{o:"默默打开手机看视频下饭",d:{g:3}},
+{o:"不好意思一个人吃，回家做",d:{i:3}},
+]},
+{q:"过年回家，最让你崩溃的事情是：",sub:"（测家庭压力承受）",o:[
+{o:"亲戚的灵魂拷问",d:{a:3}},
+{o:"被逼相亲/催婚",d:{a:3}},
+{o:"熊孩子闹腾没人管",d:{t:3}},
+{o:"七大姑八大姨比来比去",d:{d:3}},
+{o:"其实没什么，回老家挺开心的",d:{z:2,l:2}},
+]},
+{q:"你做决定时最依赖的是：",sub:"（测决策风格）",o:[
+{o:"直觉 —— 跟着感觉走",d:{c:3}},
+{o:"理性分析 —— 数据说话",d:{w:3}},
+{o:"问身边人的意见",d:{s:2}},
+{o:"抛硬币/抽签，老天安排",d:{z:3}},
+{o:"看心情，心情好做什么都对",d:{j:3}},
+{o:"根据以往经验判断",d:{w:2}},
+]},
+{q:"你最近一次跟父母吵架，是因为什么？",sub:"（测代际关系）",o:[
+{o:"婚恋问题——他们催我结婚",d:{a:3}},
+{o:"工作问题——不理解我的选择",d:{a:3}},
+{o:"生活方式——觉得我不够上进",d:{a:2}},
+{o:"好久没吵了，关系还行",d:{z:2,l:2}},
+{o:"没吵，但冷战过几天",d:{r:3}},
+{o:"价值观冲突，聊不到一块",d:{r:2}},
+]},
+{q:"你通常几点睡觉？",sub:"（测作息类型）",o:[
+{o:"晚上10点前，作息规律",d:{w:3}},
+{o:"11点到12点，正常偏晚",d:{z:2}},
+{o:"凌晨1点到2点，习惯性熬夜",d:{h:3,g:2}},
+{o:"凌晨2点以后，失眠或不想睡",d:{h:4,t:2}},
+{o:"不固定，看当天心情",d:{c:2}},
+]},
+{q:"你身边的朋友通常怎么评价你？",sub:"（测他人眼中的自己）",o:[
+{o:"靠谱，有事找我准没错",d:{w:3,l:2}},
+{o:"有趣，跟你在一起很快乐",d:{j:3,s:2}},
+{o:"高冷/神秘，不好接近",d:{r:2}},
+{o:"话太多/太吵了",d:{s:2}},
+{o:"佛系，什么都不在乎",d:{z:3}},
+{o:"拼命三娘/工作狂",d:{a:3}},
+]},
+{q:"你买过的最后悔的东西是：",sub:"（测冲动消费）",o:[
+{o:"健身房年卡，去了3次",d:{h:3,m:2}},
+{o:"直播间冲动下单的",d:{g:4,m:2}},
+{o:"旅游时买的义乌小商品",d:{j:2}},
+{o:"没后悔过，每分钱都值",d:{w:2}},
+{o:"知识付费课，没听完",d:{a:3}},
+{o:"没买什么，后悔没买",d:{m:2}},
+]},
+{q:"你的工作群里，你通常是：",sub:"（测职场存在感）",o:[
+{o:"第一个回复收到的人",d:{s:3}},
+{o:"默默看，从不主动发言",d:{i:3}},
+{o:"发言犀利，老板都怕我",d:{d:3}},
+{o:"只发工作相关，从不闲聊",d:{w:3}},
+{o:"表情包狂魔，什么都发表情",d:{c:2,g:2}},
+{o:"群里最活跃的那个",d:{s:4,d:2}},
+]},
+{q:"最后一道题：你现在最想要什么？",sub:"（灵魂拷问，请凭直觉选择）",o:[
+{o:"很多很多钱",d:{m:4,a:2}},
+{o:"一个懂我的人",d:{l:3}},
+{o:"睡个好觉",d:{z:3,t:2}},
+{o:"自由——不被约束的人生",d:{c:4}},
+{o:"健康的身体",d:{z:3,w:2}},
+{o:"升职加薪，被认可",d:{a:4}},
+{o:"世界和平，少点烦心事",d:{z:2}},
+{o:"一场说走就走的旅行",d:{c:2,j:3}},
+]},
+];
+
+const TYPES={
+S1:{n:"社牛之王",t:"SOC-K",s:"人来疯，人越多越嗨",d:"你是那种在KTV连唱3小时不休息、在饭局永远是话题制造机的人。亲戚问你有没有对象，你直接反问人家退休金多少。你的社交能量，仿佛核反应堆，取之不尽用之不竭。<br><br>跟你吃饭，永远不会冷场，因为你会自带BGM、自带话题、自带气氛组。你的座右铭：没有一顿饭是聊不热的，如果有，就再来一顿。",a:"社交是你的超能力，但偶尔也要学会独处——不然你永远不会知道，安静也是一种力量。",tags:["社牛","气氛组","话痨本痨","人来疯"],dims:{s:5},bars:{s:98,a:55,z:25,c:60,g:40},cp:[{e:"🧘",n:"佛系隐士",s:92},{e:"🐴",n:"纯正打工人",s:78}],clr:"#e74c3c"},
+S2:{n:"社交恐怖分子",t:"SOC-T",s:"不怕尴尬，尴尬的就是别人",d:"你是那种能在地铁上跟陌生人聊10站路、在电梯里跟邻居聊装修细节的人。你的字典里没有「社恐」这个词，只有「你为什么不跟我说话」。<br><br>你的口头禅是「哎你这衣服在哪买的」，你的必杀技是「来来来建个群」。跟你在一起，所有人都会被你的热情感染——或者被吓跑。",a:"你的热情是稀缺资源，建议用在值得的人身上，不要平均分配。",tags:["社牛进阶","搭子达人","自来熟","破冰大师"],dims:{s:4,d:2},bars:{s:90,a:50,z:20,c:75,g:50},cp:[{e:"🧘",n:"佛系隐士",s:40},{e:"🎭",n:"躺平大师",s:70}],clr:"#c0392b"},
+S3:{n:"暖心小太阳",t:"SUN-O",s:"走到哪里，温暖到哪里",d:"你是那种记得每个朋友生日的人，是那种看到流浪猫就挪不动腿的人，是那种别人对你好一点就想加倍回报的人。你的善良不是软弱，是一种主动的选择。<br><br>你总是先考虑别人的感受，结果常常委屈了自己。你的微信收藏里，一定存了很多朋友发来的暖心话。",a:"先爱自己，才能更好地爱别人。善良是你的底色，但也要学会设边界。",tags:["暖心","真诚","老好人","知心姐姐"],dims:{l:3,s:2},bars:{s:80,a:40,z:55,c:30,g:35},cp:[{e:"🦊",n:"社牛之王",s:88},{e:"🐴",n:"纯正打工人",s:82}],clr:"#f39c12"},
+S4:{n:"职场老油条",t:"WRK-O",s:"看透不说透，还是好朋友",d:"你是那种在职场摸爬滚打多年，练就了一身太极神功的人。领导说什么，你都能接住；同事甩锅，你都能化解。你深谙「干活不用太努力，但也不能不努力」的职场精髓。<br><br>你的口头禅是「慢慢来，不急」，你的行动哲学是「能拖则拖，拖不了就糊弄」。但奇怪的是，你的KPI永远中等偏上。",a:"摸鱼是你的生存智慧，但偶尔也要拿出真本事，不然真以为自己只会摸鱼了。",tags:["摸鱼王","太极高手","老江湖","中庸大师"],dims:{c:3,w:2,z:2},bars:{s:55,a:50,z:50,c:65,g:45},cp:[{e:"🐼",n:"搞钱狂魔",s:70},{e:"🧘",n:"佛系隐士",s:75}],clr:"#7f8c8d"},
+S5:{n:"家庭顶梁柱",t:"FAM-B",s:"为家付出，无怨无悔",d:"你是那种自己省吃俭用，也要给家里最好的的人。每个月发工资第一件事是给爸妈打钱，孩子的培训班费用比自己的午饭预算还高。你很少为自己花钱，但给家人花钱从不心疼。<br><br>你的成就感来源于家庭的幸福，你的安全感来自于银行里的存款——虽然不多，但都是为家人存的。",a:"家是你的港湾，但别忘了自己也需要被照顾。偶尔自私一下，是对家人的负责。",tags:["顾家","担当","务实","牺牲型"],dims:{l:4,w:2},bars:{s:50,a:60,z:40,c:45,g:30},cp:[{e:"🍜",n:"干饭战神",s:75},{e:"💰",n:"人间清醒",s:72}],clr:"#e67e22"},
+S6:{n:"相亲终结者",t:"DAT-X",s:"阅人无数，见招拆招",d:"你相过的亲比你吃过的火锅还多。你能从对方点菜的方式判断对方的经济实力，从对方的微信头像推断对方的审美品味。你的相亲数据库堪比民政局，比任何婚恋网站都精准。<br><br>你的相亲原则是：不主动、不拒绝、不负责（对结果负责）。你见过太多套路，所以很难被套路打动。", a:"见多识广是优势，但也别让经验蒙蔽了真心。遇到对的人，套路不重要。",tags:["相亲达人","阅人无数","挑剔精","人间清醒"],dims:{c:3,l:2,w:2},bars:{s:60,a:65,z:30,c:70,g:55},cp:[{e:"🧘",n:"佛系隐士",s:55},{e:"🎭",n:"Drama Queen",s:60}],clr:"#8e44ad"},
+M1:{n:"搞钱狂魔",t:"MNY-K",s:"赚钱是信仰，省钱是本能",d:"你的微信账单永远比工资条长。你会用红包的奥义省下每一分钱，会在直播间蹲守最优价格，会把「要不要」变成「值不值」。<br><br>你的人生信条：「钱不是省出来的，是赚出来的；也是省出来的。」你订阅了8个省钱博主，关注了12个理财账号，每个月复盘自己的收支表。", a:"钱是工具不是目的。偶尔对自己好一点，买点不必要的东西——这叫情绪价值投资。",tags:["搞钱上瘾","省钱大师","理财达人","性价比教主"],dims:{m:5,a:2},bars:{s:35,a:98,z:20,c:50,g:75},cp:[{e:"🍜",n:"干饭战神",s:65},{e:"🧘",n:"佛系隐士",s:45}],clr:"#27ae60"},
+M2:{n:"人间清醒",t:"CLR-M",s:"看透金钱游戏，不被消费主义洗脑",d:"你是那种能一眼看穿「这是智商税」还是「这钱花得值」的人。你不被种草，不被营销，不被「对自己好一点」绑架。你知道真正的奢侈品不是logo，而是时间。<br><br>你买东西前必查成分表、查口碑、查平替。你不炫富，也不哭穷，只是踏踏实实地把自己的小日子过好。", a:"清醒是你的铠甲，但偶尔也可以让自己迷糊一下，体验一下消费的快乐。",tags:["理性消费","反消费主义","通透","人间清醒"],dims:{w:3,m:2,z:2},bars:{s:40,a:70,z:60,c:35,g:40},cp:[{e:"🧘",n:"佛系隐士",s:85},{e:"🐼",n:"搞钱狂魔",s:70}],clr:"#16a085"},
+M3:{n:"抠门哲学家",t:"MIS-P",s:"每一分钱都要花在刀刃上",d:"你是那种为了用一张优惠券愿意等半小时的人，是那种为了省5块钱运费愿意凑单凑到满减的人。你的人生哲学是：省钱就是赚钱，省下来的都是赚的。<br><br>你的朋友都觉得你抠门，但你心里门儿清：钱是省出来的，不是花出来的。你的银行卡余额，是你最大的安全感。", a:"抠门是你的理财方式，但别让「不舍得」变成人生的限制。该花的钱要花。",tags:["省钱狂魔","极简主义","账本精","抠门达人"],dims:{m:4,c:2},bars:{s:25,a:60,z:55,c:40,g:50},cp:[{e:"🧘",n:"佛系隐士",s:80},{e:"🐼",n:"搞钱狂魔",s:60}],clr:"#2ecc71"},
+M4:{n:"副业探索者",t:"SIDE-E",s:"主业求稳，副业求变",d:"你是那种白天上班、晚上搞钱的人。你做过代购、开过网店、写过自媒体、炒过基金，每个月都有新的副业探索。你不相信「一份工资打天下」，你觉得鸡蛋不能放一个篮子里。<br><br>你最大的焦虑是：万一主业没了怎么办？所以你一直在找Plan B。你的手机备忘录里永远有一页「待尝试副业清单」。", a:"副业是安全感，但别让副业拖垮主业。专注，是比多线程更高级的能力。",tags:["斜杠青年","副业狂魔","上进心","多面手"],dims:{a:4,w:2},bars:{s:45,a:95,z:15,c:60,g:65},cp:[{e:"🐼",n:"搞钱狂魔",s:85},{e:"📱",n:"数码僵尸",s:40}],clr:"#f1c40f"},
+M5:{n:"职场野心家",t:"AMB-W",s:"目标明确，一路向上",d:"你是那种每次述职都能把领导说到眼睛发光的人，是那种永远在思考下一步怎么走的人。你不满足于现状，你相信晋升是给有准备的人的礼物，而你已经准备好了。<br><br>你会为了一个项目熬通宵，会为了一个晋升名额拼尽全力。你的字典里没有「差不多得了」，只有「做到极致」。", a:"野心是你的燃料，但别忘了路上的风景。工作狂也要学会休息，不然赢了世界也累了。",tags:["职场卷王","目标导向","拼命三郎","野心家"],dims:{a:5,w:2},bars:{s:50,a:98,z:15,c:55,g:60},cp:[{e:"🐼",n:"搞钱狂魔",s:78},{e:"🐴",n:"纯正打工人",s:45}],clr:"#e74c3c"},
+M6:{n:"人间财神",t:"FORT-R",s:"钱来找我，不是我找钱",d:"你是那种莫名其妙就能赚到钱的人，是那种买什么理财产品什么就涨的人，是那种随便开个店就能火的人。你的财运好到让人怀疑你是不是偷偷拜了什么神仙。<br><br>你不是最努力的，但你是运气最好的。你的人生信条是：钱是赚来的，不是省来的。该花的钱，绝不手软。", a:"财运是老天赏饭吃，但也要有接住的能力。德配其位，才是长久的富贵。",tags:["天选之人","财运好","富贵命","躺赢选手"],dims:{m:3,j:2},bars:{s:55,a:75,z:45,c:40,g:55},cp:[{e:"🍜",n:"干饭战神",s:80},{e:"🧘",n:"佛系隐士",s:60}],clr:"#f39c12"},
+Z1:{n:"佛系隐士",t:"ZEN-M",s:"人间清醒，看淡一切",d:"你是那种「都行、可以、没关系」的佛系大师。红包抢不抢都行，群里发不发都行，人生最大的追求就是——别来烦我。升职加薪？随缘。买房买车？看淡。<br><br>你的内心OS是：世间纷纷扰扰，与我何干？你已经达到了「不以物喜，不以己悲」的人生境界。这不是摆烂，是通透。", a:"佛系是你的保护色，但偶尔也要入世尝尝红尘滋味，不然老了写回忆录都没素材。",tags:["佛系","躺平大师","内心平静","低调王者"],dims:{z:5},bars:{s:20,a:30,z:95,c:15,g:60},cp:[{e:"🦊",n:"社牛之王",s:92},{e:"🐼",n:"搞钱狂魔",s:45}],clr:"#9b59b6"},
+Z2:{n:"躺平大师",t:"FLAT-D",s:"躺平是一门艺术",d:"你是那种在「躺平」这件事上做到极致的人。你不是不努力，你只是选择了不内卷。你相信「努力不一定有回报，但不努力一定很舒服」。<br><br>你的哲学是：与其在内卷中消耗自己，不如在躺平中寻找自我。你不是摆烂，你是人间清醒。", a:"躺平是你的生活态度，但别让躺平变成放弃。偶尔卷一下，也是对自己的尊重。",tags:["躺平精英","反卷达人","人间清醒","低欲望"],dims:{z:4,c:2},bars:{s:25,a:25,z:88,c:45,g:55},cp:[{e:"🧘",n:"佛系隐士",s:95},{e:"🤖",n:"数码僵尸",s:55}],clr:"#8e44ad"},
+Z3:{n:"反卷先锋",t:"REB-X",s:"拒绝内卷，从我做起",d:"你是那种敢对996说「不」的人，敢对无意义加班说「到点下班」的人。你不是躺平，你是站着拒绝内卷。你相信工作是为了更好的生活，而不是生活为了工作。<br><br>你会准点下班，会在周五年假开始时会心一笑，会对领导说「这个工作量需要加人手」。你的存在，就是对内卷文化的有力反击。", a:"反卷需要实力，躺平需要资本。在你有足够的底气之前，先积累实力。",tags:["反内卷","准时下班","边界感强","清醒打工人"],dims:{c:3,w:2,z:2},bars:{s:40,a:55,z:70,c:55,g:45},cp:[{e:"🧘",n:"佛系隐士",s:85},{e:"🐴",n:"纯正打工人",s:65}],clr:"#2c3e50"},
+Z4:{n:"情绪稳定达人",t:"EMO-S",s:"泰山崩于前而色不变",d:"你是那种遇到任何事都能保持冷静的人。方案被打回？没事，重做。工作出问题？不慌，解决。你永远是一群人里最淡定的那个，像一块定海神针。<br><br>但有时候，你也被朋友吐槽「太冷了」「能不能有点情绪」。你只是觉得，情绪解决不了问题，行动才能。", a:"情绪稳定是你的优点，但偶尔释放情绪也是健康的体现。",tags:["情绪稳定","冷场王","定海神针","理性派"],dims:{z:3,w:3},bars:{s:30,a:65,z:85,c:30,g:40},cp:[{e:"🧘",n:"佛系隐士",s:88},{e:"🐴",n:"纯正打工人",s:70}],clr:"#34495e"},
+Z5:{n:"咸鱼翻身",t:"TURN-O",s:"今天不想动，明天再说",d:"你是那种年初立flag、年末倒flag的人。你有无数个「从明天开始」：从明天开始减肥，从明天开始学习，从明天开始存钱……明天的明天，你依然在原地。<br><br>不是你不努力，是努力太累了。你经常在深夜反思自己，但第二天醒来一切照旧。", a:"别等到明天，今天就是明天的昨天。哪怕只做一点点，也是进步。",tags:["拖延症","flag倒了","明日派","嘴上努力"],dims:{h:3,a:2},bars:{s:35,a:40,z:50,c:75,g:60},cp:[{e:"🧘",n:"佛系隐士",s:70},{e:"🐴",n:"纯正打工人",s:60}],clr:"#7f8c8d"},
+Z6:{n:"生活美学派",t:"LIFE-A",s:"生活不止眼前的苟且，还有诗和远方",d:"你是那种愿意为一束花跑半个城的人，是那种会把出租屋收拾得很有格调的人，是那种周末去逛美术馆的人。你相信生活的质量不在于花了多少钱，而在于花了多少心思。<br><br>你不太追求大富大贵，你追求的是小而美的生活。你觉得，人生苦短，要把时间浪费在美好的事物上。", a:"生活美学是你的追求，但别让「精致穷」成为负担。",tags:["生活家","精致","小确幸","仪式感"],dims:{j:3,z:2},bars:{s:50,a:45,z:65,c:30,g:50},cp:[{e:"💝",n:"温暖人间客",s:85},{e:"🦊",n:"社牛之王",s:70}],clr:"#e91e63"},
+D1:{n:"数码僵尸",t:"DIG-Z",s:"手机是器官，我是它的宿主",d:"你是那种手机电量低于20%就开始焦虑的人，是那种睡前最后一秒还在刷、起床第一秒又在摸手机的人。屏幕使用时间每日破10小时，脖子越来越酸，眼睛越来越差，但就是停不下来。<br><br>你知道这样不好，但你戒不掉。你的手机比你更了解你——它知道你所有的秘密，你的每一个深夜，每一个焦虑的瞬间。", a:"每天给自己设1小时数字排毒，实在不行就多买几个充电宝。",tags:["手机成瘾","熬夜冠军","低头族","屏幕战士"],dims:{g:5,h:2},bars:{s:30,a:40,z:15,c:85,g:98},cp:[{e:"🧘",n:"佛系隐士",s:55},{e:"🎭",n:"躺平大师",s:60}],clr:"#1abc9c"},
+D2:{n:"深夜emo怪",t:"NGT-E",s:"白天笑嘻嘻，晚上网抑云",d:"你是那种白天朋友圈岁月静好、半夜两点发「人间不值得」的人。你把最真实的情绪藏在深夜，藏在没有熟人的凌晨。你常常失眠，脑子里装着很多事，很多未完成，很多遗憾。<br><br>但第二天早上，你还是会准时起床，准时打卡，准时对所有人微笑。你把脆弱藏得很好，只是偶尔在深夜会崩溃一下。", a:"emo是情绪的出口，但别让深夜的情绪控制你的人生。",tags:["深夜emo","失眠患者","内心脆弱","白天伪装者"],dims:{r:3,a:2},bars:{s:35,a:55,z:25,c:80,g:85},cp:[{e:"💝",n:"温暖人间客",s:75},{e:"🧘",n:"佛系隐士",s:60}],clr:"#2c3e50"},
+D3:{n:"冲浪达人",t:"SURF-D",s:"网上重拳出击，现实唯唯诺诺",d:"你是那种在网上能跟人Battle 300回合、但现实中连服务员都不敢大声说话的人。你键盘侠附体，谁都敢说，什么都敢喷，仿佛整个互联网都是你的战场。<br><br>但一放下手机，你就是那个最温和、最不爱惹事的老好人。你的战斗力，全给了屏幕。", a:"网上的你和现实中的你，都是你。但学会在现实中表达，会让你更完整。",tags:["键盘侠","冲浪达人","网上勇敢","现实温和"],dims:{d:3,g:2},bars:{s:25,a:35,z:35,c:90,g:88},cp:[{e:"🎭",n:"Drama Queen",s:70},{e:"🧘",n:"佛系隐士",s:50}],clr:"#9b59b6"},
+D4:{n:"追剧狂魔",t:"SERI-R",s:"人生苦短，先看为敬",d:"你是那种一口气追完整部剧的人，是那种为了追剧可以通宵的人，是那种能把所有热门剧集的剧情倒背如流的人。你的片单永远很长，你的VIP会员永远在续费。<br><br>你说「就再看一集」，然后看了10集。你的人生经验很多来自电视剧，你相信的道理也都是编剧写的。", a:"追剧是娱乐不是学习，但别让剧情代替了你自己的思考。",tags:["追剧","VIP会员","熬夜看剧","剧情专家"],dims:{g:3,j:2},bars:{s:35,a:30,z:40,c:70,g:90},cp:[{e:"🤖",n:"数码僵尸",s:80},{e:"🧘",n:"佛系隐士",s:65}],clr:"#e74c3c"},
+D5:{n:"内容创作者",t:"CON-T",s:"人人皆可创作，人人都是UP主",d:"你是那种拍个吃饭要剪辑、加个滤镜、调个色的精致生活博主范儿的人。你的朋友圈是精心设计的，你的抖音是日更的，你的B站是认真做的。你相信内容即名片，个人IP即资产。<br><br>你不是在生活，你是在记录生活。每一张照片都是作品，每一个视频都是作品。", a:"创作是表达，但不是表演。别让「内容」绑架了真实的你。",tags:["自媒体","内容创作","精致生活","个人IP"],dims:{g:4,a:2},bars:{s:65,a:70,z:25,c:65,g:92},cp:[{e:"🦊",n:"社牛之王",s:85},{e:"🎭",n:"Drama Queen",s:70}],clr:"#3498db"},
+R1:{n:"Drama Queen",t:"DRM-Q",s:"生活已经够无聊了，我制造点波澜",d:"你是那种小事变大、大事变热搜的体质。群里不说话则以，一说话就是万字长文。你的内心戏够拍50集宫廷剧，观众的情绪由你主导。<br><br>你为每一件事都能找到情绪出口，你相信情绪是需要表达的。你经常在深夜发朋友圈又秒删，在群里发表长篇大论然后后悔。你的生活从来不无聊，因为你自己就是一出好戏。", a:"Drama是天赋，但过度使用会消耗自己。把这份才华用在创作上——写小说、拍短视频都是出路。",tags:["戏精","宫斗选手","内心戏丰富","表情包大师"],dims:{d:5,r:2},bars:{s:70,a:45,z:10,c:95,g:65},cp:[{e:"🤖",n:"数码僵尸",s:70},{e:"🧘",n:"佛系隐士",s:30}],clr:"#e91e63"},
+R2:{n:"深宫怨兽",t:"DPG-M",s:"表面平静，内心翻江倒海",d:"你是那种被人欺负了不说出来、在心里记了三年小本本的人。表面上云淡风轻，实际上内心已经在复仇大戏里演了800集。你记性好，记得每个人说过的每句伤人的话；但你也记恩，记得每个温暖瞬间。<br><br>你的情绪不外露，但这不代表你没有情绪。你的情绪都在深夜向内消化了，所以你的内心比谁都丰富。", a:"内心戏丰富是天赋，但如果永远不表达，身边的人会以为你真的无所谓。学会说出来，是必修课。",tags:["记仇","高冷","内心戏丰富","慢热"],dims:{r:4,z:2},bars:{s:25,a:50,z:35,c:70,g:45},cp:[{e:"🦊",n:"社牛之王",s:50},{e:"🧘",n:"佛系隐士",s:80}],clr:"#8e44ad"},
+R3:{n:"焦虑体质",t:"ANX-Y",s:"想太多，做太少，累太多",d:"你是那种做决定前要权衡所有可能性的人，是那种发消息要反复修改措辞的人，是那种出门前要检查三遍门锁的人。你活在一种慢性焦虑中，脑子里永远有做不完的事、解不开的结。<br><br>你担心的很多事永远不会发生，但你还是停不下来担心。你对自己要求高，对未来有预期，对不确定有恐惧。", a:"焦虑是对未来的过度预演。学会接受不确定性，是成长的一步。",tags:["焦虑症","想太多","高敏感","谨慎派"],dims:{a:4,w:2},bars:{s:35,a:75,z:20,c:85,g:75},cp:[{e:"🧘",n:"佛系隐士",s:70},{e:"🐴",n:"纯正打工人",s:65}],clr:"#e74c3c"},
+R4:{n:"暴躁老哥",t:"HOT-H",s:"忍无可忍，无需再忍",d:"你是那种憋不住气的人，遇到不公平的事就要说，遇到不爽的人就要怼。你的情绪像夏天的雷阵雨，来得快去得也快。你事后可能会后悔，但当下就是忍不住。<br><br>你的朋友都说你是个直爽的人，你自己也这么觉得。虽然有时候会因为冲动吃亏，但你觉得总比憋出内伤强。", a:"直爽是性格，但冲动是魔鬼。学会延迟反应，是成熟的表现。",tags:["暴脾气","直爽","忍不住","火药桶"],dims:{d:4},bars:{s:50,a:55,z:20,c:80,g:45},cp:[{e:"🦊",n:"社牛之王",s:60},{e:"🧘",n:"佛系隐士",s:35}],clr:"#c0392b"},
+R5:{n:"内心戏王",t:"WUX-U",s:"我的脑洞，比宇宙还大",d:"你是那种看个广告都能想出一整部连续剧的人，是那种等人的时候能在脑子里过完一生的人。你常常在现实和幻想之间切换，你对世界的感知比常人更强烈、更细腻。<br><br>你的想象力是你的财富，也是你的负担。你经常想太多，想得自己都累了。但没办法，你就是这样的人。", a:"丰富的内心世界是你的天赋，把它写下来、画下来，而不是困在心里。",tags:["脑洞大","想太多","想象力丰富","内心精彩"],dims:{r:3,j:2},bars:{s:40,a:50,z:35,c:80,g:70},cp:[{e:"🎭",n:"Drama Queen",s:80},{e:"💝",n:"温暖人间客",s:65}],clr:"#9b59b6"},
+R6:{n:"碎碎念专家",t:"NAG-E",s:"话多不是病，念起来要人命",d:"你是那种自己能跟自己聊一天的人，是那种写小作文一定要写500字的人，是那种开会能补充20条意见的人。你的嘴和你的脑子一样，停不下来。<br><br>你说的话比任何人都多，你产的文字比任何人都长。你关心人的方式是唠叨，你表达爱的方式也是唠叨。你的朋友都怕跟你打电话，因为你一开口就是半小时起。", a:"话多是热情，但学会倾听是智慧。有时候，少说多听，效果更好。",tags:["话痨","小作文","爱操心","操心命"],dims:{s:3,r:2},bars:{s:85,a:50,z:20,c:65,g:60},cp:[{e:"🦊",n:"社牛之王",s:90},{e:"💝",n:"温暖人间客",s:75}],clr:"#f39c12"},
+I1:{n:"孤狼独行侠",t:"LONE-W",s:"一个人就是一支队伍",d:"你是那种不需要任何人陪伴也能活得很精彩的人。你一个人吃饭，一个人看电影，一个人旅行，一个人搬家。你不觉得孤独，你觉得这是自由。<br><br>你有很好的独处能力，你有丰富的内心世界，你不需要从别人那里获得存在感。但有时候，你也会想：如果有人懂我就好了。", a:"独立是能力，但独处太久也会孤独。学会适度依赖，是关系的开始。",tags:["独行者","高冷","独立","不需要人陪"],dims:{i:4,z:2},bars:{s:15,a:55,z:75,c:40,g:45},cp:[{e:"🧘",n:"佛系隐士",s:88},{e:"💝",n:"温暖人间客",s:50}],clr:"#2c3e50"},
+I2:{n:"内向的思想家",t:"THI-N",s:"我在想什么，你知道吗？",d:"你是那种话不多但每句都有分量的人，是那种开会时最后一个发言但一发言就震惊全场的人。你的能量来自独处，你的思考深度来自内向。<br><br>你不喜欢无效社交，你觉得大部分社交都是在浪费时间。你宁愿一个人待着思考，也不愿意去参加无聊的聚会。但一旦有人触碰到你的精神世界，你会是一个很棒的交流者。", a:"内向是你的力量，不是你的短板。深度思考的人，才是真正改变世界的人。",tags:["思想者","深度","内向高敏感","低调实力派"],dims:{w:3,i:2},bars:{s:20,a:70,z:65,c:35,g:40},cp:[{e:"🧘",n:"佛系隐士",s:90},{e:"🐼",n:"搞钱狂魔",s:55}],clr:"#34495e"},
+I3:{n:"规矩守护者",t:"RUL-E",s:"没有规矩，不成方圆",d:"你是那种过马路一定等绿灯的人，是那种看电影一定坐到自己的座位的人，是那种做任何事都有plan A、B、C的人。你相信规则是保护所有人的底线，遵守规则是基本的素养。<br><br>你看不惯插队、闯红灯、随地吐痰这些行为，你觉得这是做人的基本。你经常在内心给陌生人打分，分数往往不高。", a:"守规矩是美德，但也要理解世界不是非黑即白。灵活是一种智慧。",tags:["规矩人","原则强","计划控","一丝不苟"],dims:{w:4,z:2},bars:{s:35,a:65,z:60,c:30,g:35},cp:[{e:"🐴",n:"纯正打工人",s:80},{e:"🧘",n:"佛系隐士",s:65}],clr:"#27ae60"},
+I4:{n:"省钱老干部",t:"OLD-G",s:"新三年，旧三年，缝缝补补又三年",d:"你是那种塑料袋要叠好收起来的人，是那种剩饭剩菜一定要吃完的人，是那种什么东西都舍不得扔、万一以后用得上的人。你的节俭深入骨髓，已经成为了一种本能。<br><br>你的父母那辈人节俭是因为穷，你节俭是因为习惯了。你觉得浪费是最大的犯罪，不管这个东西值不值钱。", a:"节俭是美德，但别让「舍不得」变成人生的枷锁。",tags:["节俭","老干部风","不浪费","老派"],dims:{m:3,z:2},bars:{s:30,a:40,z:70,c:30,g:30},cp:[{e:"🧘",n:"佛系隐士",s:85},{e:"🐼",n:"搞钱狂魔",s:70}],clr:"#7f8c8d"},
+I5:{n:"人间清醒打工人",t:"CLR-W",s:"上班是谋生，不是实现自我",d:"你是那种对工作没有滤镜的人，你知道工作就是用时间换钱，别给它附加太多意义。你不会为工作拼命，但也不会不负责任。你是那种准时上下班、该干活干活、到点就走的人。<br><br>你的职场信条是：拿多少钱干多少活，不多不少刚刚好。你不内卷也不躺平，你是职场里的中等生，稳稳当当。", a:"清醒是好事，但别让「上班只是为了钱」变成不求上进的理由。",tags:["务实","清醒打工人","不卷不躺","边界清晰"],dims:{z:2,w:2},bars:{s:45,a:55,z:65,c:50,g:45},cp:[{e:"🐴",n:"纯正打工人",s:85},{e:"🧘",n:"佛系隐士",s:75}],clr:"#16a085"},
+I6:{n:"人间计算器",t:"CAL-M",s:"每一步都是精算，人生不能含糊",d:"你是那种做任何决定前都要算一笔账的人，是那种相亲都要评估对方综合得分的人，是那种买东西一定要比价到小数点后两位的人。你的大脑永远在运转，你的每一个选择都是理性计算的结果。<br><br>你很少冲动，你很少后悔，因为你在行动前已经把最坏的结果算清楚了。你的人生像一道数学题，严谨而精确。", a:"计算是能力，但人生不是数学题。有些东西，算不出来。",tags:["理性派","计算达人","精打细算","逻辑控"],dims:{w:3,m:2},bars:{s:40,a:70,z:45,c:45,g:45},cp:[{e:"🐼",n:"搞钱狂魔",s:80},{e:"🧘",n:"佛系隐士",s:60}],clr:"#2980b9"},
+F1:{n:"干饭战神",t:"FOD-W",s:"民以食为天，食以我为先",d:"你的人生三大哲学问题是：早上吃什么、中午吃什么、晚上吃什么。你对美食的热爱超越一切，距离5公里的网红店说去就去，排2小时的队也觉得值。你的胃容量是个谜，嘴上说不饿，一开吃就没完没了。<br><br>你看到美食就走不动道，你的相册里一半是食物照片，你的人生理想是吃遍全世界的米其林。", a:"干饭是热爱，但每年一体检，这是干饭人的年度义务。",tags:["吃货","干饭王","探店达人","深夜放毒"],dims:{j:4},bars:{s:65,a:30,z:40,c:60,g:70},cp:[{e:"🐴",n:"纯正打工人",s:88},{e:"🐼",n:"搞钱狂魔",s:65}],clr:"#e67e22"},
+F2:{n:"养生小达人",t:"HEA-D",s:"保温杯里泡枸杞，养生我是认真的",d:"你是那种秋天就要穿秋裤的人，是那种不喝冰水的人，是那种11点前必须睡觉的人，是那种保健品比你化妆品多的人。你从20岁就开始抗糖、抗衰老、抗氧化。<br><br>你的朋友都觉得你活得像个老年人，但你觉得这叫「赢在起跑线」。你深信养生是最值得的投资，因为没有健康，其他都是零。", a:"养生是对的，但别养生成焦虑。过度养生也是一种执念。",tags:["养生","惜命","健康生活","保温杯"],dims:{z:3,w:2},bars:{s:45,a:50,z:75,c:25,g:40},cp:[{e:"🧘",n:"佛系隐士",s:80},{e:"🐴",n:"纯正打工人",s:65}],clr:"#27ae60"},
+F3:{n:"超级奶爸/辣妈",t:"PAR-S",s:"孩子是这辈子最重要的作品",d:"你是那种所有社交都围绕孩子展开的人，是那种孩子发个烧就请假三天的人，是那种孩子的事永远排在第一位的人。你的人生重心，全在下一代。<br><br>你经常忘了自己的生日，但孩子生日你提前一个月就开始准备。你省吃俭用给孩子最好的，你觉得自己吃穿无所谓，孩子不能输在起跑线上。", a:"孩子是未来，但别忘了自己也是人生的主角。你先是你自己，再是父母。",tags:["超级家长","付出型","孩子至上","无私父母"],dims:{l:4},bars:{s:55,a:50,z:40,c:50,g:45},cp:[{e:"💝",n:"温暖人间客",s:90},{e:"🐴",n:"纯正打工人",s:70}],clr:"#e91e63"},
+};
+
+const DLABELS = {s:'社交能量',a:'上进野心',z:'佛系指数',c:'搞事指数',g:'手机依赖'};
+const DCOLORS = ['#e74c3c','#f39c12','#9b59b6','#e91e63','#1abc9c'];
+
+const ZODIAC_BONUS={
+  '龙':{c:15,a:10},'虎':{d:10,a:10},'兔':{z:15},'蛇':{r:10,z:5},
+  '马':{a:10},'羊':{z:10,l:5},'猴':{c:10,a:10},'鸡':{w:5},
+  '狗':{l:10},'猪':{z:15,j:10},'鼠':{c:10,m:10},'牛':{w:10,m:5}
+};
+const STAR_BONUS={
+  '白羊':{d:10,a:10},'金牛':{m:10,z:10},'双子':{c:10,s:5},'巨蟹':{l:15,r:10},
+  '狮子':{d:15,s:5},'处女':{w:10,a:10},'天秤':{s:10,l:5},'天蝎':{r:15,z:10},
+  '射手':{c:10,a:5},'摩羯':{a:15,w:10},'水瓶':{c:15,i:10},'双鱼':{r:15,j:5}
+};
+function ageBonus(age){
+  const b={};
+  if(age<22){b.c=15;b.a=10;b.g=10;}
+  else if(age<28){b.a=5;b.c=5;}
+  else if(age>35){b.z=15;b.w=10;b.r=5;}
+  return b;
+}
+function mergeBonus(base,...bonuses){
+  const r={...base};
+  bonuses.forEach(b=>{if(!b)return;Object.keys(b).forEach(k=>r[k]=(r[k]||0)+b[k]);});
+  return r;
+}
+function calc(){
+  const d={s:0,a:0,z:0,c:0,g:0,h:0,r:0,i:0,m:0,w:0,j:0,l:0,d:0,t:0};
+  answers.forEach(scores=>{Object.keys(scores).forEach(k=>{if(d.hasOwnProperty(k))d[k]+=scores[k];});});
+  const age=parseInt(document.getElementById('fAge')?.value)||25;
+  const zb=ZODIAC_BONUS[window.sZodiac]||{};
+  const sb=STAR_BONUS[window.sStar]||{};
+  const ab=ageBonus(age);
+  const bd=mergeBonus(d,zb,sb,ab);
+  const dims={};
+  Object.keys(d).forEach(k=>{dims[k]=Math.min(100,Math.max(0,(bd[k]||0)*12));});
+  const fin={};
+  fin.s=Math.min(100,dims.s+dims.d*0.3);
+  fin.a=Math.min(100,dims.a+dims.w*0.4);
+  fin.z=Math.min(100,dims.z+dims.i*0.5);
+  fin.c=Math.min(100,dims.c+dims.h*0.3);
+  fin.g=Math.min(100,dims.g+dims.t*0.2);
+  return fin;
+}
+function matchType(dims,age){
+  if(dims.g>=85&&dims.c>=60)return TYPES.D1;
+  if(dims.g>=85)return TYPES.D4;
+  if(dims.s>=90&&dims.d>=60)return TYPES.S1;
+  if(dims.s>=85)return TYPES.S3;
+  if(dims.z>=90)return TYPES.Z1;
+  if(dims.c>=90&&dims.d>=60)return TYPES.R1;
+  if(dims.c>=85)return TYPES.R3;
+  if(dims.a>=95)return TYPES.M5;
+  if(dims.s>=75&&dims.l>=60)return TYPES.S5;
+  if(dims.z>=80&&dims.i>=60)return TYPES.I2;
+  if(dims.c>=70&&dims.r>=60)return TYPES.R2;
+  if(dims.g>=75&&dims.h>=60)return TYPES.D2;
+  if(dims.s>=80&&dims.r>=50)return TYPES.R6;
+  if(dims.w>=75&&dims.a>=60)return TYPES.M4;
+  if(dims.j>=70&&dims.s>=50)return TYPES.F1;
+  if(dims.w>=80&&dims.m>=50)return TYPES.M6;
+  if(dims.z>=70&&dims.w>=50)return TYPES.Z4;
+  if(dims.s>=70&&dims.c>=50)return TYPES.S4;
+  if(dims.i>=70&&dims.z>=50)return TYPES.I1;
+  if(dims.m>=70&&dims.c>=40)return TYPES.M3;
+  if(dims.l>=70)return TYPES.F3;
+  if(dims.z>=65&&dims.j>=50)return TYPES.Z6;
+  if(dims.r>=65)return TYPES.R5;
+  if(dims.w>=70)return TYPES.I3;
+  if(dims.c>=70)return TYPES.D3;
+  if(dims.g>=70)return TYPES.D5;
+  if(dims.z>=70)return TYPES.Z2;
+  if(dims.r>=60)return TYPES.R4;
+  if(dims.l>=60)return TYPES.S6;
+  if(dims.w>=60)return TYPES.I5;
+  if(dims.m>=60)return TYPES.M1;
+  if(dims.w>=50&&dims.z>=50)return TYPES.Z3;
+  if(dims.z>=50)return TYPES.Z5;
+  return TYPES.Z1;
+}
+
+let ci=0,answers=[];
+window.sZodiac='';window.sStar='';window.sGender='';
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+
+function pick(el,type,val){
+  const g=document.getElementById(type==='gender'?'fGender':type==='zodiac'?'fZodiac':'fStar');
+  g.querySelectorAll('.rg-opt,.zg-opt,.sg-opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  if(type==='zodiac')window.sZodiac=val;
+  else if(type==='star')window.sStar=val;
+  else window.sGender=val;
+}
+
+function beginQuiz(){
+  const age=document.getElementById('fAge').value;
+  if(!age||age<1||age>120){document.getElementById('fAge').style.borderColor='#e74c3c';document.getElementById('fAge').placeholder='请输入真实年龄（1-120岁）';return;}
+  document.getElementById('fAge').style.borderColor='';
+  window.sAge=age;
+  ci=0;answers=[];
+  show('sQuiz');
+  document.getElementById('prog').classList.add('show');
+  document.getElementById('qT').textContent=QS.length;
+  rq();
+}
+
+function rq(){
+  const q=QS[ci];
+  document.getElementById('qN').textContent=ci+1;
+  document.getElementById('pFill').style.width=((ci)/QS.length*100)+'%';
+  const box=document.getElementById('qBox');
+  box.innerHTML=`<div class="card"><div class="q-num">第 ${ci+1} 题</div><div class="q-text">${q.q}</div><div class="q-sub">${q.sub}</div><div>${q.o.map((opt,i)=>`<button class="opt" onclick="sel(${i})"><span class="opt-mark">○</span>${opt.o}</button>`).join('')}</div></div>`;
+  document.getElementById('nWrap').classList.remove('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function sel(i){
+  answers[ci]=QS[ci].o[i].d;
+  document.querySelectorAll('.opt').forEach((o,j)=>{o.classList.toggle('sel',j===i);o.querySelector('.opt-mark').textContent=j===i?'●':'○';});
+  document.getElementById('nWrap').classList.add('show');
+}
+
+function nextQ(){
+  if(answers[ci]===undefined)return;
+  ci++;
+  if(ci>=QS.length){show('sLoad');document.getElementById('prog').classList.remove('show');setTimeout(showResult,2500);}
+  else rq();
+}
+
+function showResult(){
+  const dims=calc();
+  const pt=matchType(dims,parseInt(window.sAge||25));
+  const age=parseInt(window.sAge)||25;
+  document.getElementById('rBadge').textContent=age<22?'🌱 Z世代人格':age>35?'🍷 成熟人格':'🔥 当打之年';
+  document.getElementById('rType').textContent=pt.t;
+  document.getElementById('rName').textContent=pt.name;
+  document.getElementById('rSub').textContent=pt.s;
+  document.getElementById('rDesc').innerHTML=pt.d;
+  document.getElementById('rAdvice').textContent=pt.a;
+
+  let bh='';let i=0;
+  for(const[k,l]of Object.entries(DLABELS)){
+    const v=Math.min(100,Math.max(3,dims[k]||0));
+    bh+=`<div class="srow"><div class="slbl">${l}</div><div class="sbarbg"><div class="sbarfill" id="bar${k}" style="width:0%;background:${DCOLORS[i]}"></div></div><div class="sval">${v}</div></div>`;i++;
+  }
+  document.getElementById('rBars').innerHTML=bh;
+
+  let ch='';
+  pt.cp.forEach(c=>{const cls=c.s>=80?'hi':c.s>=60?'mi':'lo';ch+=`<div class="ci"><div class="ci-emo">${c.e}</div><div class="ci-t">${c.n}</div><div class="ci-s ${cls}">${c.s}%</div></div>`;});
+  document.getElementById('rCp').innerHTML=ch;
+
+  let th='';
+  pt.tags.forEach(t=>th+=`<span class="rtag">${t}</span>`);
+  if(window.sZodiac)th+=`<span class="rtag">🐉 ${window.sZodiac}</span>`;
+  if(window.sStar)th+=`<span class="rtag">♈ ${window.sStar}座</span>`;
+  document.getElementById('rTags').innerHTML=th;
+
+  show('sRes');
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>{let i=0;for(const k of Object.keys(DLABELS)){document.getElementById('bar'+k).style.width=(Math.min(100,Math.max(3,dims[k]||0)))+'%';}},100);
+}
+
+function share(p){
+  const pt=matchType(calc(),parseInt(window.sAge||25));
+  const txt=`我测出了「${pt.name}」！ ${pt.s}\n你也来试试？`;
+  if(p==='copy'){navigator.clipboard.writeText(txt).then(()=>alert('文案已复制！'));}
+  else{alert('截图分享到朋友圈效果最好！\n\n'+txt);}
+}
+
+function restart(){
+  ci=0;answers=[];window.sZodiac='';window.sStar='';window.sGender='';
+  document.getElementById('fAge').value='';
+  document.querySelectorAll('.rg-opt,.zg-opt,.sg-opt').forEach(o=>o.classList.remove('sel'));
+  document.getElementById('prog').classList.remove('show');
+  show('sHero');
+}
+</script>
+</body>
+</html>
