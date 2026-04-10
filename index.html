@@ -518,61 +518,6 @@ function syncDateToHidden(){
   }
 }
 
-// 初始化日期选择器（年/月/日三步）
-function initDateSelectors(){
-  const ySel=document.getElementById('fYear');
-  const mSel=document.getElementById('fMonth');
-  const dSel=document.getElementById('fDay');
-  if(!ySel||!mSel||!dSel)return;
-  // 年份：1950 ~ 今年
-  const yr=new Date().getFullYear();
-  for(let y=yr;y>=1950;y--){
-    const opt=document.createElement('option');opt.value=y;opt.textContent=y+'年';ySel.appendChild(opt);
-  }
-  // 月份
-  for(let m=1;m<=12;m++){
-    const opt=document.createElement('option');opt.value=m;opt.textContent=m+'月';mSel.appendChild(opt);
-  }
-  // 默认选中2000年
-  ySel.value='2000';
-  mSel.value='1';
-  updateDayOptions(2000,1);
-  dSel.value='1';
-  // 同步到 fBirth
-  syncDateToHidden();
-}
-function updateDayOptions(year,month){
-  const dSel=document.getElementById('fDay');
-  if(!dSel)return;
-  dSel.innerHTML='<option value="">日</option>';
-  const days=new Date(year,month,0).getDate();
-  for(let d=1;d<=days;d++){
-    const opt=document.createElement('option');opt.value=d;opt.textContent=d+'日';dSel.appendChild(opt);
-  }
-}
-function onDateSelectorChange(){
-  const y=parseInt(document.getElementById('fYear')?.value)||0;
-  const m=parseInt(document.getElementById('fMonth')?.value)||0;
-  if(y&&m){
-    updateDayOptions(y,m);
-    const d=parseInt(document.getElementById('fDay')?.value)||1;
-    document.getElementById('fDay').value=Math.min(d,new Date(y,m,0).getDate())||1;
-  }
-  syncDateToHidden();
-}
-function syncDateToHidden(){
-  const y=document.getElementById('fYear')?.value;
-  const m=document.getElementById('fMonth')?.value;
-  const d=document.getElementById('fDay')?.value;
-  const fBirth=document.getElementById('fBirth');
-  if(fBirth&&y&&m&&d){
-    const mm=String(m).padStart(2,'0');
-    const dd=String(d).padStart(2,'0');
-    fBirth.value=`${y}-${mm}-${dd}`;
-    onBirthDateChange();
-  }
-}
-
 // 根据出生日期推算十二黄道宫（公历太阳运行周期）
 function getStarFromBirth(birthStr){
   if(!birthStr)return null;
