@@ -209,7 +209,20 @@ body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none
         </div>
         <div style="display:flex;align-items:center;gap:8px">
           <span style="color:var(--text3);font-size:12px">或</span>
-          <input class="num-input" id="fBirth" type="date" placeholder="选出生日期" style="flex:1;font-size:14px" onchange="onBirthDateChange()">
+          <div style="display:flex;gap:6px;flex:1;align-items:center">
+            <select id="fYear" class="num-input" style="flex:1;font-size:14px;cursor:pointer" onchange="onDateSelectorChange()">
+              <option value="">年</option>
+            </select>
+            <select id="fMonth" class="num-input" style="flex:1;font-size:14px;cursor:pointer" onchange="onDateSelectorChange()">
+              <option value="">月</option>
+            </select>
+            <select id="fDay" class="num-input" style="flex:1;font-size:14px;cursor:pointer">
+              <option value="">日</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:none">
+          <input class="num-input" id="fBirth" type="hidden" onchange="onBirthDateChange()">
         </div>
         <div id="birthHint" style="font-size:11px;color:var(--text3);margin-top:5px;display:none">选日期后系统自动推算年龄和十二黄道宫</div>
       </div>
@@ -288,6 +301,7 @@ body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none
   <div class="res">
     <div class="res-badge" id="rBadge">你的中式人格</div>
     <div class="res-type" id="rType">-</div>
+    <div class="res-tx" id="rTx" style="font-size:13px;color:var(--text3);font-weight:400;margin-top:4px"></div>
     <div class="res-name" id="rName">-</div>
     <div class="res-quote" id="rQuote" style="display:none;margin:14px auto 20px;max-width:500px;background:linear-gradient(135deg,rgba(255,107,107,.1),rgba(255,165,2,.1));border-left:4px solid var(--accent2);border-radius:0 10px 10px 0;padding:12px 16px;font-size:14px;color:var(--text2);line-height:1.7;text-align:left;font-style:italic"></div>
     <div class="res-age-tag" id="rAgeTag" style="display:none;margin-bottom:4px;font-size:12px;color:var(--accent2);font-weight:600;letter-spacing:1px"></div>
@@ -378,23 +392,50 @@ function getShareUrl(pt,utm){
 
 // 一键复制分享链接（带人格名称的文案）
 function copyShareLink(){
-  const dims=calc();
-  const pt=matchType(dims,parseInt(window.sAge||25));
-  const url=getShareUrl(pt,'copy');
-  const txt=`我测出了「${pt.cn||pt.name} · ${pt.name}」！\n\n${pt.s}\n\n${url}\n\n#中式命格测试`;
-  navigator.clipboard.writeText(txt).then(()=>{
+  try{
+    const dims=calc();
+    const pt=matchType(dims,parseInt(window.sAge||25));
+    const url=getShareUrl(pt,'copy');
+    const cn=pt.cn||pt.name||'';
+    const en=pt.name||'';
+    const nameStr=(cn&&cn!==en)?cn+' · '+en:(cn||en||'神秘人格');
+    const txt=`我测出了「${nameStr}」！\n\n${pt.s||''}\n\n${url}\n\n#中式命格测试`;
+    // 优先用剪贴板 API
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(()=>showCopySuccess()).catch(e=>fallbackCopy(txt));
+    } else {
+      fallbackCopy(txt);
+    }
+  }catch(e){
     const btn=document.getElementById('btnCopyLink');
-    if(btn){const old=btn.innerHTML;btn.innerHTML='✅ 已复制到剪贴板！';setTimeout(()=>btn.innerHTML=old,2500);}
-  }).catch(()=>{
+    if(btn){btn.textContent='⚠️ 复制失败，请手动长按复制';}
+  }
+}
+function showCopySuccess(){
+  const btn=document.getElementById('btnCopyLink');
+  if(!btn)return;
+  const old=btn.innerHTML;
+  btn.innerHTML='✅ 已复制！去粘贴给好友吧~';
+  setTimeout(()=>{if(btn)btn.innerHTML=old;},2500);
+}
+function fallbackCopy(txt){
+  try{
     const ta=document.createElement('textarea');
     ta.value=txt;
+    ta.style.cssText='position:fixed;top:0;left:0;opacity:0';
     document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
+    ta.focus();ta.select();
+    const ok=document.execCommand('copy');
     document.body.removeChild(ta);
+    if(ok)showCopySuccess();
+    else{
+      const btn=document.getElementById('btnCopyLink');
+      if(btn)btn.textContent='⚠️ 请手动复制页面链接';
+    }
+  }catch(e){
     const btn=document.getElementById('btnCopyLink');
-    if(btn){const old=btn.innerHTML;btn.innerHTML='✅ 已复制到剪贴板！';setTimeout(()=>btn.innerHTML=old,2500);}
-  });
+    if(btn)btn.textContent='⚠️ 浏览器不支持，请手动复制';
+  }
 }
 
 // ═══════════════════════════════════════════════
@@ -420,6 +461,116 @@ function getZodiacFromBirth(birthStr){
   const cy=isBeforeLN?year-1:year;
   const animals=['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
   return animals[(cy-1900)%12];
+}
+
+// 初始化日期选择器（年/月/日三步）
+function initDateSelectors(){
+  const ySel=document.getElementById('fYear');
+  const mSel=document.getElementById('fMonth');
+  const dSel=document.getElementById('fDay');
+  if(!ySel||!mSel||!dSel)return;
+  // 年份：1950 ~ 今年
+  const yr=new Date().getFullYear();
+  for(let y=yr;y>=1950;y--){
+    const opt=document.createElement('option');opt.value=y;opt.textContent=y+'年';ySel.appendChild(opt);
+  }
+  // 月份
+  for(let m=1;m<=12;m++){
+    const opt=document.createElement('option');opt.value=m;opt.textContent=m+'月';mSel.appendChild(opt);
+  }
+  // 默认选中2000年
+  ySel.value='2000';
+  mSel.value='1';
+  updateDayOptions(2000,1);
+  dSel.value='1';
+  // 同步到 fBirth
+  syncDateToHidden();
+}
+function updateDayOptions(year,month){
+  const dSel=document.getElementById('fDay');
+  if(!dSel)return;
+  dSel.innerHTML='<option value="">日</option>';
+  const days=new Date(year,month,0).getDate();
+  for(let d=1;d<=days;d++){
+    const opt=document.createElement('option');opt.value=d;opt.textContent=d+'日';dSel.appendChild(opt);
+  }
+}
+function onDateSelectorChange(){
+  const y=parseInt(document.getElementById('fYear')?.value)||0;
+  const m=parseInt(document.getElementById('fMonth')?.value)||0;
+  if(y&&m){
+    updateDayOptions(y,m);
+    const d=parseInt(document.getElementById('fDay')?.value)||1;
+    document.getElementById('fDay').value=Math.min(d,new Date(y,m,0).getDate())||1;
+  }
+  syncDateToHidden();
+}
+function syncDateToHidden(){
+  const y=document.getElementById('fYear')?.value;
+  const m=document.getElementById('fMonth')?.value;
+  const d=document.getElementById('fDay')?.value;
+  const fBirth=document.getElementById('fBirth');
+  if(fBirth&&y&&m&&d){
+    const mm=String(m).padStart(2,'0');
+    const dd=String(d).padStart(2,'0');
+    fBirth.value=`${y}-${mm}-${dd}`;
+    onBirthDateChange();
+  }
+}
+
+// 初始化日期选择器（年/月/日三步）
+function initDateSelectors(){
+  const ySel=document.getElementById('fYear');
+  const mSel=document.getElementById('fMonth');
+  const dSel=document.getElementById('fDay');
+  if(!ySel||!mSel||!dSel)return;
+  // 年份：1950 ~ 今年
+  const yr=new Date().getFullYear();
+  for(let y=yr;y>=1950;y--){
+    const opt=document.createElement('option');opt.value=y;opt.textContent=y+'年';ySel.appendChild(opt);
+  }
+  // 月份
+  for(let m=1;m<=12;m++){
+    const opt=document.createElement('option');opt.value=m;opt.textContent=m+'月';mSel.appendChild(opt);
+  }
+  // 默认选中2000年
+  ySel.value='2000';
+  mSel.value='1';
+  updateDayOptions(2000,1);
+  dSel.value='1';
+  // 同步到 fBirth
+  syncDateToHidden();
+}
+function updateDayOptions(year,month){
+  const dSel=document.getElementById('fDay');
+  if(!dSel)return;
+  dSel.innerHTML='<option value="">日</option>';
+  const days=new Date(year,month,0).getDate();
+  for(let d=1;d<=days;d++){
+    const opt=document.createElement('option');opt.value=d;opt.textContent=d+'日';dSel.appendChild(opt);
+  }
+}
+function onDateSelectorChange(){
+  const y=parseInt(document.getElementById('fYear')?.value)||0;
+  const m=parseInt(document.getElementById('fMonth')?.value)||0;
+  if(y&&m){
+    updateDayOptions(y,m);
+    const d=parseInt(document.getElementById('fDay')?.value)||1;
+    document.getElementById('fDay').value=Math.min(d,new Date(y,m,0).getDate())||1;
+  }
+  syncDateToHidden();
+}
+function syncDateToHidden(){
+  const y=document.getElementById('fYear')?.value;
+  const m=document.getElementById('fMonth')?.value;
+  const d=document.getElementById('fDay')?.value;
+  const fBirth=document.getElementById('fBirth');
+  if(fBirth&&y&&m&&d){
+    const mm=String(m).padStart(2,'0');
+    const dd=String(d).padStart(2,'0');
+    fBirth.value=`${y}-${mm}-${dd}`;
+    onBirthDateChange();
+  }
 }
 
 // 根据出生日期推算十二黄道宫（公历太阳运行周期）
@@ -1340,8 +1491,14 @@ function showResult(){
   document.getElementById('rBadge').textContent='你的中式人格';
   document.getElementById('rAgeTag').style.display='block';
   document.getElementById('rAgeTag').textContent=age<22?'🌱 命定Z世代·青春加持':age>35?'🍷 命定不惑年·成熟加持':'🔥 命定当打年·正值巅峰';
-  document.getElementById('rType').textContent=pt.t + (pt.tx ? ' · ' + pt.tx : '');
-  document.getElementById('rName').textContent=(pt.cn || pt.name) + (pt.name !== pt.cn ? " · " + pt.name : "");
+  // 英文缩写一行
+  document.getElementById('rType').textContent=pt.t;
+  // 英文说明一行（小字）
+  document.getElementById('rTx').textContent=(pt.tx || pt.n || pt.name || '');
+  // 中文名一行（不要 undefined）
+  const cn = (pt.cn || '').strip ? pt.cn : (pt.cn || '');
+  const en = (pt.name || '').strip ? pt.name : (pt.name || '');
+  document.getElementById('rName').textContent=(cn && cn!==en) ? cn + ' · ' + en : (cn || en || '');
   document.getElementById('rSub').textContent=pt.s;
   const qel=document.getElementById('rQuote');
   qel.textContent='💬 ' + (pt.q || '你这种人，命中注定与众不同。');
@@ -1354,12 +1511,26 @@ function showResult(){
   document.getElementById('rGrow').innerHTML=pt.grow||pt.a;
   document.getElementById('rAdvice').textContent=pt.a;
 
-  // bars
-  let bh='';let i=0;
-  for(const[k,l]of Object.entries(DLABELS)){
-    const v=Math.round(Math.min(100,Math.max(3,dims[k]||0)));
-    bh+=`<div class="srow"><div class="slbl">${l}</div><div class="sbarbg"><div class="sbarfill" id="bar${k}" style="width:0%;background:${DCOLORS[i]}"></div></div><div class="sval">${v}</div></div>`;i++;
-  }
+  // bars - MBTI风格正反对应对
+  const RADAR_PAIRS = [
+    {pk:'s', pl:'社交气场',    nk:'i', nl:'内心世界',   color:'#e74c3c'},
+    {pk:'a', pl:'卷王指数',    nk:'z', nl:'躺平修为',   color:'#f39c12'},
+    {pk:'c', pl:'搞事指数',    nk:'w', nl:'稳重指数',   color:'#9b59b6'},
+    {pk:'m', pl:'物质欲望',    nk:'j', nl:'精神追求',   color:'#e91e63'},
+    {pk:'l', pl:'情感浓度',    nk:'r', nl:'理性指数',   color:'#1abc9c'},
+  ];
+  let bh='';
+  RADAR_PAIRS.forEach(pair => {
+    const rawPos = dims[pair.pk]||0;
+    const rawNeg = dims[pair.nk]||0;
+    const total  = rawPos + rawNeg;
+    const posV   = total > 0 ? Math.round(rawPos/total*100) : 50;
+    const negV   = 100 - posV;
+    const posPct = Math.max(3, posV);
+    const negPct = Math.max(3, negV);
+    bh+=`<div class="srow"><div class="slbl">${pair.pl}</div><div class="sbarbg"><div class="sbarfill" id="bar${pair.pk}" style="width:${posPct}%;background:${pair.color}"></div></div><div class="sval">${posV}</div></div>`;
+    bh+=`<div class="srow"><div class="slbl">${pair.nl}</div><div class="sbarbg"><div class="sbarfill" id="bar${pair.nk}" style="width:${negPct}%;background:#95a5a6"></div></div><div class="sval">${negV}</div></div>`;
+  });
   document.getElementById('rBars').innerHTML=bh;
 
   // cp
@@ -1385,10 +1556,16 @@ function showResult(){
   document.getElementById('wmType').textContent=pt.t+' '+pt.name;
   wm.classList.add('show');
   setTimeout(()=>{
-    let i=0;
-    for(const k of Object.keys(DLABELS)){
-      document.getElementById('bar'+k).style.width=Math.round(Math.min(100,Math.max(3,dims[k]||0)))+'%';
-    }
+    RADAR_PAIRS.forEach(pair => {
+      const rawPos=dims[pair.pk]||0, rawNeg=dims[pair.nk]||0;
+      const total=rawPos+rawNeg;
+      const posV=total>0?Math.round(rawPos/total*100):50;
+      const negV=100-posV;
+      const pb=document.getElementById('bar'+pair.pk);
+      const nb=document.getElementById('bar'+pair.nk);
+      if(pb)pb.style.width=Math.max(3,posV)+'%';
+      if(nb)nb.style.width=Math.max(3,negV)+'%';
+    });
   },100);
 }
 
@@ -1408,8 +1585,11 @@ function showResult(){
       document.getElementById('rBadge').textContent=`${n}的中式人格`;
       document.getElementById('rAgeTag').style.display='block';
       document.getElementById('rAgeTag').textContent='👀 这是好友分享的结果';
-      document.getElementById('rType').textContent=pt.t + (pt.tx ? ' · ' + pt.tx : '');
-      document.getElementById('rName').textContent=(pt.cn || pt.name) + (pt.name !== pt.cn ? ' · ' + pt.name : '');
+      document.getElementById('rType').textContent=pt.t;
+      document.getElementById('rTx').textContent=(pt.tx || pt.n || pt.name || '');
+      const cn2=(pt.cn||'').replace(/undefined/g,'');
+      const en2=(pt.name||'').replace(/undefined/g,'');
+      document.getElementById('rName').textContent=(cn2&&cn2!==en2)?cn2+' · '+en2:(cn2||en2||'');
       document.getElementById('rSub').textContent=pt.s;
       // 金句
       const qel2=document.getElementById('rQuote');
@@ -1446,6 +1626,14 @@ function doRestart(){
   ci=0;answers=[];window.sZodiac='';window.sStar='';window.sGender='';
   document.getElementById('fAge').value='';
   document.getElementById('fBirth').value='';
+  const ySel=document.getElementById('fYear'),mSel=document.getElementById('fMonth'),dSel=document.getElementById('fDay');
+  if(ySel)ySel.value='2000';
+  if(mSel)mSel.value='1';
+  if(dSel){updateDayOptions(2000,1);dSel.value='1';}
+  const ySel=document.getElementById('fYear'),mSel=document.getElementById('fMonth'),dSel=document.getElementById('fDay');
+  if(ySel)ySel.value='2000';
+  if(mSel)mSel.value='1';
+  if(dSel){updateDayOptions(2000,1);dSel.value='1';}
   document.querySelectorAll('.rg-opt,.zg-opt,.sg-opt').forEach(o=>o.classList.remove('sel'));
   document.getElementById('prog').classList.remove('show');
   document.body.classList.remove('nosel');
