@@ -39,11 +39,11 @@ body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none
 @keyframes fadein{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── Hero ── */
-.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px 20px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:32px 20px}
 .hero-badge{display:inline-block;background:linear-gradient(135deg,var(--accent)22,var(--accent2)22);border:1px solid var(--accent2)55;color:var(--accent2);font-size:11px;font-weight:700;padding:6px 18px;border-radius:20px;margin-bottom:20px;letter-spacing:3px}
 .hero-title{font-size:clamp(28px,8vw,52px);font-weight:900;line-height:1.25;margin-bottom:14px;background:linear-gradient(135deg,var(--text),#f0e6ff 50%,#ffe0f0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero-sub{font-size:15px;color:var(--text3);line-height:1.7;margin-bottom:32px}
-.hero-icons{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:40px}
+.hero-icons{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:28px}
 .hero-icon{background:var(--card2);border:1px solid var(--border2);padding:7px 14px;border-radius:14px;font-size:13px;color:var(--text2)}
 .btn{background:linear-gradient(135deg,var(--accent),var(--accent3));color:#fff;border:none;padding:15px 44px;font-size:17px;font-weight:700;border-radius:50px;cursor:pointer;transition:all .3s;box-shadow:0 4px 24px #ff475755}
 .btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px #ff475788}
@@ -58,38 +58,38 @@ body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none
 .prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:4px;transition:width .35s ease}
 
 /* ── Info Form ── */
-.info-pg{padding-top:70px;padding-bottom:40px;min-height:100vh}
-.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px 24px;margin-bottom:18px}
+.info-pg{padding-top:60px;padding-bottom:24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 14px;margin-bottom:12px}
 .q-num{font-size:11px;color:var(--accent2);font-weight:700;letter-spacing:2px;margin-bottom:10px}
-.q-text{font-size:19px;font-weight:700;line-height:1.5;margin-bottom:6px}
-.q-sub{font-size:12px;color:var(--text3);font-style:italic;margin-bottom:20px}
-.form-row{margin-bottom:22px}
-.form-row label{display:block;font-size:15px;font-weight:600;margin-bottom:10px;color:var(--text)}
-.num-input{width:100%;background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:13px 16px;font-size:16px;color:var(--text);outline:none;transition:border .2s}
+.q-text{font-size:16px;font-weight:700;line-height:1.4;margin-bottom:4px}
+.q-sub{font-size:11px;color:var(--text3);font-style:italic;margin-bottom:8px}
+.form-row{margin-bottom:14px}
+.form-row label{display:block;font-size:14px;font-weight:600;margin-bottom:6px;color:var(--text)}
+.num-input{width:100%;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:10px 12px;font-size:15px;color:var(--text);outline:none;transition:border .2s}
 .num-input:focus{border-color:var(--accent2)}
 .rg{display:flex;gap:8px;flex-wrap:wrap}
-.rg-opt{background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:10px 18px;font-size:14px;color:var(--text2);cursor:pointer;transition:all .2s}
+.rg-opt{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:8px 14px;font-size:14px;color:var(--text2);cursor:pointer;transition:all .2s}
 .rg-opt:hover{border-color:var(--accent2)66}
 .rg-opt.sel{background:var(--accent2)18;border-color:var(--accent2);color:var(--accent2);font-weight:700}
 .zg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-.zg-opt{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:9px 2px;text-align:center;cursor:pointer;transition:all .2s;font-size:13px;color:var(--text2)}
+.zg-opt{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:6px 2px;text-align:center;cursor:pointer;transition:all .2s;font-size:13px;color:var(--text2)}
 .zg-opt:hover{border-color:var(--accent2)66}
 .zg-opt.sel{background:var(--accent2)18;border-color:var(--accent2);color:var(--accent2);font-weight:700}
 .zg-opt .emoji{display:block;font-size:20px;margin-bottom:3px}
 .sg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-.sg-opt{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:8px 2px;text-align:center;cursor:pointer;transition:all .2s;font-size:12px;color:var(--text2)}
+.sg-opt{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:5px 2px;text-align:center;cursor:pointer;transition:all .2s;font-size:12px;color:var(--text2)}
 .sg-opt:hover{border-color:var(--accent2)66}
 .sg-opt.sel{background:var(--accent2)18;border-color:var(--accent2);color:var(--accent2);font-weight:700}
 .sg-opt .icon{display:block;font-size:16px;margin-bottom:2px}
 
 /* ── Quiz ── */
-.quiz-pg{padding-top:70px;padding-bottom:40px;min-height:100vh}
-.opt{background:var(--card2);border:1px solid var(--border2);border-radius:14px;padding:13px 16px;margin-bottom:9px;cursor:pointer;transition:all .2s;font-size:14px;line-height:1.5;color:var(--text2);text-align:left;width:100%;display:flex;gap:10px;align-items:center;min-height:52px}
+.quiz-pg{padding-top:60px;padding-bottom:24px}
+.opt{background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:11px 14px;margin-bottom:7px;cursor:pointer;transition:all .2s;font-size:13px;line-height:1.4;color:var(--text2);text-align:left;width:100%;display:flex;gap:10px;align-items:center;min-height:44px}
 .opt:hover{background:var(--accent2)12;border-color:var(--accent2)44;transform:translateX(3px)}
 .opt.sel{background:var(--accent2)1e;border-color:var(--accent2);color:var(--accent2);font-weight:700}
 .opt-mark{width:22px;height:22px;border:2px solid var(--border2);border-radius:50%;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s;background:var(--card)}
 .opt.sel .opt-mark{background:var(--accent2);border-color:var(--accent2);color:#fff}
-.nav-wrap{margin-top:14px;display:flex;gap:10px;justify-content:space-between}
+.nav-wrap{margin-top:10px;display:flex;gap:10px;justify-content:space-between}
 .nav-wrap.hidden{display:none}
 
 /* ── Loading ── */
@@ -100,31 +100,31 @@ body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none
 @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
 
 /* ── Result ── */
-.res{padding-top:60px;padding-bottom:60px;min-height:100vh;text-align:center}
+.res{padding-top:48px;padding-bottom:24px;text-align:center}
 .res-badge{display:inline-block;background:linear-gradient(135deg,var(--accent)18,var(--accent2)18);border:1px solid var(--accent2)44;color:var(--accent2);font-size:11px;font-weight:700;padding:5px 16px;border-radius:20px;margin-bottom:14px;letter-spacing:2px}
-.res-type{font-size:clamp(30px,9vw,58px);font-weight:900;margin-bottom:6px;background:linear-gradient(135deg,var(--accent),var(--accent2),#ffe0f0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200%;animation:shimmer 3s infinite}
+.res-type{font-size:clamp(22px,8vw,36px);font-weight:900;margin-bottom:4px;background:linear-gradient(135deg,var(--accent),var(--accent2),#ffe0f0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200%;animation:shimmer 3s infinite}
 @keyframes shimmer{0%{background-position:0%}50%{background-position:100%}100%{background-position:0%}}
-.res-name{font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px}
-.res-sub{font-size:13px;color:var(--text3);font-style:italic;margin-bottom:28px}
-.rc{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:left}
-.rst{font-size:11px;font-weight:700;color:var(--accent2);letter-spacing:2px;margin-bottom:12px;display:flex;align-items:center;gap:7px}
-.rt{font-size:14px;line-height:1.8;color:var(--text2);margin-bottom:10px}
+.res-name{font-size:17px;font-weight:700;color:var(--text);margin-bottom:3px}
+.res-sub{font-size:12px;color:var(--text3);font-style:italic;margin-bottom:10px}
+.rc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 12px;margin-bottom:10px;text-align:left}
+.rst{font-size:10px;font-weight:700;color:var(--accent2);letter-spacing:2px;margin-bottom:6px;display:flex;align-items:center;gap:7px}
+.rt{font-size:13px;line-height:1.5;color:var(--text2);margin-bottom:6px}
 .sbars{}
-.srow{display:flex;align-items:center;gap:10px;margin-bottom:9px}
-.slbl{width:76px;font-size:12px;color:var(--text3);text-align:right;flex-shrink:0}
+.srow{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.slbl{width:64px;font-size:11px;color:var(--text3);text-align:right;flex-shrink:0}
 .sbarbg{flex:1;height:7px;background:var(--border);border-radius:8px;overflow:hidden}
 .sbarfill{height:100%;border-radius:8px;transition:width 1.2s ease}
 .sval{width:34px;font-size:11px;color:var(--text3);text-align:left}
-.rtags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.rtags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
 .rtag{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.2);color:var(--accent);padding:4px 13px;border-radius:20px;font-size:12px}
-.cg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-.ci{background:var(--card2);border-radius:12px;padding:14px 10px;text-align:center}
-.ci-emo{font-size:26px;margin-bottom:5px}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.ci{background:var(--card2);border-radius:10px;padding:10px 8px;text-align:center}
+.ci-emo{font-size:22px;margin-bottom:3px}
 .ci-t{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}
 .ci-s{font-size:18px;font-weight:900}
 .ci-s.hi{color:#2ecc71}.ci-s.mi{color:#f39c12}.ci-s.lo{color:#e74c3c}
-.res-act{display:flex;gap:10px;justify-content:center;margin-top:20px;margin-bottom:24px;flex-wrap:wrap}
-.act-btn{background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:11px 22px;font-size:13px;color:var(--text2);cursor:pointer;transition:all .2s}
+.res-act{display:flex;gap:10px;justify-content:center;margin-top:12px;margin-bottom:12px;flex-wrap:wrap}
+.act-btn{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:10px 18px;font-size:12px;color:var(--text2);cursor:pointer;transition:all .2s}
 .act-btn:hover{background:var(--accent2)12;border-color:var(--accent2)66;color:var(--accent2)}
 .rt-btn{background:transparent;border:1px solid var(--border2);color:var(--text3);padding:12px 30px;border-radius:50px;cursor:pointer;font-size:13px;transition:all .2s}
 .rt-btn:hover{border-color:var(--text2);color:var(--text)}
@@ -188,7 +188,7 @@ body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none
       <span class="hero-icon">🌙 夜猫精元</span>
       <span class="hero-icon">😤 记仇修为</span>
     </div>
-    <button class="btn" onclick="show('sInfo')">开始测试 →</button>
+    <button class="btn" type="button" onclick="show('sInfo')">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
   </div>
 </div>
@@ -303,7 +303,7 @@ body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none
     <div class="res-type" id="rType">-</div>
     <div class="res-tx" id="rTx" style="font-size:13px;color:var(--text3);font-weight:400;margin-top:4px"></div>
     <div class="res-name" id="rName">-</div>
-    <div class="res-quote" id="rQuote" style="display:none;margin:14px auto 20px;max-width:500px;background:linear-gradient(135deg,rgba(255,107,107,.1),rgba(255,165,2,.1));border-left:4px solid var(--accent2);border-radius:0 10px 10px 0;padding:12px 16px;font-size:14px;color:var(--text2);line-height:1.7;text-align:left;font-style:italic"></div>
+    <div class="res-quote" id="rQuote" style="display:none;margin:8px auto 12px;max-width:500px;background:linear-gradient(135deg,rgba(255,107,107,.1),rgba(255,165,2,.1));border-left:4px solid var(--accent2);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--text2);line-height:1.6;text-align:left;font-style:italic"></div>
     <div class="res-age-tag" id="rAgeTag" style="display:none;margin-bottom:4px;font-size:12px;color:var(--accent2);font-weight:600;letter-spacing:1px"></div>
     <div class="res-sub" id="rSub">-</div>
 
