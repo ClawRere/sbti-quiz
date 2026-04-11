@@ -71,16 +71,16 @@ body.nosel button,body.nosel .act-btn,body.nosel .rt-btn,body.nosel .btn{pointer
 .num-input{width:100%;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:10px 12px;font-size:15px;color:var(--text);outline:none;transition:border .2s}
 .num-input:focus{border-color:var(--accent2)}
 .rg{display:flex;gap:8px;flex-wrap:wrap}
-.rg-opt{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:8px 14px;font-size:14px;color:var(--text2);cursor:pointer;transition:all .2s}
+.rg-opt{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:8px 14px;font-size:14px;color:var(--text2);cursor:pointer;transition:all .2s;flex-shrink:0}
 .rg-opt:hover{border-color:var(--accent2)66}
 .rg-opt.sel{background:var(--accent2)18;border-color:var(--accent2);color:var(--accent2);font-weight:700}
-.zg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-.zg-opt{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:6px 2px;text-align:center;cursor:pointer;transition:all .2s;font-size:13px;color:var(--text2)}
+.zg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;min-height:0;width:100%;box-sizing:border-box}
+.zg-opt{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:6px 2px;text-align:center;cursor:pointer;transition:all .2s;font-size:13px;color:var(--text2);flex-shrink:0;min-width:0}
 .zg-opt:hover{border-color:var(--accent2)66}
 .zg-opt.sel{background:var(--accent2)18;border-color:var(--accent2);color:var(--accent2);font-weight:700}
 .zg-opt .emoji{display:block;font-size:20px;margin-bottom:3px}
-.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-.sg-opt{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:5px 2px;text-align:center;cursor:pointer;transition:all .2s;font-size:12px;color:var(--text2)}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;min-height:0;width:100%;box-sizing:border-box}
+.sg-opt{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:5px 2px;text-align:center;cursor:pointer;transition:all .2s;font-size:12px;color:var(--text2);flex-shrink:0;min-width:0}
 .sg-opt:hover{border-color:var(--accent2)66}
 .sg-opt.sel{background:var(--accent2)18;border-color:var(--accent2);color:var(--accent2);font-weight:700}
 .sg-opt .icon{display:block;font-size:16px;margin-bottom:2px}
@@ -1886,8 +1886,10 @@ function doRestart(){
   });
 }
 
-// ══ 页面初始化 ══
-initDateSelectors();
+// ══ 页面初始化（必须在 DOMContentLoaded 里确保 DOM 就绪）═
+document.addEventListener('DOMContentLoaded', function() {
+  initDateSelectors();
+});
 </script>
 </body>
 </html>
