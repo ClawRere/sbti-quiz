@@ -309,45 +309,45 @@ window._showRestartConfirm=function(callback){
       <div class="form-row">
         <label>⚧ 性别</label>
         <div class="rg" id="fGender">
-          <div class="rg-opt" data-pick="gender">🙋‍♂️ 男</div>
-          <div class="rg-opt" data-pick="gender">🙋‍♀️ 女</div>
-          <div class="rg-opt" data-pick="gender">🤖 武装直升机</div>
+          <div class="rg-opt" onclick="pick(this,'gender')">🙋‍♂️ 男</div>
+          <div class="rg-opt" onclick="pick(this,'gender')">🙋‍♀️ 女</div>
+          <div class="rg-opt" onclick="pick(this,'gender')">🤖 武装直升机</div>
         </div>
       </div>
 
       <div class="form-row">
         <label>🐉 生肖 <span id="autoHintZodiac" style="font-size:11px;color:var(--accent2);display:none">（系统按出生日期自动填入）</span></label>
         <div class="zg" id="fZodiac">
-          <div class="zg-opt" data-pick="zodiac" data-val="鼠"><span class="emoji">🐀</span>鼠</div>
-          <div class="zg-opt" data-pick="zodiac" data-val="牛"><span class="emoji">🐂</span>牛</div>
-          <div class="zg-opt" data-pick="zodiac" data-val="虎"><span class="emoji">🐅</span>虎</div>
-          <div class="zg-opt" data-pick="zodiac" data-val="兔"><span class="emoji">🐇</span>兔</div>
-          <div class="zg-opt" data-pick="zodiac" data-val="龙"><span class="emoji">🐉</span>龙</div>
-          <div class="zg-opt" data-pick="zodiac" data-val="蛇"><span class="emoji">🐍</span>蛇</div>
-          <div class="zg-opt" data-pick="zodiac" data-val="马"><span class="emoji">🐎</span>马</div>
-          <div class="zg-opt" data-pick="zodiac" data-val="羊"><span class="emoji">🐑</span>羊</div>
-          <div class="zg-opt" data-pick="zodiac" data-val="猴"><span class="emoji">🐒</span>猴</div>
-          <div class="zg-opt" data-pick="zodiac" data-val="鸡"><span class="emoji">🐓</span>鸡</div>
-          <div class="zg-opt" data-pick="zodiac" data-val="狗"><span class="emoji">🐕</span>狗</div>
-          <div class="zg-opt" data-pick="zodiac" data-val="猪"><span class="emoji">🐖</span>猪</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','鼠')"><span class="emoji">🐀</span>鼠</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','牛')"><span class="emoji">🐂</span>牛</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','虎')"><span class="emoji">🐅</span>虎</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','兔')"><span class="emoji">🐇</span>兔</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','龙')"><span class="emoji">🐉</span>龙</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','蛇')"><span class="emoji">🐍</span>蛇</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','马')"><span class="emoji">🐎</span>马</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','羊')"><span class="emoji">🐑</span>羊</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','猴')"><span class="emoji">🐒</span>猴</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','鸡')"><span class="emoji">🐓</span>鸡</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','狗')"><span class="emoji">🐕</span>狗</div>
+          <div class="zg-opt" onclick="pick(this,'zodiac','猪')"><span class="emoji">🐖</span>猪</div>
         </div>
       </div>
 
       <div class="form-row">
         <label>☀️ 十二黄道宫 <span id="autoHintStar" style="font-size:11px;color:var(--accent2);display:none">（系统按出生日期自动填入）</span></label>
         <div class="sg" id="fStar">
-          <div class="sg-opt" data-pick="star" data-val="白羊"><span class="icon">♈</span>白羊</div>
-          <div class="sg-opt" data-pick="star" data-val="金牛"><span class="icon">♉</span>金牛</div>
-          <div class="sg-opt" data-pick="star" data-val="双子"><span class="icon">♊</span>双子</div>
-          <div class="sg-opt" data-pick="star" data-val="巨蟹"><span class="icon">♋</span>巨蟹</div>
-          <div class="sg-opt" data-pick="star" data-val="狮子"><span class="icon">♌</span>狮子</div>
-          <div class="sg-opt" data-pick="star" data-val="处女"><span class="icon">♍</span>处女</div>
-          <div class="sg-opt" data-pick="star" data-val="天秤"><span class="icon">♎</span>天秤</div>
-          <div class="sg-opt" data-pick="star" data-val="天蝎"><span class="icon">♏</span>天蝎</div>
-          <div class="sg-opt" data-pick="star" data-val="射手"><span class="icon">♐</span>射手</div>
-          <div class="sg-opt" data-pick="star" data-val="摩羯"><span class="icon">♑</span>摩羯</div>
-          <div class="sg-opt" data-pick="star" data-val="水瓶"><span class="icon">♒</span>水瓶</div>
-          <div class="sg-opt" data-pick="star" data-val="双鱼"><span class="icon">♓</span>双鱼</div>
+          <div class="sg-opt" onclick="pick(this,'star','白羊')"><span class="icon">♈</span>白羊</div>
+          <div class="sg-opt" onclick="pick(this,'star','金牛')"><span class="icon">♉</span>金牛</div>
+          <div class="sg-opt" onclick="pick(this,'star','双子')"><span class="icon">♊</span>双子</div>
+          <div class="sg-opt" onclick="pick(this,'star','巨蟹')"><span class="icon">♋</span>巨蟹</div>
+          <div class="sg-opt" onclick="pick(this,'star','狮子')"><span class="icon">♌</span>狮子</div>
+          <div class="sg-opt" onclick="pick(this,'star','处女')"><span class="icon">♍</span>处女</div>
+          <div class="sg-opt" onclick="pick(this,'star','天秤')"><span class="icon">♎</span>天秤</div>
+          <div class="sg-opt" onclick="pick(this,'star','天蝎')"><span class="icon">♏</span>天蝎</div>
+          <div class="sg-opt" onclick="pick(this,'star','射手')"><span class="icon">♐</span>射手</div>
+          <div class="sg-opt" onclick="pick(this,'star','摩羯')"><span class="icon">♑</span>摩羯</div>
+          <div class="sg-opt" onclick="pick(this,'star','水瓶')"><span class="icon">♒</span>水瓶</div>
+          <div class="sg-opt" onclick="pick(this,'star','双鱼')"><span class="icon">♓</span>双鱼</div>
         </div>
       </div>
 
@@ -1881,17 +1881,13 @@ function doRestart(){
 }
 
 // ══ 页面初始化 ══
-document.addEventListener('DOMContentLoaded',function(){
-  initDateSelectors();
-  // 事件委托：捕获 form-row 区域内的选项点击，替代 inline onclick
-  document.addEventListener('click',function(e){
-    const opt=e.target.closest('[data-pick]');
-    if(!opt)return;
-    const type=opt.dataset.pick;
-    const val=opt.dataset.val||null;
-    pick(opt,type,val);
-  });
-});
+(function(){
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',initDateSelectors);
+  } else {
+    initDateSelectors();
+  }
+})();
 </script>
 </body>
 </html>
