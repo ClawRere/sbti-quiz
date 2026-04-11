@@ -19,9 +19,10 @@
   --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.1);
 }
 /* ── 反爬虫：禁止选字/拖拽 ── */
-.nosel{-webkit-user-select:none;-moz-user-select:none;user-select:none;pointer-events:none}
+.nosel{-webkit-user-select:none;-moz-user-select:none;user-select:none}
 body{font-family:'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .5s,color .5s}
 body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none!important;user-select:none!important}
+body.nosel button,body.nosel .act-btn,body.nosel .rt-btn,body.nosel .btn{pointer-events:auto!important;cursor:pointer!important;-webkit-user-select:none!important;user-select:none!important}
 /* ── 水印 ── */
 .watermark{position:fixed;bottom:12px;right:14px;font-size:11px;color:rgba(128,128,200,.18);pointer-events:none;z-index:200;display:none;line-height:1.6}
 .watermark.show{display:block}"/>
@@ -111,11 +112,20 @@ body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none
 .rst{font-size:10px;font-weight:700;color:var(--accent2);letter-spacing:2px;margin-bottom:6px;display:flex;align-items:center;gap:7px}
 .rt{font-size:13px;line-height:1.5;color:var(--text2);margin-bottom:6px}
 .sbars{}
-.srow{display:flex;align-items:center;gap:8px;margin-bottom:5px}
-.slbl{width:64px;font-size:11px;color:var(--text3);text-align:right;flex-shrink:0}
-.sbarbg{flex:1;height:7px;background:var(--border);border-radius:8px;overflow:hidden}
-.sbarfill{height:100%;border-radius:8px;transition:width 1.2s ease}
-.sval{width:34px;font-size:11px;color:var(--text3);text-align:left}
+/* ── 维度对比条（左右对称） ── */
+.srow{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.slbl{width:60px;font-size:11px;color:var(--text2);font-weight:600;flex-shrink:0}
+.slbl-l{text-align:right}
+.slbl-r{text-align:left}
+.sbarbg-wrap{flex:1;display:flex;align-items:center;gap:4px}
+/* 左侧bar容器：右对齐，条从右往左长 */
+.sbarbg-l{flex:1;height:8px;background:var(--border);border-radius:8px 0 0 8px;overflow:hidden;display:flex;justify-content:flex-end}
+.sbarfill-l{height:100%;border-radius:8px 0 0 8px;transition:width 1.2s ease}
+/* 中间数值 */
+.sval-center{min-width:52px;text-align:center;font-size:11px;color:var(--text3);flex-shrink:0;white-space:nowrap}
+/* 右侧bar容器：左对齐，条从左往右长 */
+.sbarbg-r{flex:1;height:8px;background:var(--border);border-radius:0 8px 8px 0;overflow:hidden;display:flex;justify-content:flex-start}
+.sbarfill-r{height:100%;border-radius:0 8px 8px 0;transition:width 1.2s ease}
 .rtags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
 .rtag{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.2);color:var(--accent);padding:4px 13px;border-radius:20px;font-size:12px}
 .cg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
@@ -1482,8 +1492,14 @@ function showResult(){
     const negV   = 100 - posV;
     const posPct = Math.max(3, posV);
     const negPct = Math.max(3, negV);
-    bh+=`<div class="srow"><div class="slbl">${pair.pl}</div><div class="sbarbg"><div class="sbarfill" id="bar${pair.pk}" style="width:${posPct}%;background:${pair.color}"></div></div><div class="sval">${posV}</div></div>`;
-    bh+=`<div class="srow"><div class="slbl">${pair.nl}</div><div class="sbarbg"><div class="sbarfill" id="bar${pair.nk}" style="width:${negPct}%;background:#95a5a6"></div></div><div class="sval">${negV}</div></div>`;
+    // 一行：左标签 | 左bar（正向，从右往左） | 中间数值 | 右bar（负向，从左往右） | 右标签
+    bh+=`<div class="srow">
+      <div class="slbl slbl-l">${pair.pl}</div>
+      <div class="sbarbg-l"><div class="sbarfill-l" id="barL${pair.pk}" style="width:${posPct}%;background:${pair.color}"></div></div>
+      <div class="sval-center"><span style="color:${pair.color};font-weight:700">${posV}</span><span style="color:var(--text3)"> vs </span><span style="color:#95a5a6;font-weight:700">${negV}</span></div>
+      <div class="sbarbg-r"><div class="sbarfill-r" id="barR${pair.nk}" style="width:${negPct}%;background:#95a5a6"></div></div>
+      <div class="slbl slbl-r">${pair.nl}</div>
+    </div>`;
   });
   document.getElementById('rBars').innerHTML=bh;
 
@@ -1515,8 +1531,8 @@ function showResult(){
       const total=rawPos+rawNeg;
       const posV=total>0?Math.round(rawPos/total*100):50;
       const negV=100-posV;
-      const pb=document.getElementById('bar'+pair.pk);
-      const nb=document.getElementById('bar'+pair.nk);
+      const pb=document.getElementById('barL'+pair.pk);
+      const nb=document.getElementById('barR'+pair.nk);
       if(pb)pb.style.width=Math.max(3,posV)+'%';
       if(nb)nb.style.width=Math.max(3,negV)+'%';
     });
