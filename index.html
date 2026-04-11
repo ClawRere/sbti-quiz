@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded',function(){
             <select id="fMonth" class="num-input" style="flex:1;font-size:14px;cursor:pointer" onchange="onDateSelectorChange()">
               <option value="">月</option>
             </select>
-            <select id="fDay" class="num-input" style="flex:1;font-size:14px;cursor:pointer">
+            <select id="fDay" class="num-input" style="flex:1;font-size:14px;cursor:pointer" onchange="syncDateToHidden()">
               <option value="">日</option>
             </select>
           </div>
@@ -1248,6 +1248,8 @@ function mergeBonus(base,...bonuses){
 }
 
 // 核心计分
+// 各维度满分系数（理论最大原始分 * coef ≈ 85，留余量区分度）
+const DIM_COEF={s:1.6,a:1.75,z:1.1,c:1.45,g:2.6,h:3.7,r:2.1,i:3.1,m:3.7,w:1.25,j:3.0,l:1.9,d:1.45,t:4.5};
 function calc(){
   const d={s:0,a:0,z:0,c:0,g:0,h:0,r:0,i:0,m:0,w:0,j:0,l:0,d:0,t:0};
   answers.forEach(scores=>{
@@ -1258,10 +1260,11 @@ function calc(){
   const sb=STAR_BONUS[window.sStar]||{};
   const ab=ageBonus(age);
   const bd=mergeBonus(d,zb,sb,ab);
-  // 归一化到0-100
+  // 归一化到0-100，每个维度用自己的系数
   const dims={};
   Object.keys(d).forEach(k=>{
-    dims[k]=Math.min(100,Math.max(0,(bd[k]||0)*12));
+    const coef=DIM_COEF[k]||2;
+    dims[k]=Math.min(100,Math.max(0,(bd[k]||0)*coef));
   });
   // 综合维度
   const fin={};
