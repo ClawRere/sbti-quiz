@@ -41,7 +41,8 @@ body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none
 /* ── Hero ── */
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:32px 20px}
 .hero-badge{display:inline-block;background:linear-gradient(135deg,var(--accent)22,var(--accent2)22);border:1px solid var(--accent2)55;color:var(--accent2);font-size:11px;font-weight:700;padding:6px 18px;border-radius:20px;margin-bottom:20px;letter-spacing:3px}
-.hero-title{font-size:clamp(28px,8vw,52px);font-weight:900;line-height:1.25;margin-bottom:14px;background:linear-gradient(135deg,var(--text),#f0e6ff 50%,#ffe0f0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-title{font-size:clamp(28px,8vw,52px);font-weight:900;line-height:1.25;margin-bottom:14px;background:linear-gradient(135deg,#c0392b,#8e44ad 50%,#e91e8c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+[data-theme="dark"] .hero-title{background:linear-gradient(135deg,var(--text),#f0e6ff 50%,#ffe0f0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero-sub{font-size:15px;color:var(--text3);line-height:1.7;margin-bottom:32px}
 .hero-icons{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:28px}
 .hero-icon{background:var(--card2);border:1px solid var(--border2);padding:7px 14px;border-radius:14px;font-size:13px;color:var(--text2)}
@@ -136,6 +137,8 @@ body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none
 <div class="stars" id="stars"></div>
 <script>
 document.addEventListener('DOMContentLoaded',function(){
+
+
 // ══ 主题自适应：19点前白色，19点后到次日7点黑色 ══
 (function(){
   function setTheme(){
@@ -1360,12 +1363,16 @@ window.sZodiac='';window.sStar='';window.sGender='';
 window._show=function(id){try{var el=document.getElementById(id);if(!el){alert('元素#'+id+'不存在');return}var ss=document.querySelectorAll('.screen');for(var i=0;i<ss.length;i++)ss[i].classList.remove('active');el.classList.add('active');}catch(e){alert('show错误:'+e.message)}};
 
 function pick(el,type,val){
-  const g=document.getElementById(type==='gender'?'fGender':type==='zodiac'?'fZodiac':'fStar');
-  g.querySelectorAll('.rg-opt,.zg-opt,.sg-opt').forEach(o=>o.classList.remove('sel'));
+  // 只清当前分组内的 sel，不影响其他分组
+  const gId=type==='gender'?'fGender':type==='zodiac'?'fZodiac':'fStar';
+  const g=document.getElementById(gId);
+  if(!g)return;
+  const selector=type==='gender'?'.rg-opt':type==='zodiac'?'.zg-opt':'.sg-opt';
+  g.querySelectorAll(selector).forEach(o=>o.classList.remove('sel'));
   el.classList.add('sel');
   if(type==='zodiac')window.sZodiac=val;
   else if(type==='star')window.sStar=val;
-  else window.sGender=val;
+  else window.sGender=el.textContent.trim();
 }
 
 function beginQuiz(){
@@ -1573,19 +1580,20 @@ function doRestart(){
   ci=0;answers=[];window.sZodiac='';window.sStar='';window.sGender='';
   document.getElementById('fAge').value='';
   document.getElementById('fBirth').value='';
-  const ySel=document.getElementById('fYear'),mSel=document.getElementById('fMonth'),dSel=document.getElementById('fDay');
-  if(ySel)ySel.value='2000';
-  if(mSel)mSel.value='1';
-  if(dSel){updateDayOptions(2000,1);dSel.value='1';}
-  const ySel=document.getElementById('fYear'),mSel=document.getElementById('fMonth'),dSel=document.getElementById('fDay');
-  if(ySel)ySel.value='2000';
-  if(mSel)mSel.value='1';
-  if(dSel){updateDayOptions(2000,1);dSel.value='1';}
+  const rYSel=document.getElementById('fYear'),rMSel=document.getElementById('fMonth'),rDSel=document.getElementById('fDay');
+  if(rYSel)rYSel.value='2000';
+  if(rMSel)rMSel.value='1';
+  if(rDSel){updateDayOptions(2000,1);rDSel.value='1';}
   document.querySelectorAll('.rg-opt,.zg-opt,.sg-opt').forEach(o=>o.classList.remove('sel'));
   document.getElementById('prog').classList.remove('show');
   document.body.classList.remove('nosel');
   window._show('sHero');
 }
+
+// ══ 页面初始化 ══
+document.addEventListener('DOMContentLoaded',function(){
+  initDateSelectors();
+});
 </script>
 </body>
 </html>
