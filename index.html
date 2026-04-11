@@ -83,6 +83,16 @@ body.nosel button,body.nosel .act-btn,body.nosel .rt-btn,body.nosel .btn{pointer
 .sg-opt:hover{border-color:var(--accent2)66}
 .sg-opt.sel{background:var(--accent2)18;border-color:var(--accent2);color:var(--accent2);font-weight:700}
 .sg-opt .icon{display:block;font-size:16px;margin-bottom:2px}
+/* ── Toggle Switch ── */
+.cal-toggle{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.cal-toggle-label{font-size:12px;color:var(--text2)}
+.cal-toggle-switch{position:relative;width:44px;height:24px;flex-shrink:0}
+.cal-toggle-switch input{opacity:0;width:0;height:0}
+.cal-toggle-slider{position:absolute;cursor:pointer;inset:0;background:#ccc;border-radius:24px;transition:.3s}
+.cal-toggle-slider:before{position:absolute;content:'';height:18px;width:18px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s}
+.cal-toggle-switch input:checked+.cal-toggle-slider{background:var(--accent2)}
+.cal-toggle-switch input:checked+.cal-toggle-slider:before{transform:translateX(20px)}
+.lunar-hint{font-size:11px;color:var(--accent2);margin-top:4px;display:none}
 
 /* ── Quiz ── */
 .quiz-pg{padding-top:60px;padding-bottom:24px}
@@ -247,8 +257,16 @@ window._showRestartConfirm=function(callback){
 
       <div class="form-row">
         <label>🎂 出生日期</label>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <div style="display:flex;gap:6px;flex:1;align-items:center">
+        <div class="cal-toggle">
+          <span class="cal-toggle-label">☀️ 阳历</span>
+          <label class="cal-toggle-switch">
+            <input type="checkbox" id="isLunar" onchange="onCalendarToggle()">
+            <span class="cal-toggle-slider"></span>
+          </label>
+          <span class="cal-toggle-label">🌙 阴历</span>
+        </div>
+        <div id="solarDateRow">
+          <div style="display:flex;gap:6px;align-items:center">
             <select id="fYear" class="num-input" style="flex:1;font-size:14px;cursor:pointer" onchange="onDateSelectorChange()">
               <option value="">年</option>
             </select>
@@ -260,6 +278,20 @@ window._showRestartConfirm=function(callback){
             </select>
           </div>
         </div>
+        <div id="lunarDateRow" style="display:none">
+          <div style="display:flex;gap:6px;align-items:center">
+            <select id="fLunarYear" class="num-input" style="flex:1;font-size:14px;cursor:pointer" onchange="onLunarDateChange()">
+              <option value="">年</option>
+            </select>
+            <select id="fLunarMonth" class="num-input" style="flex:1;font-size:14px;cursor:pointer" onchange="onLunarDateChange()">
+              <option value="">月</option>
+            </select>
+            <select id="fLunarDay" class="num-input" style="flex:1;font-size:14px;cursor:pointer" onchange="onLunarDateChange()">
+              <option value="">日</option>
+            </select>
+          </div>
+        </div>
+        <div id="lunarHint" class="lunar-hint"></div>
         <div style="display:none">
           <input class="num-input" id="fBirth" type="hidden" onchange="onBirthDateChange()">
         </div>
@@ -538,6 +570,8 @@ function initDateSelectors(){
   dSel.value='1';
   // 同步到 fBirth 并触发自动选生肖/星座（此处手动调用，不要依赖onchange事件）
   syncDateToHidden();
+  // 初始化阴历选择器
+  initLunarSelectors();
 }
 function updateDayOptions(year,month){
   const dSel=document.getElementById('fDay');
@@ -571,12 +605,110 @@ function syncDateToHidden(){
   }
 }
 
+// ═══════════════════════════════════════════════
+// 阳历/阴历切换
+// ═══════════════════════════════════════════════
+const LUNAR_MONTHS=['正月','二月','三月','四月','五月','六月','七月','八月','九月','十月','冬月','腊月'];
+const LUNAR_MONTHS_SHORT=['正','二','三','四','五','六','七','八','九','十','冬','腊'];
+const LUNAR_DAYS=['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十',
+  '十一','十二','十三','十四','十五','十六','十七','十八','十九','二十',
+  '廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
+const LUNAR_NEW_YEAR_LUT={
+  1990:'2/27',1991:'2/15',1992:'2/4',1993:'1/23',1994:'2/10',1995:'1/31',
+  1996:'2/19',1997:'2/7',1998:'1/28',1999:'2/16',2000:'2/5',2001:'1/24',
+  2002:'2/12',2003:'2/1',2004:'1/22',2005:'2/9',2006:'1/29',2007:'2/18',
+  2008:'2/7',2009:'1/26',2010:'2/14',2011:'2/3',2012:'1/23',2013:'2/10',
+  2014:'1/31',2015:'2/19',2016:'2/8',2017:'1/28',2018:'2/16',2019:'2/5',
+  2020:'1/25',2021:'2/12',2022:'2/1',2023:'1/22',2024:'2/10',2025:'1/29',
+  2026:'2/17',2027:'2/6',2028:'1/26',2029:'2/13',2030:'2/3',
+  2031:'1/23',2032:'2/10',2033:'1/30',2034:'2/19',2035:'2/8',
+  2036:'1/28',2037:'2/15',2038:'2/4',2039:'1/24',2040:'2/12',
+  1970:'2/6',1971:'1/27',1972:'2/15',1973:'2/3',1974:'1/23',1975:'2/11',
+  1976:'1/31',1977:'2/18',1978:'2/7',1979:'1/28',1980:'2/16',1981:'2/5',
+  1982:'1/25',1983:'2/13',1984:'2/2',1985:'2/20',1986:'2/9',1987:'1/29',
+  1988:'2/17',1989:'2/6',
+};
+function lunarNewYearDay(year){
+  const lut=LUNAR_NEW_YEAR_LUT[year];
+  if(lut){const [m,d]=lut.split('/');return new Date(year,parseInt(m)-1,parseInt(d));}
+  return new Date(year,1,8);
+}
+// 阳历转近似农历 {year,monthIdx,day}
+function solarToLunar(solarStr){
+  if(!solarStr)return null;
+  const bd=new Date(solarStr);
+  const year=bd.getFullYear();
+  const ny=lunarNewYearDay(bd<lunarNewYearDay(year)?year-1:year);
+  const diff=Math.round((bd-new Date(ny))/86400000);
+  let lYear=bd<lunarNewYearDay(year)?year-1:year;
+  const ny2=lunarNewYearDay(lYear);
+  const diff2=Math.round((bd-new Date(ny2))/86400000);
+  let lMonth=Math.max(1,Math.min(12,Math.floor(diff2/29.53)+1));
+  let lDay=Math.max(1,Math.min(30,diff2-Math.floor((lMonth-1)*29.53)+1));
+  return {year:lYear,monthIdx:lMonth,day:lDay};
+}
+// 农历转近似阳历 YYYY-MM-DD
+function lunarToSolar(lunarYear,lunarMonth,lunarDay){
+  try{
+    const ny=lunarNewYearDay(lunarYear);
+    const offset=Math.round((lunarMonth-1)*29.53+lunarDay-1);
+    const sd=new Date(ny);sd.setDate(sd.getDate()+offset);
+    return sd.getFullYear()+'-'+String(sd.getMonth()+1).padStart(2,'0')+'-'+String(sd.getDate()).padStart(2,'0');
+  }catch(e){return null;}
+}
+function initLunarSelectors(){
+  const ly=document.getElementById('fLunarYear');
+  const lm=document.getElementById('fLunarMonth');
+  const ld=document.getElementById('fLunarDay');
+  if(!ly||!lm||!ld)return;
+  const yr=new Date().getFullYear();
+  for(let y=yr;y>=1950;y--){const opt=document.createElement('option');opt.value=y;opt.textContent=y+'年';ly.appendChild(opt);}
+  for(let m=1;m<=12;m++){const opt=document.createElement('option');opt.value=m;opt.textContent=LUNAR_MONTHS[m-1];lm.appendChild(opt);}
+  for(let d=1;d<=30;d++){const opt=document.createElement('option');opt.value=d;opt.textContent=LUNAR_DAYS[d-1];ld.appendChild(opt);}
+  ly.value='2000';lm.value='1';ld.value='1';
+}
+function onCalendarToggle(){
+  const isLunar=document.getElementById('isLunar').checked;
+  document.getElementById('solarDateRow').style.display=isLunar?'none':'block';
+  document.getElementById('lunarDateRow').style.display=isLunar?'block':'none';
+  const lunarHint=document.getElementById('lunarHint');
+  if(isLunar){
+    lunarHint.style.display='block';
+    const bd=document.getElementById('fBirth').value;
+    if(bd){
+      const li=solarToLunar(bd);
+      if(li){
+        document.getElementById('fLunarYear').value=li.year;
+        document.getElementById('fLunarMonth').value=li.monthIdx;
+        document.getElementById('fLunarDay').value=li.day;
+        lunarHint.textContent='当前阴历：'+(LUNAR_MONTHS[li.monthIdx-1]||'')+(LUNAR_DAYS[li.day-1]||'');
+      } else {lunarHint.textContent='请选择您的阴历出生日期';}
+    } else {lunarHint.textContent='请选择您的阴历出生日期';}
+  } else {lunarHint.style.display='none';}
+}
+function onLunarDateChange(){
+  const ly=parseInt(document.getElementById('fLunarYear')?.value)||0;
+  const lm=parseInt(document.getElementById('fLunarMonth')?.value)||0;
+  const ld=parseInt(document.getElementById('fLunarDay')?.value)||0;
+  if(!ly||!lm||!ld)return;
+  const solar=lunarToSolar(ly,lm,ld);
+  if(solar){
+    const bd=new Date(solar);
+    document.getElementById('fYear').value=bd.getFullYear();
+    document.getElementById('fMonth').value=bd.getMonth()+1;
+    updateDayOptions(bd.getFullYear(),bd.getMonth()+1);
+    document.getElementById('fDay').value=bd.getDate();
+    const lunarTxt=(LUNAR_MONTHS[lm-1]||'')+(LUNAR_DAYS[ld-1]||'');
+    document.getElementById('lunarHint').textContent='对应阳历'+bd.getFullYear()+'-'+(bd.getMonth()+1)+'-'+bd.getDate()+'（阴历'+lunarTxt+'）';
+  }
+  syncDateToHidden();
+}
+
 // 根据出生日期推算十二黄道宫（公历太阳运行周期）
 function getStarFromBirth(birthStr){
   if(!birthStr)return null;
   const bd=new Date(birthStr);
   const m=bd.getMonth()+1,d=bd.getDate();
-  // 粗略黄道宫划分（每年略有±1天浮动）
   const cutoffs=[20,19,20,20,21,21,22,22,21,22,21,20];
   const signs=['魔羯','水瓶','双鱼','白羊','金牛','双子','巨蟹','狮子','处女','天秤','天蝎','射手'];
   const idx=m<cutoffs[m-1]?m-1:m-1===-1?11:m-1;
@@ -588,32 +720,33 @@ function onAgeOrDateChange(){
   const a=document.getElementById('fAge').value;
   if(a)window.sAge=a;
 }
-// 出生日期变化 → 自动填年龄 + 自动选生肖 + 自动选黄道宫
+// 出生日期变化 → 自动填年龄 + 自动选生肖 + 自动选黄道宫（仅在用户未手动选择时）
 function onBirthDateChange(){
   const bd=document.getElementById('fBirth').value;
   if(!bd)return;
-  // 自动算年龄填入
   const age=calcAge(bd);
   if(age>0&&age<120){
     document.getElementById('fAge').value=age;
     window.sAge=age;
   }
   document.getElementById('birthHint').style.display='block';
-  // 自动选生肖 + 显示提示
-  const zodiac=getZodiacFromBirth(bd);
-  if(zodiac){
-    const opts=document.querySelectorAll('#fZodiac .zg-opt');
-    opts.forEach(o=>{if(o.textContent.includes(zodiac)){pick(o,'zodiac',zodiac);}});
-    const hint=document.getElementById('autoHintZodiac');
-    if(hint)hint.style.display='inline';
+  if(!window._manualZodiac){
+    const zodiac=getZodiacFromBirth(bd);
+    if(zodiac){
+      const opts=document.querySelectorAll('#fZodiac .zg-opt');
+      opts.forEach(o=>{if(o.textContent.includes(zodiac)){o.classList.add('sel');}});
+      const hint=document.getElementById('autoHintZodiac');
+      if(hint)hint.style.display='inline';
+    }
   }
-  // 自动选黄道宫 + 显示提示
-  const star=getStarFromBirth(bd);
-  if(star){
-    const opts=document.querySelectorAll('#fStar .sg-opt');
-    opts.forEach(o=>{if(o.textContent.includes(star)){pick(o,'star',star);}});
-    const hint=document.getElementById('autoHintStar');
-    if(hint)hint.style.display='inline';
+  if(!window._manualStar){
+    const star=getStarFromBirth(bd);
+    if(star){
+      const opts=document.querySelectorAll('#fStar .sg-opt');
+      opts.forEach(o=>{if(o.textContent.includes(star)){o.classList.add('sel');}});
+      const hint=document.getElementById('autoHintStar');
+      if(hint)hint.style.display='inline';
+    }
   }
 }
 
@@ -1469,6 +1602,8 @@ function matchType(dims,age){
 // ═══════════════════════════════════════════════
 let ci=0,answers=[];
 window.sZodiac='';window.sStar='';window.sGender='';
+window._manualZodiac=false; // 用户手动选了生肖
+window._manualStar=false;   // 用户手动选了星座
 window._show=function(id){try{var el=document.getElementById(id);if(!el){alert('元素#'+id+'不存在');return}var ss=document.querySelectorAll('.screen');for(var i=0;i<ss.length;i++)ss[i].classList.remove('active');el.classList.add('active');}catch(e){alert('show错误:'+e.message)}};
 
 function pick(el,type,val){
@@ -1481,10 +1616,12 @@ function pick(el,type,val){
   el.classList.add('sel');
   if(type==='zodiac'){
     window.sZodiac=val;
+    window._manualZodiac=true; // 标记用户手动选择
     const hint=document.getElementById('autoHintZodiac');
     if(hint)hint.style.display='none';
   }else if(type==='star'){
     window.sStar=val;
+    window._manualStar=true; // 标记用户手动选择
     const hint=document.getElementById('autoHintStar');
     if(hint)hint.style.display='none';
   }else{
@@ -1722,6 +1859,7 @@ function doRestart(){
   window._showRestartConfirm(function(ok){
     if(!ok)return;
     ci=0;answers=[];window.sZodiac='';window.sStar='';window.sGender='';
+    window._manualZodiac=false;window._manualStar=false;
     document.getElementById('fAge').value='';
     document.getElementById('fBirth').value='';
     document.getElementById('autoHintZodiac').style.display='none';
@@ -1731,6 +1869,12 @@ function doRestart(){
     if(rMSel)rMSel.value='1';
     if(rDSel){updateDayOptions(2000,1);rDSel.value='1';}
     document.querySelectorAll('.rg-opt,.zg-opt,.sg-opt').forEach(o=>o.classList.remove('sel'));
+    // 重置阳历/阴历切换
+    const isLunarChk=document.getElementById('isLunar');
+    if(isLunarChk)isLunarChk.checked=false;
+    document.getElementById('solarDateRow').style.display='block';
+    document.getElementById('lunarDateRow').style.display='none';
+    document.getElementById('lunarHint').style.display='none';
     document.getElementById('prog').classList.remove('show');
     document.body.classList.remove('nosel');
     window._show('sHero');
