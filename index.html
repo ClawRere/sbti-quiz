@@ -111,7 +111,7 @@ body.nosel button,body.nosel .act-btn,body.nosel .rt-btn,body.nosel .btn{pointer
 @keyframes loadcenter{from{opacity:0}to{opacity:1}}
 .load-spin{width:56px;height:56px;border:3px solid var(--accent2)18;border-top-color:var(--accent2);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.load-txt{font-size:16px;color:var(--text3);margin-top:22px;animation:pulse 1.5s infinite}
+.load-txt{font-size:16px;color:var(--text3);margin-top:14px;animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
 
 /* ── Result ── */
@@ -1887,13 +1887,7 @@ function doRestart(){
 }
 
 // ══ 页面初始化 ══
-(function(){
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',initDateSelectors);
-  } else {
-    initDateSelectors();
-  }
-})();
+initDateSelectors();
 </script>
 </body>
 </html>
