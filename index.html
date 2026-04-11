@@ -252,8 +252,8 @@ window._showRestartConfirm=function(callback){
   <div class="info-pg">
     <div class="card" style="animation:none">
       <div class="q-num">基本信息</div>
-      <div class="q-text">先告诉我你是谁</div>
-      <div class="q-sub">保证测试结果更精准（认真脸）</div>
+      <div class="q-text">先聊聊你的基本属性</div>
+      <div class="q-sub">基本信息越准，人格画像越真</div>
 
       <div class="form-row">
         <label>🎂 出生日期</label>
@@ -1627,14 +1627,6 @@ function pick(el,type,val){
     window.sGender=el.textContent.trim();
   }
 }
-// 事件委托：捕获 form-row 区域内的选项点击，替代 inline onclick
-document.addEventListener('click',function(e){
-  const opt=e.target.closest('[data-pick]');
-  if(!opt)return;
-  const type=opt.dataset.pick;
-  const val=opt.dataset.val||null;
-  pick(opt,type,val);
-});
 
 function beginQuiz(){
   // 支持年龄数字或出生日期
@@ -1891,6 +1883,14 @@ function doRestart(){
 // ══ 页面初始化 ══
 document.addEventListener('DOMContentLoaded',function(){
   initDateSelectors();
+  // 事件委托：捕获 form-row 区域内的选项点击，替代 inline onclick
+  document.addEventListener('click',function(e){
+    const opt=e.target.closest('[data-pick]');
+    if(!opt)return;
+    const type=opt.dataset.pick;
+    const val=opt.dataset.val||null;
+    pick(opt,type,val);
+  });
 });
 </script>
 </body>
