@@ -661,6 +661,8 @@ function lunarToSolar(lunarYear,lunarMonth,lunarDay){
   }catch(e){return null;}
 }
 function initLunarSelectors(){
+  if(window._lunarInitDone)return;
+  window._lunarInitDone=true;
   const ly=document.getElementById('fLunarYear');
   const lm=document.getElementById('fLunarMonth');
   const ld=document.getElementById('fLunarDay');
@@ -1891,6 +1893,7 @@ function doRestart(){
 // ══ 页面初始化（必须在 DOMContentLoaded 里确保 DOM 就绪）═
 document.addEventListener('DOMContentLoaded', function() {
   initDateSelectors();
+  initLunarSelectors();
 });
 </script>
 </body>
