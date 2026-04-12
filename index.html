@@ -268,7 +268,7 @@ window._showRestartConfirm=function(callback){
     </div>
     <button class="btn" type="button" onclick="(function(){var el=document.getElementById('sInfo');if(el){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});el.classList.add('active');}}())">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.2.5</div>
+    <div class="hero-version">v1.2.6</div>
   </div>
 </div>
 
@@ -1600,18 +1600,27 @@ function pick(el,type,val){
   const g=document.getElementById(gId);
   if(!g)return;
   const selector=type==='gender'?'.rg-opt':type==='zodiac'?'.zg-opt':'.sg-opt';
+  // Toggle：点击已选中的项则取消选择
+  if(el.classList.contains('sel')){
+    el.classList.remove('sel');
+    if(type==='zodiac'){window.sZodiac='';window._manualZodiac=false;}
+    else if(type==='star'){window.sStar='';window._manualStar=false;}
+    else{window.sGender='';}
+    return;
+  }
+  // 否则：先清除同组其他选择，再选中当前项
   g.querySelectorAll(selector).forEach(o=>o.classList.remove('sel'));
   el.classList.add('sel');
   if(type==='zodiac'){
     window.sZodiac=val;
     window._manualZodiac=true;
     const hint=document.getElementById('autoHintZodiac');
-    if(hint)hint.style.display='none';
+    if(hint){hint.style.display='none';}
   }else if(type==='star'){
     window.sStar=val;
     window._manualStar=true;
     const hint=document.getElementById('autoHintStar');
-    if(hint)hint.style.display='none';
+    if(hint){hint.style.display='none';}
   }else{
     window.sGender=el.textContent.trim();
   }
