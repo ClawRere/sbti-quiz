@@ -256,7 +256,7 @@ window._showRestartConfirm=function(callback){
     </div>
     <button class="btn" type="button" onclick="(function(){var el=document.getElementById('sInfo');if(el){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});el.classList.add('active');}}())">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.2.2</div>
+    <div class="hero-version">v1.2.3</div>
   </div>
 </div>
 
@@ -1894,7 +1894,7 @@ function doRestart(){
     const rYSel=document.getElementById('fYear'),rMSel=document.getElementById('fMonth'),rDSel=document.getElementById('fDay');
     if(rYSel)rYSel.value='';
     if(rMSel)rMSel.value='';
-    if(rDSel){rDSel.innerHTML='<option value="">日</option>';}
+    if(rDSel){rDSel.innerHTML='<option value="">日</option>';for(var _d=1;_d<=31;_d++){var _o=document.createElement('option');_o.value=_d;_o.textContent=_d+'日';rDSel.appendChild(_o);}}
     document.querySelectorAll('.rg-opt,.zg-opt,.sg-opt').forEach(o=>o.classList.remove('sel'));
     // 重置阳历/阴历切换
     const isLunarChk=document.getElementById('isLunar');
