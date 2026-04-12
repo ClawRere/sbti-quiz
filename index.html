@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>中式命格测试 v2.3 - 你的「中国式灵魂」是什么型号？</title>
+<title>中式命格测试 v2.4 - 你的「中国式灵魂」是什么型号？</title>
 <!-- build:2026-04-12-v2.3 -->
 <style>
 /* ══ 主题变量 ══ */
@@ -157,7 +157,8 @@ body.nosel button,body.nosel .act-btn,body.nosel .rt-btn,body.nosel .btn{pointer
 @media(max-width:480px){.zg,.sg{grid-template-columns:repeat(3,1fr)} .cg{grid-template-columns:1fr 1fr}}
 </style>
 </head>
-<body>
+<body
+<div id="initStatus" style="position:fixed;top:0;left:0;right:0;background:#e74c3c;color:#fff;font-size:13px;text-align:center;padding:5px;z-index:9999;display:none;font-family:sans-serif">初始化状态</div>>
 <div class="stars" id="stars"></div>
 
 <!-- 重新测试确认框 -->
@@ -555,30 +556,33 @@ function getZodiacFromBirth(birthStr){
 
 // 初始化日期选择器（年/月/日三步）
 function initDateSelectors(){
-  if(window._dateInitDone)return;
+  var s=document.getElementById('initStatus');
+  function log(m){console.log('[initDate] '+m);if(s){s.textContent=m;s.style.display='block';}}
+  if(window._dateInitDone){log('跳过（已执行过）');return;}
   window._dateInitDone=true;
-  const ySel=document.getElementById('fYear');
-  const mSel=document.getElementById('fMonth');
-  const dSel=document.getElementById('fDay');
-  if(!ySel||!mSel||!dSel){console.error('[initDateSelectors] 元素未找到!');return;}
-  console.log('[initDate] before: ySel.options='+ySel.options.length+' mSel.options='+mSel.options.length+' dSel.options='+dSel.options.length);
-  // 年/月/日：统一JS生成，完全不依赖HTML里的选项结构
+  log('开始初始化...');
+  var ySel=document.getElementById('fYear');
+  var mSel=document.getElementById('fMonth');
+  var dSel=document.getElementById('fDay');
+  if(!ySel||!mSel||!dSel){log('错误：fYear/fMonth/fDay 元素不存在！');return;}
+  // 强制清空并重建（不信任HTML里的选项结构）
   ySel.innerHTML=''; mSel.innerHTML=''; dSel.innerHTML='';
-  const yr=new Date().getFullYear();
-  for(let y=yr;y>=1950;y--){
-    const opt=document.createElement('option');opt.value=y;opt.textContent=y+'年';ySel.appendChild(opt);
+  var yr=new Date().getFullYear();
+  for(var y=yr;y>=1950;y--){
+    var opt=document.createElement('option');opt.value=y;opt.textContent=y+'年';ySel.appendChild(opt);
   }
-  for(let m=1;m<=12;m++){
-    const opt=document.createElement('option');opt.value=m;opt.textContent=m+'月';mSel.appendChild(opt);
+  for(var m=1;m<=12;m++){
+    opt=document.createElement('option');opt.value=m;opt.textContent=m+'月';mSel.appendChild(opt);
   }
-  const days=new Date(2000,1,0).getDate(); // 2000年1月的天数
-  for(let d=1;d<=days;d++){
-    const opt=document.createElement('option');opt.value=d;opt.textContent=d+'日';dSel.appendChild(opt);
+  var days=new Date(2000,1,0).getDate();
+  for(var d=1;d<=days;d++){
+    opt=document.createElement('option');opt.value=d;opt.textContent=d+'日';dSel.appendChild(opt);
   }
   ySel.value='2000'; mSel.value='1'; dSel.value='1';
-  console.log('[initDate] after: ySel.options='+ySel.options.length+' mSel.options='+mSel.options.length+' dSel.options='+dSel.options.length+' default day='+dSel.value);
+  log('初始化完成！ySel='+ySel.options.length+'个 mSel='+mSel.options.length+'个 dSel='+dSel.options.length+'个');
   syncDateToHidden();
   initLunarSelectors();
+  setTimeout(function(){if(s)s.style.display='none';},2500);
 }
 function updateDayOptions(year,month){
   const dSel=document.getElementById('fDay');
@@ -666,15 +670,18 @@ function lunarToSolar(lunarYear,lunarMonth,lunarDay){
 function initLunarSelectors(){
   if(window._lunarInitDone)return;
   window._lunarInitDone=true;
-  const ly=document.getElementById('fLunarYear');
-  const lm=document.getElementById('fLunarMonth');
-  const ld=document.getElementById('fLunarDay');
-  if(!ly||!lm||!ld)return;
-  const yr=new Date().getFullYear();
-  for(let y=yr;y>=1950;y--){const opt=document.createElement('option');opt.value=y;opt.textContent=y+'年';ly.appendChild(opt);}
-  for(let m=1;m<=12;m++){const opt=document.createElement('option');opt.value=m;opt.textContent=LUNAR_MONTHS[m-1];lm.appendChild(opt);}
-  for(let d=1;d<=30;d++){const opt=document.createElement('option');opt.value=d;opt.textContent=LUNAR_DAYS[d-1];ld.appendChild(opt);}
+  var ly=document.getElementById('fLunarYear');
+  var lm=document.getElementById('fLunarMonth');
+  var ld=document.getElementById('fLunarDay');
+  if(!ly||!lm||!ld){console.log('[initLunar] 元素未找到');return;}
+  // 强制清空并重建（不信任HTML结构）
+  ly.innerHTML=''; lm.innerHTML=''; ld.innerHTML='';
+  var yr=new Date().getFullYear();
+  for(var y=yr;y>=1950;y--){var opt=document.createElement('option');opt.value=y;opt.textContent=y+'年';ly.appendChild(opt);}
+  for(var m=1;m<=12;m++){opt=document.createElement('option');opt.value=m;opt.textContent=LUNAR_MONTHS[m-1];lm.appendChild(opt);}
+  for(var d=1;d<=30;d++){opt=document.createElement('option');opt.value=d;opt.textContent=LUNAR_DAYS[d-1];ld.appendChild(opt);}
   ly.value='2000';lm.value='1';ld.value='1';
+  console.log('[initLunar] 完成 ly='+ly.options.length+' lm='+lm.options.length+' ld='+ld.options.length);
 }
 function onCalendarToggle(){
   const isLunar=document.getElementById('isLunar').checked;
