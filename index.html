@@ -2,6 +2,9 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>中式命格测试 - 你的「中国式灵魂」是什么型号？</title>
 <style>
@@ -79,7 +82,7 @@ body.nosel select,body.nosel select *,body.nosel input,body.nosel textarea{
 .q-sub{font-size:11px;color:var(--text3);font-style:italic;margin-bottom:8px}
 .form-row{margin-bottom:14px}
 .form-row label{display:block;font-size:14px;font-weight:600;margin-bottom:6px;color:var(--text)}
-.num-input{width:100%;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:10px 12px;font-size:15px;color:var(--text);outline:none;transition:border .2s}
+.num-input{width:100%;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:10px 12px;font-size:15px;color:var(--text);outline:none;transition:border .2s;-webkit-appearance:auto;appearance:auto;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .num-input:focus{border-color:var(--accent2)}
 .rg{display:flex;gap:8px;flex-wrap:wrap}
 .rg-opt{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:8px 14px;font-size:14px;color:var(--text2);cursor:pointer;transition:all .2s}
@@ -256,7 +259,7 @@ window._showRestartConfirm=function(callback){
     </div>
     <button class="btn" type="button" onclick="(function(){var el=document.getElementById('sInfo');if(el){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});el.classList.add('active');}}())">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.2.3</div>
+    <div class="hero-version">v1.2.4</div>
   </div>
 </div>
 
@@ -280,26 +283,26 @@ window._showRestartConfirm=function(callback){
         </div>
         <div id="solarDateRow">
           <div style="display:flex;gap:6px;align-items:center">
-            <select id="fYear" class="num-input" style="flex:1;font-size:14px;cursor:pointer" onchange="onDateSelectorChange()">
+            <select id="fYear" class="num-input" style="flex:1;font-size:14px;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation" onchange="onDateSelectorChange()">
               <option value="">年</option>
             </select>
-            <select id="fMonth" class="num-input" style="flex:1;font-size:14px;cursor:pointer" onchange="onDateSelectorChange()">
+            <select id="fMonth" class="num-input" style="flex:1;font-size:14px;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation" onchange="onDateSelectorChange()">
               <option value="">月</option>
             </select>
-            <select id="fDay" class="num-input" style="flex:1;font-size:14px;cursor:pointer" onchange="syncDateToHidden()">
+            <select id="fDay" class="num-input" style="flex:1;font-size:14px;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation" onchange="syncDateToHidden()">
               <option value="">日</option>
             </select>
           </div>
         </div>
         <div id="lunarDateRow" style="display:none">
           <div style="display:flex;gap:6px;align-items:center">
-            <select id="fLunarYear" class="num-input" style="flex:1;font-size:14px;cursor:pointer" onchange="onLunarDateChange()">
+            <select id="fLunarYear" class="num-input" style="flex:1;font-size:14px;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation" onchange="onLunarDateChange()">
               <option value="">年</option>
             </select>
-            <select id="fLunarMonth" class="num-input" style="flex:1;font-size:14px;cursor:pointer" onchange="onLunarDateChange()">
+            <select id="fLunarMonth" class="num-input" style="flex:1;font-size:14px;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation" onchange="onLunarDateChange()">
               <option value="">月</option>
             </select>
-            <select id="fLunarDay" class="num-input" style="flex:1;font-size:14px;cursor:pointer" onchange="onLunarDateChange()">
+            <select id="fLunarDay" class="num-input" style="flex:1;font-size:14px;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation" onchange="onLunarDateChange()">
               <option value="">日</option>
             </select>
           </div>
