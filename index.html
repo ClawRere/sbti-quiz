@@ -23,7 +23,17 @@
 body{font-family:'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .5s,color .5s}
 body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none!important;user-select:none!important}
 body.nosel button,body.nosel .act-btn,body.nosel .rt-btn,body.nosel .btn{pointer-events:auto!important;cursor:pointer!important;-webkit-user-select:none!important;user-select:none!important}
-body.nosel select,body.nosel input,body.nosel textarea{pointer-events:auto!important;cursor:pointer!important;-webkit-user-select:auto!important;user-select:auto!important}
+/* 关键：select/input 必须彻底豁免，否则 iOS/微信内置浏览器会禁止弹选择器 */
+body.nosel select,body.nosel select *,body.nosel input,body.nosel textarea{
+  pointer-events:auto!important;
+  touch-action:auto!important;
+  cursor:pointer!important;
+  -webkit-user-select:text!important;
+  -moz-user-select:text!important;
+  user-select:text!important;
+  -webkit-appearance:auto!important;
+  appearance:auto!important;
+}
 /* ── 水印 ── */
 .watermark{position:fixed;bottom:12px;right:14px;font-size:11px;color:rgba(128,128,200,.18);pointer-events:none;z-index:200;display:none;line-height:1.6}
 .watermark.show{display:block}"/>
@@ -246,7 +256,7 @@ window._showRestartConfirm=function(callback){
     </div>
     <button class="btn" type="button" onclick="(function(){var el=document.getElementById('sInfo');if(el){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});el.classList.add('active');}}())">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.2.1</div>
+    <div class="hero-version">v1.2.2</div>
   </div>
 </div>
 
@@ -566,8 +576,11 @@ function initDateSelectors(){
   for(let m=1;m<=12;m++){
     const opt=document.createElement('option');opt.value=m;opt.textContent=m+'月';mSel.appendChild(opt);
   }
+  // 日：初始填 1-31（用户可先选日；选完年月后通过 updateDayOptions 收紧范围）
+  for(let d=1;d<=31;d++){
+    const opt=document.createElement('option');opt.value=d;opt.textContent=d+'日';dSel.appendChild(opt);
+  }
   // 不预设默认值，用户主动选才触发自动推算
-  // (不调用 syncDateToHidden，避免初始化时强制预填生肖/星座)
   // 初始化阴历选择器
   initLunarSelectors();
 }
@@ -584,16 +597,16 @@ function onDateSelectorChange(){
   const y=parseInt(document.getElementById('fYear')?.value)||0;
   const m=parseInt(document.getElementById('fMonth')?.value)||0;
   if(y&&m){
-    // 先保留当前日的值，更新日列表
+    // 年月都有值时，更新日的真实范围
     const curD=parseInt(document.getElementById('fDay')?.value)||0;
     updateDayOptions(y,m);
-    // 若之前已选了日，保留（不超过最大天数）
     if(curD>0){
       const maxD=new Date(y,m,0).getDate();
       document.getElementById('fDay').value=Math.min(curD,maxD);
-      syncDateToHidden(); // 年月日都有值，触发推算
+      syncDateToHidden();
     }
-    // 若日还没选，不触发推算
+  } else if(y||m){
+    // 只有年或月时，什么都不做（日保持 1-31）
   }
 }
 function syncDateToHidden(){
@@ -1791,6 +1804,8 @@ function showResult(){
   window._show('sRes');
   window.scrollTo({top:0,behavior:'smooth'});
   document.body.classList.add('nosel');
+  // 内联保护：确保 sInfo 里的 select/input 始终可点（不受 nosel 影响）
+  document.querySelectorAll('#sInfo select,#sInfo input').forEach(function(el){el.style.cssText+='pointer-events:auto!important;touch-action:auto!important;-webkit-user-select:text!important;user-select:text!important;-webkit-appearance:auto!important;appearance:auto!important;';});
   // 显示水印
   const wm=document.getElementById('watermark');
   document.getElementById('wmType').textContent=pt.t+' '+pt.name;
@@ -1861,6 +1876,7 @@ function showResult(){
       window._show('sRes');
       // 反爬虫：结果页禁止选字
       document.body.classList.add('nosel');
+      document.querySelectorAll('#sInfo select,#sInfo input').forEach(function(el){el.style.cssText+='pointer-events:auto!important;touch-action:auto!important;-webkit-user-select:text!important;user-select:text!important;-webkit-appearance:auto!important;appearance:auto!important;';});
       return;
     }
   }catch(e){}
