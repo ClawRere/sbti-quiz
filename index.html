@@ -167,18 +167,19 @@ body.nosel { -webkit-touch-callout: none }
 .preview-label { font-size: 12px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.5px; }
 .preview-content { display: flex; gap: 12px; flex-wrap: wrap; }
 .preview-tag {
-  display: flex; align-items: center; gap: 10px; background: var(--bg-card); border: 1px solid var(--border-light);
-  border-radius: var(--radius-xl); padding: 18px 28px; font-size: 17px; font-weight: 600;
-  box-shadow: var(--shadow-sm); transition: all 0.3s; min-width: 180px; justify-content: center;
+  display: flex; align-items: center; gap: 6px; background: var(--bg-card); border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl); padding: 10px 16px; font-size: 14px; font-weight: 600;
+  box-shadow: var(--shadow-sm); transition: all 0.3s; min-width: auto; justify-content: center;
 }
 .preview-tag:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-.preview-tag .emoji { font-size: 36px; animation: pulse 2s ease-in-out infinite; }
-.preview-tag .zodiac { color: var(--accent-primary); font-size: 18px; }
-.preview-tag .star { color: var(--accent-tertiary); font-size: 18px; letter-spacing: 1px; }
+.preview-tag .emoji { font-size: 20px; animation: float 2.5s ease-in-out infinite; }
+.preview-tag .zodiac { color: var(--accent-primary); font-size: 14px; }
+.preview-tag .star { color: var(--accent-tertiary); font-size: 14px; letter-spacing: 0.5px; }
+.preview-tag .sep { color: var(--border-medium); margin: 0 2px; font-size: 12px; }
 @media (max-width: 480px) {
-  .preview-tag { padding: 10px 14px; font-size: 13px; min-width: 130px; gap: 6px; }
-  .preview-tag .emoji { font-size: 22px; }
-  .preview-tag .zodiac, .preview-tag .star { font-size: 13px; }
+  .preview-tag { padding: 8px 12px; font-size: 13px; min-width: auto; gap: 4px; }
+  .preview-tag .emoji { font-size: 16px; }
+  .preview-tag .zodiac, .preview-tag .star, .preview-tag .sep { font-size: 13px; }
 }
 .gender-options { display: flex; gap: 10px; flex-wrap: wrap; }
 .gender-option {
@@ -357,7 +358,7 @@ body.nosel { -webkit-touch-callout: none }
     </div>
     <button class="btn" type="button" onclick="window._show('sInfo')">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.8.0</div>
+    <div class="hero-version">v1.8.4</div>
   </div>
 </div>
 
@@ -383,6 +384,7 @@ body.nosel { -webkit-touch-callout: none }
         </div>
         <input id="fDate" type="hidden">
         <input id="fBirth" type="hidden">
+        <button class="btn btn-secondary" style="width:100%;margin-top:12px" id="btnPreview" onclick="showPreview()">🔮 星辰属相测算</button>
         <div class="preview-box" id="previewBox">
           <div class="preview-header">
             <span class="preview-icon">✨</span>
@@ -406,8 +408,7 @@ body.nosel { -webkit-touch-callout: none }
         </div>
       </div>
       <div class="btn-area">
-        <button class="btn" style="width:100%" id="btnPreview" onclick="showPreview()">🔮 正在进行的星辰属相测算 →</button>
-        <button class="btn btn-secondary hidden" style="width:100%;margin-top:10px" id="btnConfirm" onclick="beginQuiz()">✅ 确认，开始答题 →</button>
+        <button class="btn btn-secondary hidden" style="width:100%" id="btnConfirm" onclick="beginQuiz()">✅ 确认，开始答题 →</button>
       </div>
     </div>
   </div>
@@ -710,13 +711,17 @@ function calculateZodiacAndStar(){
   if(zodiac){
     window.sZodiac = zodiac;
     var emoji = ZODIAC_EMOJI[zodiac] || '❓';
-    var html = '';
-    html += '<div class="preview-tag"><span class="emoji">' + emoji + '</span><span class="zodiac">' + zodiac + '年</span></div>';
+    var html = '<div class="preview-tag">';
+    html += '<span class="emoji">' + emoji + '</span>';
+    html += '<span class="zodiac">' + zodiac + '</span>';
     if(starData && starData.name){
       window.sStar = starData;
       var symbol = STAR_SYMBOLS[starData.name] || '☀️';
-      html += '<div class="preview-tag"><span class="emoji">' + symbol + '</span><span class="star">' + starData.name + '座</span></div>';
+      html += '<span class="sep">·</span>';
+      html += '<span class="emoji">' + symbol + '</span>';
+      html += '<span class="star">' + starData.name + '</span>';
     }
+    html += '</div>';
     var previewTags = document.getElementById('previewTags');
     var previewBox = document.getElementById('previewBox');
     if(previewTags) previewTags.innerHTML = html;
@@ -755,7 +760,8 @@ function showPreview(){
   calculateZodiacAndStar();
 
   setTimeout(function(){
-    btn.classList.add('hidden');
+    btn.innerHTML = '🔮 星辰属相测算';
+    btn.disabled = false;
     var cb = document.getElementById('btnConfirm');
     if(cb) cb.classList.remove('hidden');
   }, 1000);
@@ -766,6 +772,10 @@ function beginQuiz(){
   var gender = window.sGender;
   if(!dateVal){ alert('请选择出生日期'); return; }
   if(!gender){ alert('请选择性别'); return; }
+  // 未点测算时自动计算生肖和星座
+  if(!window.sZodiac || !window.sStar){
+    calculateZodiacAndStar();
+  }
   window._show('sQuiz');
   document.getElementById('prog').classList.add('show');
   ci = 0;
@@ -864,10 +874,8 @@ window.selectOpt = function(el, idx){
 };
 
 // ═══ 计算核心 ═══
-// 维度最大值（题库中该维度单选项最高分 × 总题数 × 系数 × 调整系数最大值）
-var DIM_MAX = {'s':48,'m':30,'r':48,'i':48,'c':60,'w':60,'g':60,'h':60,'a':60,'j':60,'l':60,'d':60,'t':48};
-// 典型人格该维度的参考值（用于归一化参考）
-var DIM_REF = {'s':50,'m':40,'r':50,'i':50,'c':55,'w':50,'g':50,'h':50,'a':45,'j':50,'l':45,'d':55,'t':45};
+// 维度最大值：25题×最高选项分3≈75，取50作为归一化基准
+var DIM_MAX = {'s':50,'m':50,'r':50,'i':50,'c':50,'w':50,'g':50,'h':50,'a':50,'j':50,'l':50,'d':50,'t':50};
 
 function calc(){
   var ds = {s:0,m:0,r:0,i:0,c:0,w:0,g:0,h:0,a:0,j:0,l:0,d:0,t:0};
@@ -880,34 +888,29 @@ function calc(){
     Object.keys(opt.s).forEach(function(k){ ds[k] = (ds[k]||0) + opt.s[k] });
   });
 
-  // 第一轮：收集原始维度分数（不去系数×0.5，保留差异）
+  // 第一轮：归一化到 0-100（去掉 DIM_COEF，所有维度等权）
   Object.keys(ds).forEach(function(k){
-    ds[k] *= (DIM_COEF[k] || 1);
-  });
-
-  // 第二轮：归一化到 0-100（去掉 DIM_COEF×0.5 的压缩效果）
-  Object.keys(ds).forEach(function(k){
-    var mx = DIM_MAX[k] || 60;
+    var mx = DIM_MAX[k] || 50;
     ds[k] = Math.round((ds[k] / mx) * 100);
     if(ds[k] > 100) ds[k] = 100;
     if(ds[k] < 0) ds[k] = 0;
   });
 
-  // 第三轮：生肖 + 星座加成（加绝对分值，而非乘系数）
+  // 第二轮：生肖 + 星座加成（加绝对分值）
   Object.keys(ds).forEach(function(k){
     var zodiacBonus = ZODIAC_BONUS[window.sZodiac] && ZODIAC_BONUS[window.sZodiac][k] ? ZODIAC_BONUS[window.sZodiac][k] - 1 : 0;
     var starBonus = (window.sStar && window.sStar.name && STAR_BONUS[window.sStar.name] && STAR_BONUS[window.sStar.name][k]) ? STAR_BONUS[window.sStar.name][k] - 1 : 0;
-    var bonus = (zodiacBonus + starBonus) * 3; // 加成范围 [-3, +3]，降低生肖星座对结果的干扰
+    var bonus = (zodiacBonus + starBonus) * 3;
     ds[k] = Math.max(0, Math.min(100, ds[k] + bonus));
   });
 
-  // 第四轮：性别调整
+  // 第三轮：性别调整
   if(window.sGender === '🙋‍♀️ 女' || window.sGender === '🤖 武装直升机'){
     var fadj = {'s':-5,'g':6,'r':4,'w':4,'h':2,'j':-3};
     Object.keys(fadj).forEach(function(k){ ds[k] = Math.max(0, Math.min(100, ds[k] + fadj[k])); });
   }
 
-  // 第五轮：年龄调整
+  // 第四轮：年龄调整
   if(window.sAge && window.sAge < 22){
     var ymad = {'g':5,'w':6,'i':4,'j':-4};
     Object.keys(ymad).forEach(function(k){ ds[k] = Math.max(0, Math.min(100, ds[k] + ymad[k])); });
@@ -1127,7 +1130,7 @@ function doRestart(){
     window.sGender = '';
     document.getElementById('quizArea').innerHTML = '';
     var btnPreview = document.getElementById('btnPreview');
-    if(btnPreview){ btnPreview.classList.remove('hidden'); btnPreview.innerHTML = '🔮 正在进行的星辰属相测算 →'; btnPreview.disabled = false; }
+    if(btnPreview){ btnPreview.classList.remove('hidden'); btnPreview.innerHTML = '🔮 星辰属相测算'; btnPreview.disabled = false; }
     var btnConfirm = document.getElementById('btnConfirm');
     if(btnConfirm) btnConfirm.classList.add('hidden');
     var previewBox = document.getElementById('previewBox');
@@ -1185,8 +1188,35 @@ function doRestart(){
       document.getElementById('rAdvice').textContent = '（完整忠告仅本人测试后可见）';
       document.getElementById('rZy').innerHTML = (pt.zy ? '<span style="font-size:12px;color:var(--accent-primary);font-weight:600;margin-right:6px">🔮</span>' + pt.zy + '<br><span style="color:var(--text-muted);font-size:11px;margin-top:4px;display:block">完整命理解读需本人测试后查看</span>' : '（完整命理解读需本人测试后查看）');
       document.getElementById('rBars').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px">🔒 性格天平仅本人测试后可见</div>';
-      document.getElementById('rCp').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px">🔒 完整人格对比仅本人测试后可见</div>';
-      document.getElementById('rCompare').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px">🔒 完整人格对比仅本人测试后可见</div>';
+      var cmpList = getCompareList(pt, TYPES);
+      var cmpHtml = '';
+      cmpList.forEach(function(cm){
+        cmpHtml += '<div class="compare-card">';
+        cmpHtml += '<div class="compare-header">';
+        cmpHtml += '<span class="compare-icon">' + cm.icon + '</span>';
+        cmpHtml += '<span class="compare-name">' + cm.name + '</span>';
+        cmpHtml += '<span class="compare-type">' + cm.t + '</span>';
+        cmpHtml += '</div>';
+        cmpHtml += '<div class="compare-desc">' + cm.desc + '</div>';
+        cmpHtml += '<div class="compare-tags">' + (cm.tags || []).slice(0, 3).map(function(t){ return '<span class="compare-tag">' + t + '</span>' }).join('') + '</div>';
+        cmpHtml += '</div>';
+      });
+      document.getElementById('rCompare').innerHTML = cmpHtml;
+
+      var cpList = getCpList(pt, TYPES);
+      var cpHtml = '';
+      cpList.forEach(function(cp){
+        cpHtml += '<div class="cp-card">';
+        cpHtml += '<div class="cp-avatar">' + cp.icon + '</div>';
+        cpHtml += '<div class="cp-info">';
+        cpHtml += '<div class="cp-name">' + cp.name + '</div>';
+        cpHtml += '<div class="cp-type">' + cp.t + '</div>';
+        cpHtml += '<div class="cp-compat">契合度：<span>' + cp.compat + '%</span></div>';
+        cpHtml += '<div class="cp-desc">' + cp.desc + '</div>';
+        cpHtml += '<div class="cp-tags">' + (cp.tags || []).slice(0, 2).map(function(t){ return '<span class="cp-tag">' + t + '</span>' }).join('') + '</div>';
+        cpHtml += '</div></div>';
+      });
+      document.getElementById('rCp').innerHTML = cpHtml;
       document.getElementById('rRadar').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px">🔒 人格雷达仅本人测试后可见</div>';
 
       var th = '';
