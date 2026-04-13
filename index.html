@@ -1008,6 +1008,109 @@ body.nosel { -webkit-touch-callout: none }
 
 .res-act { text-align: center; margin-top: 20px; }
 
+/* ═══ 反向属性对比条 ═══ */
+.opp-row {
+  margin-bottom: 14px;
+}
+.opp-row:last-child { margin-bottom: 0; }
+
+.opp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.opp-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.opp-center {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.opp-bar-wrap {
+  position: relative;
+  height: 10px;
+  background: var(--bg-secondary);
+  border-radius: 5px;
+  overflow: visible;
+}
+
+.opp-bar-left {
+  position: absolute;
+  right: 50%;
+  height: 100%;
+  border-radius: 5px 0 0 5px;
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.opp-bar-right {
+  position: absolute;
+  left: 50%;
+  height: 100%;
+  border-radius: 0 5px 5px 0;
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.opp-tick {
+  position: absolute;
+  left: 50%;
+  top: -2px;
+  width: 2px;
+  height: 14px;
+  background: var(--border-medium);
+  transform: translateX(-50%);
+}
+
+/* ═══ 雷达迷你图（纯CSS/文字替代） ═══ */
+.radar-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.radar-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.radar-key {
+  font-size: 12px;
+  color: var(--text-secondary);
+  width: 70px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.radar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.radar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.radar-val {
+  font-size: 11px;
+  color: var(--text-muted);
+  width: 28px;
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
 /* 隐藏域 */
 .hidden { display: none !important; }
 </style>
@@ -1036,7 +1139,7 @@ body.nosel { -webkit-touch-callout: none }
   <div class="hero">
     <div class="hero-badge">🔥 中式专属人格测试</div>
     <h1 class="hero-title">你是哪种<br>「中式命格」？</h1>
-    <p class="hero-sub">生肖 · 黄道宫 · 出生日期 · 日常修为<br>35道题，测出你刻在命盘里的中国人属性</p>
+    <p class="hero-sub">生肖 · 黄道宫 · 出生日期 · 日常修为<br>25道随机题，测出你刻在命盘里的中国人属性</p>
     <div class="hero-icons">
       <span class="hero-icon">🧧 红包命格</span>
       <span class="hero-icon">🐉 生肖气运</span>
@@ -1050,7 +1153,7 @@ body.nosel { -webkit-touch-callout: none }
     </div>
     <button class="btn" type="button" onclick="window._show('sInfo')">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.6.0</div>
+    <div class="hero-version">v1.7.0</div>
   </div>
 </div>
 
@@ -1150,6 +1253,19 @@ body.nosel { -webkit-touch-callout: none }
       <div class="result-sub" id="rSub"></div>
     </div>
 
+    <div class="card" id="rAgeTag" style="display:none">
+      <div class="section-title"></div>
+      <div id="rDesc"></div>
+    </div>
+
+    <!-- 人格雷达 + 反向属性对比 -->
+    <div class="card" id="rRadarCard">
+      <div class="section-title">📊 人格雷达</div>
+      <div id="rRadar"></div>
+      <div class="section-title" style="margin-top:20px">⚖️ 性格天平 · 反向对照</div>
+      <div id="rBars"></div>
+    </div>
+
     <div class="card" id="rTxCard">
       <div class="section-title">📝 深度解读</div>
       <div id="rTx"></div>
@@ -1162,11 +1278,6 @@ body.nosel { -webkit-touch-callout: none }
     <div class="card">
       <div class="section-title">🏷️ 人格标签</div>
       <div class="rtags" id="rTags"></div>
-    </div>
-
-    <div class="card" id="rAgeTag" style="display:none">
-      <div class="section-title"></div>
-      <div id="rDesc"></div>
     </div>
 
     <div class="card">
@@ -1198,11 +1309,6 @@ body.nosel { -webkit-touch-callout: none }
     <div class="card" id="rGrow">
       <div class="section-title">🌱 成长建议</div>
       <div id="rGrowDetail"></div>
-    </div>
-
-    <div class="card">
-      <div class="section-title">📊 人格雷达</div>
-      <div id="rBars"></div>
     </div>
 
     <div class="card" id="rCp">
@@ -1355,7 +1461,12 @@ function getStarFromBirth(birthStr){
     [22,'魔羯','♑']
   ];
   var star = stars[m - 1];
-  return d < star[0] ? star : { 1: stars[m][1], 2: stars[m][2], symbol: stars[m][2], name: stars[m][1] };
+  if(d >= star[0]){
+    // 月末边界：m=12 时 m%12=0 回到 stars[0]（魔羯）
+    var next = stars[m % 12];
+    return { name: next[1], symbol: next[2] };
+  }
+  return { name: star[1], symbol: star[2] };
 }
 
 var ZODIAC_EMOJI = {
@@ -1585,43 +1696,173 @@ function fallbackCopy(txt){
 // ═══════════════════════════════════════════════
 // 题目数据
 // ═══════════════════════════════════════════════
+// ═══ 新题库：25题随机抽取，每题多维度映射 ═══
+// 每个选项格式：{t:'选项文字', s:{dim:分值, dim:分值}}，总分=3
 const QS=[
-  {q:'周末你最喜欢？',d:'s',o:['睡觉，睡到自然醒','出门浪，探索新店','在家刷剧/打游戏','学习或搞钱']},
-  {q:'微信红包你通常？',d:'m',o:['不点，假装没看到','抢完还要嚎一嗓子','一分也是爱，必回','只收不发自得其乐']},
-  {q:'亲戚问你「有对象了吗」时？',d:'r',o:['微笑点头转移话题','当场编一个糊弄过去','反问「您家孩子呢」','无所谓，爱问就问']},
-  {q:'你手机里最多的App是？',d:'i',o:['外卖和团购','社交/聊天软件','购物/比价软件','工作/效率软件']},
-  {q:'点外卖你通常？',d:'c',o:['同一品类点同一家','哪家便宜点哪家','贵的不在乎，品质第一','纠结半小时最后不点了']},
-  {q:'你平均每天用几个小时手机？',d:'w',o:['2小时以内，自控力强','3-5小时，正常水平','6-8小时，手机奴隶','8小时以上，深度成瘾']},
-  {q:'你记账吗？',d:'g',o:['每月必记，财务清晰','偶尔想起来记一下','从不记账，钱花就花了','记了三天就放弃了']},
-  {q:'睡前最后一件事通常是？',d:'h',o:['刷手机停不下来','看书或听播客','躺着发呆放空','制定明天的计划']},
-  {q:'你对「已读不回」的态度？',d:'a',o:['记仇，三天不理人','假装没看到，心里记着','立刻回，不回难受','无所谓，不在乎']},
-  {q:'朋友找你借钱，你？',d:'j',o:['借，但心里默默记着','直接拒绝，不留余地','看关系和金额定','找借口拖，拖到对方忘']},
-  {q:'在群里发表情包通常？',d:'l',o:['表情包狂人，必回','偶尔发表情附和','纯文字党，不发表情','看心情']},
-  {q:'你更喜欢哪种相处模式？',d:'d',o:['偶尔见面，平时各自忙碌','每天都要保持联系','需要时在，不需要时自由','深度绑定，恨不得住一起']},
-  {q:'过年回家最怕什么？',d:'t',o:['被催婚催生','亲戚间的比较和攀比','无聊，没事做','什么都不怕']},
-  {q:'同事背后说你坏话被你知道，你会？',d:'r',o:['当面质问，不憋着','默默疏远，暗中较劲','无所谓，当没听到','发朋友圈含沙射影']},
-  {q:'你每月工资（或零花钱）大部分花在哪？',d:'m',o:['吃喝玩乐享受生活','存起来，看着数字开心','买买买，购物治百病','投资自己或还贷']},
-  {q:'你群消息通常怎么回？',d:'s',o:['秒回，不回手痒','看到就回，不刻意','不怎么看群','选择性回复重要群']},
-  {q:'你觉得自己是个？',d:'a',o:['情绪化，但真实','理性克制，冷静','时而天使时而魔鬼','佛系，什么都行']},
-  {q:'你去一个新城市，会？',d:'i',o:['做好攻略，计划周全','随机漫游，随遇而安','问本地人推荐','去网红地标打卡']},
-  {q:'你倾向哪种工作方式？',d:'g',o:['稳定编制，铁饭碗','自由职业，自己当老板','大公司，福利好','创业，博一把大的']},
-  {q:'你和父母的关系？',d:'r',o:['亲密，什么都聊','表面和平，内心独立','偶尔联系，各过各的','相爱相杀，互相折磨']},
-  {q:'你手机从不静音的原因？',d:'w',o:['怕错过重要电话','工作需要随时响应','习惯，不喜欢安静','等某个人的消息']},
-  {q:'你朋友圈通常发什么？',d:'i',o:['生活日常，记录生活','只看不发，默默围观','精致九宫格，修到满意','偶尔转发，不发自己']},
-  {q:'别人夸你，你会？',d:'a',o:['嘴上说哪里哪里，心里很受用','回怼：你在讽刺我吧','害羞，转移话题','大方接受并感谢']},
-  {q:'你对「断舍离」的态度？',d:'c',o:['定期扔扔扔，清爽','什么都舍不得扔','该扔扔，该买买','概念很认同，行动没有']},
-  {q:'你玩游戏吗？',d:'i',o:['沉迷氪金玩家','偶尔玩，不上瘾','不玩游戏','玩，但只玩单机']},
-  {q:'你觉得自己更像哪种动物？',d:'s',o:['狐狸：聪明灵活','狼：独立有团队精神','猫：傲娇又慵懒','牛：踏实肯干']},
-  {q:'遇到问题你通常？',d:'j',o:['先自己想，想不通再问','立刻查百度/小红书','直接问身边人','逃避，等它自己消失']},
-  {q:'你更看重？',d:'d',o:['面子和尊严','实际的利益','感情和关系','自我感受和自由']},
-  {q:'你做决定快吗？',d:'a',o:['很快，相信直觉','很慢，纠结半天','视情况而定','做完了还在纠结']},
-  {q:'你更愿意为什么花大钱？',d:'g',o:['房子车子资产','旅行和体验','吃喝玩乐享受','学习和成长']},
-  {q:'同事拿走了你的零食，你会？',d:'r',o:['下次也拿他的','直接问是不是你拿的','算了，不值几个钱','默默记下，找机会还回去']},
-  {q:'你手机屏保是？',d:'i',o:['偶像/爱豆照片','风景或抽象图','家人或宠物','从来不设']},
-  {q:'你和朋友吵架后通常？',d:'a',o:['冷静后主动和好','等对方先道歉','吵完还是朋友，无所谓','从此拉黑，老死不相往来']},
-  {q:'你穿衣风格？',d:'c',o:['跟风买爆款','经典款式，不易过时','舒适为主，方便就好','看场合，衣柜丰富']},
-  {q:'你对自己未来的期待？',d:'g',o:['财富自由，财务无忧','家庭幸福，稳稳当当','自由职业，随心所欲','不断成长，一直在路上']}
+  {q:'周末你最喜欢？',o:[
+    {t:'睡觉，睡到自然醒',s:{h:3}},
+    {t:'出门浪，探索新店',s:{s:2,l:1}},
+    {t:'在家刷剧/打游戏',s:{w:2,a:1}},
+    {t:'学习或搞钱',s:{g:3}}
+  ]},
+  {q:'微信红包你通常？',o:[
+    {t:'不点，假装没看到',s:{a:2,m:1}},
+    {t:'抢完还要嚎一嗓子',s:{s:2,l:1}},
+    {t:'一分也是爱，必回',s:{r:3}},
+    {t:'只收不发自得其乐',s:{m:1,d:2}}
+  ]},
+  {q:'点外卖你通常？',o:[
+    {t:'同一品类点同一家',s:{c:3}},
+    {t:'哪家便宜点哪家',s:{m:2,g:1}},
+    {t:'贵的不在乎，品质第一',s:{c:1,s:2}},
+    {t:'纠结半小时最后不点了',s:{a:2,d:1}}
+  ]},
+  {q:'你平均每天用几个小时手机？',o:[
+    {t:'2小时以内，自控力强',s:{h:3}},
+    {t:'3-5小时，正常水平',s:{w:1,h:1,g:1}},
+    {t:'6-8小时，手机奴隶',s:{w:3}},
+    {t:'8小时以上，深度成瘾',s:{w:2,m:1}}
+  ]},
+  {q:'你记账吗？',o:[
+    {t:'每月必记，财务清晰',s:{g:3}},
+    {t:'偶尔想起来记一下',s:{g:1,m:1,c:1}},
+    {t:'从不记账，钱花就花了',s:{c:3}},
+    {t:'记了三天就放弃了',s:{c:2,d:1}}
+  ]},
+  {q:'睡前最后一件事通常是？',o:[
+    {t:'刷手机停不下来',s:{w:3}},
+    {t:'看书或听播客',s:{h:2,g:1}},
+    {t:'躺着发呆放空',s:{d:3}},
+    {t:'制定明天的计划',s:{j:2,a:1}}
+  ]},
+  {q:'你对「已读不回」的态度？',o:[
+    {t:'记仇，三天不理人',s:{a:3}},
+    {t:'假装没看到，心里记着',s:{a:1,h:1,m:1}},
+    {t:'立刻回，不回难受',s:{s:2,r:1}},
+    {t:'无所谓，不在乎',s:{d:3}}
+  ]},
+  {q:'朋友找你借钱，你？',o:[
+    {t:'借，但心里默默记着',s:{r:3}},
+    {t:'直接拒绝，不留余地',s:{a:2,r:1}},
+    {t:'看关系和金额定',s:{g:2,s:1}},
+    {t:'找借口拖，拖到对方忘',s:{d:2,a:1}}
+  ]},
+  {q:'在群里你通常是？',o:[
+    {t:'表情包狂人，必回',s:{l:3,s:1}},
+    {t:'偶尔发表情附和',s:{l:1,s:1,d:1}},
+    {t:'纯文字党，不发表情',s:{d:2,s:1}},
+    {t:'看心情',s:{d:3}}
+  ]},
+  {q:'你更喜欢哪种相处模式？',o:[
+    {t:'偶尔见面，平时各自忙碌',s:{d:3}},
+    {t:'每天都要保持联系',s:{s:3}},
+    {t:'需要时在，不需要时自由',s:{d:1,g:1,r:1}},
+    {t:'深度绑定，恨不得住一起',s:{s:2,r:1}}
+  ]},
+  {q:'过年回家最怕什么？',o:[
+    {t:'被催婚催生',s:{t:3}},
+    {t:'亲戚间的比较和攀比',s:{a:2,t:1}},
+    {t:'无聊，没事做',s:{t:0,d:2,h:1}},
+    {t:'什么都不怕',s:{d:2,t:0,g:1}}
+  ]},
+  {q:'你每月工资大部分花在哪？',o:[
+    {t:'吃喝玩乐享受生活',s:{s:2,c:1}},
+    {t:'存起来，看着数字开心',s:{g:3}},
+    {t:'买买买，购物治百病',s:{c:3}},
+    {t:'投资自己或还贷',s:{g:2,i:1}}
+  ]},
+  {q:'你觉得自己是个？',o:[
+    {t:'情绪化，但真实',s:{a:2,r:1}},
+    {t:'理性克制，冷静',s:{g:2,j:1}},
+    {t:'时而天使时而魔鬼',s:{s:1,a:1,d:1}},
+    {t:'佛系，什么都行',s:{d:2,h:1}}
+  ]},
+  {q:'你去一个新城市，会？',o:[
+    {t:'做好攻略，计划周全',s:{j:2,g:1}},
+    {t:'随机漫游，随遇而安',s:{d:3}},
+    {t:'问本地人推荐',s:{r:2,s:1}},
+    {t:'去网红地标打卡',s:{s:2,l:1}}
+  ]},
+  {q:'你倾向哪种工作方式？',o:[
+    {t:'稳定编制，铁饭碗',s:{j:3}},
+    {t:'自由职业，自己当老板',s:{d:2,g:1}},
+    {t:'大公司，福利好',s:{j:1,g:1,r:1}},
+    {t:'创业，博一把大的',s:{j:2,g:1,a:1}}
+  ]},
+  {q:'你和父母的关系？',o:[
+    {t:'亲密，什么都聊',s:{r:3}},
+    {t:'表面和平，内心独立',s:{r:1,d:2}},
+    {t:'偶尔联系，各过各的',s:{d:3}},
+    {t:'相爱相杀，互相折磨',s:{a:2,t:1}}
+  ]},
+  {q:'你手机从不静音的原因是？',o:[
+    {t:'怕错过重要电话',s:{w:2,r:1}},
+    {t:'工作需要随时响应',s:{j:3}},
+    {t:'习惯，不喜欢安静',s:{w:1,h:2}},
+    {t:'等某个人的消息',s:{s:2,a:1}}
+  ]},
+  {q:'你朋友圈通常发什么？',o:[
+    {t:'生活日常，记录生活',s:{s:2,l:1}},
+    {t:'只看不发，默默围观',s:{d:2,s:1}},
+    {t:'精致九宫格，修到满意',s:{l:3}},
+    {t:'偶尔转发，不发自己',s:{d:3}}
+  ]},
+  {q:'别人夸你，你会？',o:[
+    {t:'嘴上说哪里哪里，心里很受用',s:{a:2,r:1}},
+    {t:'回怼：你在讽刺我吧',s:{a:3}},
+    {t:'害羞，转移话题',s:{d:2,s:1}},
+    {t:'大方接受并感谢',s:{r:3}}
+  ]},
+  {q:'你对「断舍离」的态度？',o:[
+    {t:'定期扔扔扔，清爽',s:{c:2,d:1}},
+    {t:'什么都舍不得扔',s:{c:0,m:2,a:1}},
+    {t:'该扔扔，该买买',s:{c:1,g:1,d:1}},
+    {t:'概念很认同，行动没有',s:{c:2,d:1}}
+  ]},
+  {q:'你玩游戏吗？',o:[
+    {t:'沉迷氪金玩家',s:{w:2,m:1}},
+    {t:'偶尔玩，不上瘾',s:{w:1,g:1,d:1}},
+    {t:'不玩游戏',s:{g:2,h:1}},
+    {t:'玩，但只玩单机',s:{d:2,g:1}}
+  ]},
+  {q:'遇到问题你通常？',o:[
+    {t:'先自己想，想不通再问',s:{d:2,g:1}},
+    {t:'立刻查百度/小红书',s:{i:2,s:1}},
+    {t:'直接问身边人',s:{s:2,r:1}},
+    {t:'逃避，等它自己消失',s:{t:2,d:1}}
+  ]},
+  {q:'你做决定快吗？',o:[
+    {t:'很快，相信直觉',s:{a:1,g:2}},
+    {t:'很慢，纠结半天',s:{a:0,j:2,g:1}},
+    {t:'视情况而定',s:{d:2,g:1}},
+    {t:'做完了还在纠结',s:{a:0,d:3}}
+  ]},
+  {q:'你更愿意为什么花大钱？',o:[
+    {t:'房子车子资产',s:{g:2,j:1}},
+    {t:'旅行和体验',s:{s:2,d:1}},
+    {t:'吃喝玩乐享受',s:{c:2,s:1}},
+    {t:'学习和成长',s:{g:2,i:1}}
+  ]},
+  {q:'你穿衣风格是？',o:[
+    {t:'跟风买爆款',s:{s:1,l:1,c:1}},
+    {t:'经典款式，不易过时',s:{g:1,c:1,d:1}},
+    {t:'舒适为主，方便就好',s:{d:3}},
+    {t:'看场合，衣柜丰富',s:{s:2,g:1}}
+  ]}
 ];
+
+// ═══ 每次随机抽取 25 题 ═══
+var _qsPool = null;
+function getQuestions(){
+  if(_qsPool) return _qsPool;
+  var pool = QS.slice();
+  for(var i=pool.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var tmp=pool[i];pool[i]=pool[j];pool[j]=tmp;
+  }
+  _qsPool = pool.slice(0, 25);
+  return _qsPool;
+}
 
 // ═══════════════════════════════════════════════
 // 人格类型数据（35型）
@@ -1705,30 +1946,31 @@ const DCOLORS=['#e85a4f','#d4a574','#8e7cc3','#52b788','#667eea'];
 var ci = 0, answers = [];
 
 function startQuiz(){
+  _qsPool = null; // 重置题库
+  ci = 0;
+  answers = [];
   renderQ();
 }
 
 function renderQ(){
-  if(ci >= QS.length){ doResult(); return }
-  var q = QS[ci];
-  var pct = (ci / QS.length * 100).toFixed(1);
+  var qs = getQuestions();
+  if(ci >= qs.length){ doResult(); return }
+  var q = qs[ci];
+  var pct = (ci / qs.length * 100).toFixed(1);
   
   document.getElementById('qN').textContent = ci + 1;
-  document.getElementById('qT').textContent = QS.length;
+  document.getElementById('qT').textContent = qs.length;
   document.getElementById('pFill').style.width = pct + '%';
   
-  var dims = ['社交享乐','理性规划','人际和谐','数码生活','消费观念','工作态度','身心健康','情绪管理','沟通表达','决策风格'];
-  var dimKeys = ['s','m','r','i','c','w','g','h','a','j'];
-  var dimIdx = dimKeys.indexOf(q.d);
-  
   var html = '<div class="q-card">';
-  html += '<div class="q-meta">第 ' + (ci + 1) + ' / ' + QS.length + ' 题</div>';
-  html += '<div class="q-dim">' + dims[dimIdx >= 0 ? dimIdx : 0] + '</div>';
+  html += '<div class="q-meta">第 ' + (ci + 1) + ' / ' + qs.length + ' 题</div>';
+  html += '<div class="q-dim">🎯 凭直觉选择</div>';
   html += '<div class="q-question">' + q.q + '</div>';
   html += '<div class="q-options">';
   
   q.o.forEach(function(opt, idx){
-    html += '<div class="q-option" onclick="selectOpt(this,' + idx + ')">' + opt + '</div>';
+    var text = opt.t || String(opt);
+    html += '<div class="q-option" onclick="selectOpt(this,' + idx + ')">' + text + '</div>';
   });
   
   html += '</div></div>';
@@ -1738,7 +1980,7 @@ function renderQ(){
 window.selectOpt = function(el, idx){
   document.querySelectorAll('.q-option').forEach(function(o){ o.classList.remove('sel') });
   el.classList.add('sel');
-  answers.push({ d: QS[ci].d, o: idx });
+  answers.push({ qi: ci, oi: idx });
   ci++;
   setTimeout(renderQ, 120);
 };
@@ -1750,15 +1992,19 @@ function calc(){
   var ds = {s:0,m:0,r:0,i:0,c:0,w:0,g:0,h:0,a:0,j:0,l:0,d:0,t:0};
   
   answers.forEach(function(ans){
-    var wt = [3,2,1,0];
-    ds[ans.d] += (wt[ans.o] || 0);
+    var q = getQuestions()[ans.qi];
+    if(!q) return;
+    var opt = q.o[ans.oi];
+    if(!opt || !opt.s) return;
+    // opt.s = {dim:val, dim:val}
+    Object.keys(opt.s).forEach(function(k){ ds[k] = (ds[k]||0) + opt.s[k] });
   });
   
   var keys = Object.keys(ds);
   keys.forEach(function(k){
     ds[k] *= (DIM_COEF[k] || 1);
     if(ZODIAC_BONUS[window.sZodiac] && ZODIAC_BONUS[window.sZodiac][k]) ds[k] *= ZODIAC_BONUS[window.sZodiac][k];
-    if(window.sStar && STAR_BONUS[window.sStar] && STAR_BONUS[window.sStar][k]) ds[k] *= STAR_BONUS[window.sStar][k];
+    if(window.sStar && window.sStar.name && STAR_BONUS[window.sStar.name] && STAR_BONUS[window.sStar.name][k]) ds[k] *= STAR_BONUS[window.sStar.name][k];
     if(window.sGender === '🙋‍♀️ 女' || window.sGender === '🤖 武装直升机'){
       var fadj = {'s':.92,'g':1.08,'r':1.05,'w':1.05,'h':1.03,'j':.95};
       if(fadj[k]) ds[k] *= fadj[k];
@@ -1822,10 +2068,11 @@ function doResult(){
     document.getElementById('rTags').innerHTML = tags;
     
     document.getElementById('rAgeTag').style.display = 'block';
+    var starName = (window.sStar && window.sStar.name) ? window.sStar.name : '';
     document.getElementById('rAgeTag').querySelector('.section-title').textContent = 
       '👤 出生于 ' + document.getElementById('fDate').value + 
       (window.sZodiac ? '，属' + window.sZodiac : '') + 
-      (window.sStar && window.sStar.name ? '，' + window.sStar.name + '座' : '') + 
+      (starName ? '，' + starName + '座' : '') + 
       (window.sGender ? '，' + window.sGender : '');
     
     document.getElementById('rDesc').innerHTML = (pt.d2 ? '<p style="font-size:14px;line-height:1.7;color:var(--text-secondary);margin-bottom:10px">' + pt.d2 + '</p>' : '') + (pt.r2 ? '<p style="font-size:13px;color:var(--accent-primary)">⚠️ 注意：' + pt.r2 + '</p>' : '');
@@ -1837,28 +2084,57 @@ function doResult(){
     
     // 各维度
     var dims2 = [
-      {k:'s',n:'社交指数'},
-      {k:'m',n:'财运指数'},
-      {k:'r',n:'人缘指数'},
-      {k:'i',n:'数码指数'},
-      {k:'c',n:'消费指数'},
-      {k:'w',n:'网瘾指数'},
-      {k:'g',n:'搞钱指数'},
-      {k:'h',n:'作息指数'},
-      {k:'a',n:'记仇指数'},
-      {k:'j',n:'卷王指数'},
-      {k:'l',n:'话痨指数'},
-      {k:'d',n:'独立指数'},
+      {k:'s',n:'社交指数'},{k:'m',n:'财运指数'},{k:'r',n:'人缘指数'},
+      {k:'i',n:'数码指数'},{k:'c',n:'消费指数'},{k:'w',n:'网瘾指数'},
+      {k:'g',n:'搞钱指数'},{k:'h',n:'作息指数'},{k:'a',n:'记仇指数'},
+      {k:'j',n:'卷王指数'},{k:'l',n:'话痨指数'},{k:'d',n:'独立指数'},
       {k:'t',n:'社恐指数'}
     ];
     
-    var barsHtml = '';
+    // 雷达迷你图（简化柱状）
+    var radarHtml = '<div class="radar-grid">';
     dims2.forEach(function(dim, idx){
       var v = Math.min(100, Math.max(0, dims[dim.k] || 0));
-      barsHtml += '<div class="dim-row">';
-      barsHtml += '<div class="dim-label">' + dim.n + '</div>';
-      barsHtml += '<div class="dim-bar"><div class="dim-fill" style="width:' + v + '%;background:' + DCOLORS[idx % 5] + '"></div></div>';
-      barsHtml += '<div class="dim-value">' + Math.round(v) + '</div>';
+      radarHtml += '<div class="radar-item">';
+      radarHtml += '<div class="radar-key">' + dim.n + '</div>';
+      radarHtml += '<div class="radar-track">';
+      radarHtml += '<div class="radar-fill" style="width:' + v + '%;background:' + DCOLORS[idx % 5] + '"></div>';
+      radarHtml += '</div>';
+      radarHtml += '<div class="radar-val">' + Math.round(v) + '</div>';
+      radarHtml += '</div>';
+    });
+    radarHtml += '</div>';
+    document.getElementById('rRadar').innerHTML = radarHtml;
+    
+    // 反向属性对比（左右对称柱）
+    // 对照表：[主维度, 名称, 反向维度, 反向名称, 主色, 反色]
+    var oppPairs = [
+      {k:'s',n:'社交达人',nk:'s',nn:'独处爱好者',c:'#e85a4f',nc:'#52b788'},
+      {k:'g',n:'消费自由',nk:'g',nn:'存钱节俭',c:'#d4a574',nc:'#52b788'},
+      {k:'h',n:'作息规律',nk:'h',nn:'熬夜选手',c:'#8e7cc3',nc:'#667eea'},
+      {k:'j',n:'内卷达人',nk:'t',nn:'躺平选手',c:'#e85a4f',nc:'#52b788'},
+      {k:'a',n:'记仇模式',nk:'a',nn:'大度模式',c:'#d4a574',nc:'#52b788'},
+      {k:'l',n:'群聊话痨',nk:'d',nn:'独来独往',c:'#8e7cc3',nc:'#667eea'}
+    ];
+    
+    var barsHtml = '';
+    oppPairs.forEach(function(pair){
+      var v1 = Math.min(100, Math.max(0, dims[pair.k] || 0));
+      var v2 = Math.min(100, Math.max(0, dims[pair.nk] || 0));
+      var total = v1 + v2 || 1;
+      var leftW = (v2 / total) * 50;
+      var rightW = (v1 / total) * 50;
+      barsHtml += '<div class="opp-row">';
+      barsHtml += '<div class="opp-header">';
+      barsHtml += '<span class="opp-label" style="color:' + pair.nc + '">' + pair.nn + '</span>';
+      barsHtml += '<span class="opp-center">' + Math.round(v1) + ' vs ' + Math.round(v2) + '</span>';
+      barsHtml += '<span class="opp-label" style="color:' + pair.c + '">' + pair.n + '</span>';
+      barsHtml += '</div>';
+      barsHtml += '<div class="opp-bar-wrap">';
+      barsHtml += '<div class="opp-bar-left" style="width:' + leftW + '%;background:' + pair.nc + '"></div>';
+      barsHtml += '<div class="opp-bar-right" style="width:' + rightW + '%;background:' + pair.c + '"></div>';
+      barsHtml += '<div class="opp-tick"></div>';
+      barsHtml += '</div>';
       barsHtml += '</div>';
     });
     document.getElementById('rBars').innerHTML = barsHtml;
@@ -1912,7 +2188,6 @@ window._showRestartConfirm = function(callback){
   modal.classList.add('show');
   var ok = document.getElementById('modalOk');
   var cancel = document.getElementById('modalCancel');
-  
   function cleanup(){ modal.classList.remove('show'); ok.onclick = null; cancel.onclick = null }
   ok.onclick = function(){ cleanup(); callback && callback(true) };
   cancel.onclick = function(){ cleanup(); callback && callback(false) };
@@ -1921,6 +2196,7 @@ window._showRestartConfirm = function(callback){
 function doRestart(){
   window._showRestartConfirm(function(ok){
     if(!ok) return;
+    _qsPool = null;
     ci = 0;
     answers = [];
     window.sZodiac = '';
@@ -2003,7 +2279,8 @@ function doRestart(){
       document.getElementById('rGrow').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:16px">🔒 完整成长建议仅本人测试后可见</div>';
       document.getElementById('rAdvice').textContent = '（完整忠告仅本人测试后可见）';
       document.getElementById('rZy').innerHTML = (pt.zy ? '<span style="font-size:12px;color:var(--accent-primary);font-weight:600;margin-right:6px">🔮</span>' + pt.zy + '<br><span style="color:var(--text-muted);font-size:11px;margin-top:4px;display:block">完整命理解读需本人测试后查看</span>' : '（完整命理解读需本人测试后查看）');
-      document.getElementById('rBars').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:16px">🔒 人格雷达仅本人测试后可见</div>';
+      document.getElementById('rRadar').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px">🔒 人格雷达仅本人测试后可见</div>';
+      document.getElementById('rBars').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px">🔒 性格天平仅本人测试后可见</div>';
       document.getElementById('rCp').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px">🔒 完整人格对比仅本人测试后可见</div>';
       document.getElementById('rCompare').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px">🔒 完整人格对比仅本人测试后可见</div>';
       
