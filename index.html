@@ -358,7 +358,7 @@ body.nosel { -webkit-touch-callout: none }
     </div>
     <button class="btn" type="button" onclick="window._show('sInfo')">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.8.4</div>
+    <div class="hero-version">v1.8.5</div>
   </div>
 </div>
 
@@ -444,7 +444,13 @@ body.nosel { -webkit-touch-callout: none }
       <div class="result-sub" id="rSub"></div>
     </div>
 
-    <!-- 一句话金句（新增） -->
+    <!-- 可能的类型列表（v2.0 新功能） -->
+    <div class="card" id="rPossibilityCard">
+      <div class="section-title">🎯 可能的类型 · Top 3</div>
+      <div id="rPossibilityList"></div>
+    </div>
+
+    <!-- 一句话金句 -->
     <div class="golden-quote" id="rGoldenQuote" style="display:none">
       <div class="golden-quote-label">✦ 命理金句</div>
       <div class="golden-quote-text" id="rGoldenText"></div>
@@ -794,11 +800,12 @@ function getShareUrl(pt, utm){
 function copyShareLink(){
   try{
     var dims = calc();
-    var pt = matchType(dims, parseInt(window.sAge || 25));
+    var results = matchType(dims);
+    var pt = results.length > 0 ? results[0].type : TYPES[Object.keys(TYPES)[0]];
     var url = getShareUrl(pt, 'copy');
     var cn = pt.cn || pt.name || '';
-    var si = pt.s || pt.selfIntro || '命中注定与众不同';
-    var txt = '我是「' + (cn || pt.name) + '（' + pt.t + '）」，我的特点是【' + si + '】。查看链接：' + url + ' #中式命格测试';
+    var si = pt.s || '命中注定与众不同';
+    var txt = '我是「' + (cn || pt.name) + '」，我的特点是【' + si + '】。查看链接：' + url + ' #中式命格测试';
     if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(txt).then(function(){ showCopySuccess() }).catch(function(){ fallbackCopy(txt) });
     } else { fallbackCopy(txt); }
@@ -873,22 +880,25 @@ window.selectOpt = function(el, idx){
   setTimeout(renderQ, 120);
 };
 
-// ═══ 计算核心 ═══
-// 维度最大值：25题×最高选项分3≈75，取50作为归一化基准
+// ═══ 计算核心（v2.0 简化算法） ═══
+// 维度最大值：22题×最高选项分3≈66，取50作为归一化基准
 var DIM_MAX = {'s':50,'m':50,'r':50,'i':50,'c':50,'w':50,'g':50,'h':50,'a':50,'j':50,'l':50,'d':50,'t':50};
 
 function calc(){
   var ds = {s:0,m:0,r:0,i:0,c:0,w:0,g:0,h:0,a:0,j:0,l:0,d:0,t:0};
 
+  // v2.0 题库格式：{q:'题目', o:[{t:'选项文字', v:分数, dim:'维度'}]}
   answers.forEach(function(ans){
     var q = getQuestions()[ans.qi];
     if(!q) return;
     var opt = q.o[ans.oi];
-    if(!opt || !opt.s) return;
-    Object.keys(opt.s).forEach(function(k){ ds[k] = (ds[k]||0) + opt.s[k] });
+    if(!opt || !opt.dim) return;
+    var dim = opt.dim;
+    var val = parseFloat(opt.v) || 0;
+    ds[dim] = (ds[dim]||0) + val;
   });
 
-  // 第一轮：归一化到 0-100（去掉 DIM_COEF，所有维度等权）
+  // 归一化到 0-100
   Object.keys(ds).forEach(function(k){
     var mx = DIM_MAX[k] || 50;
     ds[k] = Math.round((ds[k] / mx) * 100);
@@ -896,21 +906,29 @@ function calc(){
     if(ds[k] < 0) ds[k] = 0;
   });
 
-  // 第二轮：生肖 + 星座加成（加绝对分值）
-  Object.keys(ds).forEach(function(k){
-    var zodiacBonus = ZODIAC_BONUS[window.sZodiac] && ZODIAC_BONUS[window.sZodiac][k] ? ZODIAC_BONUS[window.sZodiac][k] - 1 : 0;
-    var starBonus = (window.sStar && window.sStar.name && STAR_BONUS[window.sStar.name] && STAR_BONUS[window.sStar.name][k]) ? STAR_BONUS[window.sStar.name][k] - 1 : 0;
-    var bonus = (zodiacBonus + starBonus) * 3;
-    ds[k] = Math.max(0, Math.min(100, ds[k] + bonus));
-  });
+  // 生肖加成
+  if(window.sZodiac && ZODIAC_BONUS[window.sZodiac]){
+    Object.keys(ZODIAC_BONUS[window.sZodiac]).forEach(function(k){
+      var b = ZODIAC_BONUS[window.sZodiac][k] - 1;
+      ds[k] = Math.max(0, Math.min(100, ds[k] + b * 5));
+    });
+  }
 
-  // 第三轮：性别调整
+  // 星座加成
+  if(window.sStar && window.sStar.name && STAR_BONUS[window.sStar.name]){
+    Object.keys(STAR_BONUS[window.sStar.name]).forEach(function(k){
+      var b = STAR_BONUS[window.sStar.name][k] - 1;
+      ds[k] = Math.max(0, Math.min(100, ds[k] + b * 5));
+    });
+  }
+
+  // 性别调整
   if(window.sGender === '🙋‍♀️ 女' || window.sGender === '🤖 武装直升机'){
     var fadj = {'s':-5,'g':6,'r':4,'w':4,'h':2,'j':-3};
     Object.keys(fadj).forEach(function(k){ ds[k] = Math.max(0, Math.min(100, ds[k] + fadj[k])); });
   }
 
-  // 第四轮：年龄调整
+  // 年龄调整
   if(window.sAge && window.sAge < 22){
     var ymad = {'g':5,'w':6,'i':4,'j':-4};
     Object.keys(ymad).forEach(function(k){ ds[k] = Math.max(0, Math.min(100, ds[k] + ymad[k])); });
@@ -923,28 +941,53 @@ function calc(){
   return ds;
 }
 
-function matchType(ds, age){
-  // 纯欧氏距离：用户维度分 vs 人格标准维度分，距离越小越匹配
-  var best = null, bestScore = Infinity;
-  Object.keys(TYPES).forEach(function(k){
+// v2.0 匹配算法：返回排序后的人格概率列表
+function matchType(ds){
+  var results = [];
+  var keys = Object.keys(TYPES);
+
+  keys.forEach(function(k){
     var t = TYPES[k];
-    // 解析人格标准维度
-    var td = {};
-    (t.dcols || []).forEach(function(dc){
-      var kv = dc.split(':');
-      td[kv[0]] = parseFloat(kv[1]);
-    });
-    // 欧氏距离（13维）
+    if(!t.dcols) return;
+
+    // 计算欧几里得距离
     var dist = 0;
+    var count = 0;
     Object.keys(ds).forEach(function(dim){
-      var dv = ds[dim] || 0;
-      var tv = td[dim] || 0;
-      var diff = dv - tv;
+      var userN = ds[dim] || 0;
+      var typeN = ((t.dcols[dim] + 2) / 5) * 100; // -2~3 → 0~100
+      var diff = userN - typeN;
       dist += diff * diff;
+      count++;
     });
-    if(dist < bestScore){ bestScore = dist; best = t }
+    var score = count > 0 ? (100 - Math.sqrt(dist / count) / 1.2) : 0;
+    score = Math.max(0, score);
+
+    // 稀有人格降低权重
+    var rareWeight = t.rare ? 0.15 : 1;
+
+    // 基础概率
+    var baseRate = t.base_rate || 1.5;
+    var rate = score * 0.6 + baseRate * rareWeight * 0.4;
+
+    results.push({
+      key:k,
+      type:t,
+      score:Math.round(score),
+      rate:Math.round(rate * 10) / 10,
+      rare:t.rare||false
+    });
   });
-  return best || TYPES[Object.keys(TYPES)[0]];
+
+  // 归一化概率
+  var totalRate = results.reduce(function(s,r){ return s + r.rate; }, 0);
+  results.forEach(function(r){
+    r.pct = totalRate > 0 ? Math.round((r.rate / totalRate) * 100) : 0;
+  });
+
+  // 排序：概率最高的在前
+  results.sort(function(a,b){ return b.rate - a.rate; });
+  return results;
 }
 
 // ═══ 结果页 ═══
@@ -954,7 +997,25 @@ function doResult(){
     var dims = calc();
     var age = calcAge(document.getElementById('fDate').value);
     window.sAge = age;
-    var pt = matchType(dims, age);
+
+    // v2.0: 获取排序后的人格概率列表
+    var matchResults = matchType(dims);
+    var pt = matchResults.length > 0 ? matchResults[0].type : TYPES[Object.keys(TYPES)[0]];
+
+    // 展示可能的类型 Top 3（不展示具体分值）
+    var possibleHtml = '';
+    matchResults.slice(0, 3).forEach(function(item, idx){
+      var rareTag = item.rare ? '<span style="background:#f0e6ff;color:#8e7cc3;padding:2px 8px;border-radius:8px;font-size:11px;margin-left:6px">稀有</span>' : '';
+      possibleHtml += '<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-light);' + (idx===0?'opacity:1':'opacity:0.75') + '">';
+      possibleHtml += '<span style="font-size:20px;font-weight:700;color:' + (idx===0?'var(--accent-primary)':(idx===1?'#d4a574':'#8e7cc3')) + ';min-width:24px">' + (idx+1) + '</span>';
+      possibleHtml += '<div style="flex:1">';
+      possibleHtml += '<div style="font-size:15px;font-weight:600;margin-bottom:4px">' + (item.type.cn||item.type.name||item.key) + rareTag + '</div>';
+      possibleHtml += '<div style="font-size:13px;color:var(--text-muted)">' + (item.type.d||'').substring(0,50) + '...</div>';
+      possibleHtml += '</div>';
+      possibleHtml += '<div style="font-size:18px;font-weight:700;color:var(--accent-primary)">' + item.pct + '%</div>';
+      possibleHtml += '</div>';
+    });
+    document.getElementById('rPossibilityList').innerHTML = possibleHtml;
 
     var cn = (pt.cn || '').replace(/undefined/g,'');
     var en = (pt.name || '').replace(/undefined/g,'');
