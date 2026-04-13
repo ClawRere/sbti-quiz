@@ -269,7 +269,7 @@ window._showRestartConfirm=function(callback){
     </div>
     <button class="btn" type="button" onclick="(function(){var el=document.getElementById('sInfo');if(el){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});el.classList.add('active');}}())">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.2.7</div>
+    <div class="hero-version">v1.2.8</div>
   </div>
 </div>
 
@@ -326,10 +326,10 @@ window._showRestartConfirm=function(callback){
 
       <div class="form-row">
         <label>⚧ 性别</label>
-        <div class="rg" id="fGender">
-          <div class="rg-opt" onclick="pick(this,'gender')">🙋‍♂️ 男</div>
-          <div class="rg-opt" onclick="pick(this,'gender')">🙋‍♀️ 女</div>
-          <div class="rg-opt" onclick="pick(this,'gender')">🤖 武装直升机</div>
+        <div class="rg" id="fGender" data-group="gender">
+          <div class="rg-opt" data-group="gender" onclick="pick(this,'gender')">🙋‍♂️ 男</div>
+          <div class="rg-opt" data-group="gender" onclick="pick(this,'gender')">🙋‍♀️ 女</div>
+          <div class="rg-opt" data-group="gender" onclick="pick(this,'gender')">🤖 武装直升机</div>
         </div>
       </div>
 
@@ -1597,18 +1597,20 @@ window._manualStar=false;   // 用户手动选了星座
 window._show=function(id){try{var el=document.getElementById(id);if(!el){alert('元素#'+id+'不存在');return}var ss=document.querySelectorAll('.screen');for(var i=0;i<ss.length;i++)ss[i].classList.remove('active');el.classList.add('active');}catch(e){alert('show错误:'+e.message)}};
 
 function pick(el,type,val){
+  // 严格隔离：只清除同type同容器内的选项
   const gId=type==='gender'?'fGender':type==='zodiac'?'fZodiac':'fStar';
   const g=document.getElementById(gId);
   if(!g)return;
-  const selector=type==='gender'?'.rg-opt':type==='zodiac'?'.zg-opt':'.sg-opt';
-  // toggle模式：点击已选项则取消选择，否则选中并清除同组其他选择
+  const cls=type==='gender'?'rg-opt':type==='zodiac'?'zg-opt':'sg-opt';
+  // toggle：点击已选 → 取消；否则清本组 → 选中
   if(el.classList.contains('sel')){
     el.classList.remove('sel');
     if(type==='zodiac'){window.sZodiac='';window._manualZodiac=false;}
     else if(type==='star'){window.sStar='';window._manualStar=false;}
     else{window.sGender='';}
   }else{
-    g.querySelectorAll(selector).forEach(o=>o.classList.remove('sel'));
+    // 只清本组容器内的选项，绝对不跨组
+    Array.from(g.children).forEach(function(o){if(o.classList.contains(cls))o.classList.remove('sel');});
     el.classList.add('sel');
     if(type==='zodiac'){
       window.sZodiac=val;window._manualZodiac=true;
