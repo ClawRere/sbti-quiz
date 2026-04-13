@@ -875,15 +875,13 @@ function calc(){
     Object.keys(opt.s).forEach(function(k){ ds[k] = (ds[k]||0) + opt.s[k] });
   });
 
-  // 第一轮：应用维度权重
+  // 第一轮：收集原始维度分数（不去系数×0.5，保留差异）
   Object.keys(ds).forEach(function(k){
     ds[k] *= (DIM_COEF[k] || 1);
   });
 
-  // 第二轮：归一化到 0-100 范围（相对于典型人格值）
-  var maxVal = 0;
+  // 第二轮：归一化到 0-100（去掉 DIM_COEF×0.5 的压缩效果）
   Object.keys(ds).forEach(function(k){
-    var ref = DIM_REF[k] || 50;
     var mx = DIM_MAX[k] || 60;
     ds[k] = Math.round((ds[k] / mx) * 100);
     if(ds[k] > 100) ds[k] = 100;
@@ -918,7 +916,8 @@ function calc(){
 }
 
 function matchType(ds, age){
-  var best = null, bestScore = -1;
+  // 纯欧氏距离：用户维度分 vs 人格标准维度分，距离越小越匹配
+  var best = null, bestScore = Infinity;
   Object.keys(TYPES).forEach(function(k){
     var t = TYPES[k];
     // 解析人格标准维度
@@ -927,27 +926,15 @@ function matchType(ds, age){
       var kv = dc.split(':');
       td[kv[0]] = parseFloat(kv[1]);
     });
-    // 余弦相似度
-    var dot = 0, dLen = 0, tLen = 0;
+    // 欧氏距离（13维）
+    var dist = 0;
     Object.keys(ds).forEach(function(dim){
       var dv = ds[dim] || 0;
       var tv = td[dim] || 0;
-      dot += dv * tv;
-      dLen += dv * dv;
-      tLen += tv * tv;
+      var diff = dv - tv;
+      dist += diff * diff;
     });
-    var cos = (dLen > 0 && tLen > 0) ? dot / (Math.sqrt(dLen) * Math.sqrt(tLen)) : 0;
-    // 结合距离惩罚：分差太大的要扣分
-    var distPenalty = 0;
-    Object.keys(ds).forEach(function(dim){
-      var dv = ds[dim] || 0;
-      var tv = td[dim] || 0;
-      var diff = Math.abs(dv - tv);
-      distPenalty += diff;
-    });
-    // 综合得分：余弦相似度权重 0.7，距离惩罚权重 0.3
-    var score = cos * 100 - distPenalty * 0.3;
-    if(score > bestScore){ bestScore = score; best = t }
+    if(dist < bestScore){ bestScore = dist; best = t }
   });
   return best || TYPES[Object.keys(TYPES)[0]];
 }
@@ -1022,7 +1009,7 @@ function doResult(){
       barsHtml += '<div class="opp-row">';
       barsHtml += '<div class="opp-header">';
       barsHtml += '<span class="opp-label" style="color:' + pair.nc + '">' + pair.nn + '</span>';
-      barsHtml += '<span class="opp-center">' + Math.round(v1) + ' vs ' + Math.round(v2) + '</span>';
+      barsHtml += '<span class="opp-center">' + Math.round(v2) + ' vs ' + Math.round(v1) + '</span>';
       barsHtml += '<span class="opp-label" style="color:' + pair.c + '">' + pair.n + '</span>';
       barsHtml += '</div>';
       barsHtml += '<div class="opp-bar-wrap">';
