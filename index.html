@@ -156,6 +156,7 @@ body.nosel { -webkit-touch-callout: none }
   color: var(--text-primary); cursor: pointer; appearance: none; -webkit-appearance: none; transition: all 0.2s;
 }
 .date-select:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 0 3px rgba(232, 90, 79, 0.1); }
+.cal-active { background: var(--accent-primary) !important; color: #fff; }
 .date-select option { padding: 8px; background: var(--bg-card); color: var(--text-primary); }
 .preview-box {
   background: var(--gradient-preview); border: 1px solid var(--border-light); border-radius: var(--radius-lg);
@@ -370,8 +371,12 @@ body.nosel { -webkit-touch-callout: none }
       <div class="q-text">先聊聊你的基本属性</div>
       <div class="q-sub">基本信息越准，人格画像越真</div>
       <div class="form-row">
-        <label>🎂 出生日期</label>
-        <div class="date-grid">
+<label>🎂 出生日期</label>
+        <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:6px">
+          <div style="display:flex;background:var(--bg-secondary);border-radius:20px;padding:2px;font-size:12px">
+            <div id="calSolar" onclick="window.switchCal('solar')" style="padding:4px 12px;border-radius:20px;cursor:pointer;transition:all 0.2s;font-weight:600">阳历</div>
+            <div id="calLunar" onclick="window.switchCal('lunar')" style="padding:4px 12px;border-radius:20px;cursor:pointer;transition:all 0.2s">阴历</div>
+          </div>
           <div class="date-select-wrapper">
             <select id="fYear" class="date-select"><option value="">年</option></select>
           </div>
@@ -693,10 +698,24 @@ function initDateSelectors(){
   return true;
 }
 
-function updateFDate(){
+// ═══ 阴历/阳历切换 ═══
+window.calType = 'solar';
+window.switchCal = function(type){
+  window.calType = type;
+  var solarEl = document.getElementById('calSolar');
+  var lunarEl = document.getElementById('calLunar');
+  if(solarEl) solarEl.classList.toggle('cal-active', type === 'solar');
+  if(lunarEl) lunarEl.classList.toggle('cal-active', type === 'lunar');
+  var hint = document.getElementById('calHint');
+  if(hint) hint.textContent = type === 'lunar' ? '请输入阴历出生日期，系统将自动转换为阳历' : '';
+  updateFDate();
+};
+
+// ═══ 日期级联 ═══
   var yr = document.getElementById('fYear').value;
   var mo = document.getElementById('fMonth').value;
   var dy = document.getElementById('fDay').value;
+  if(!yr || !mo) return; // 防抖：年和月未选时不更新日选项
   var dInput = document.getElementById('fDate');
   if(yr && mo && dy){
     dInput.value = yr + '-' + String(mo).padStart(2, '0') + '-' + String(dy).padStart(2, '0');
@@ -1053,15 +1072,21 @@ function doResult(){
     var matchResults = matchType(dims);
     var pt = matchResults.length > 0 ? matchResults[0].type : TYPES[Object.keys(TYPES)[0]];
 
-    // 展示可能的类型 Top 3（紧凑版：只显示名字+百分比）
+    // 展示可能的类型（只显示 >=60% 的，标签化紧凑展示）
     var possibleHtml = '';
-    matchResults.slice(0, 3).forEach(function(item, idx){
+    var shown = 0;
+    matchResults.forEach(function(item, idx){
+      if(item.pct < 60) return; // 只显示 60% 以上的
       var rareTag = item.rare ? '<span style="background:#f0e6ff;color:#8e7cc3;padding:1px 6px;border-radius:6px;font-size:10px;margin-left:4px">稀有</span>' : '';
       var name = item.type.cn || item.type.name || item.key;
-      possibleHtml += '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid var(--border-light)">';
-      possibleHtml += '<span style="font-weight:600">' + (idx+1) + '. ' + name + rareTag + '</span>';
+      possibleHtml += '<div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;font-size:12px;border-bottom:1px solid var(--border-light)">';
+      possibleHtml += '<span style="font-weight:600">' + name + rareTag + '</span>';
       possibleHtml += '<span style="color:var(--accent-primary);font-weight:700">' + item.pct + '%</span></div>';
+      shown++;
     });
+    // 可能类型整体卡片：≥1条才显示，0条隐藏
+    var possCard = document.getElementById('rPossibilityCard');
+    if(possCard) possCard.style.display = shown > 0 ? 'block' : 'none';
     document.getElementById('rPossibilityList').innerHTML = possibleHtml;
 
     var cn = (pt.cn || '').replace(/undefined/g,'');
@@ -1250,9 +1275,9 @@ function doRestart(){
     var yr = document.getElementById('fYear');
     var mo = document.getElementById('fMonth');
     var dy = document.getElementById('fDay');
-    if(yr) yr.value = 2000;
-    if(mo) mo.value = 1;
-    if(dy) dy.value = 1;
+    if(yr) yr.selectedIndex = 0;  // value=2000 改用 selectedIndex 避免 select 重绘闪烁
+    if(mo) mo.selectedIndex = 1;  // value=1
+    if(dy) dy.selectedIndex = 1;  // value=1
     updateFDate();
     window._show('sHero');
     document.body.classList.remove('nosel');
