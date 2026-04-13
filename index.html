@@ -6,137 +6,1010 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>中式人格测试</title>
 <style>
-/* ══ 主题变量 ══ */
-:root{--bg:#f5f5f0;--bg2:#faf9f6;--card:#fff;--card2:#f0ede8;--text:#1a1a1a;--text2:#444;--text3:#888;--accent:#c0392b;--accent2:#e67e22;--border:#ddd;--border2:#ccc;--shadow:rgba(0,0,0,.08);--prog-bg:#fff}
-[data-theme=dark]{--bg:#0d0d10;--bg2:#13131a;--card:#1a1a24;--card2:#22222e;--text:#e8e8e8;--text2:#aaa;--text3:#666;--border:#333;--border2:#444;--shadow:rgba(0,0,0,.4);--prog-bg:#1a1a24}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%}
-body{font-family:-apple-system,Helvetica Neue,PingFang SC,Microsoft YaHei,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;overflow-x:hidden}
-.nosel{user-select:none;-webkit-user-select:none}
-.stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0;transition:opacity 1s}
-.stars.show{opacity:1}
-.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--d,2s) ease-in-out infinite alternate}
-@keyframes twinkle{0%{opacity:.1}100%{opacity:.9}}
-/* ── 反爬虫：禁止选字/拖拽 ── */
-body.nosel,body.nosel *{user-select:none!important;-webkit-user-select:none!important}
-body.nosel{-webkit-touch-callout:none}
-/* ── 水印 ── */
-.watermark{position:fixed;bottom:12px;right:12px;font-size:11px;color:var(--text3);opacity:.4;line-height:1.6;z-index:5;text-align:right;pointer-events:none;display:none}
-.watermark.show{display:block}
-.watermark span{font-weight:600;font-size:12px}
-/* ── 深色星空背景（仅夜间模式显示） ── */
-[data-theme=dark] body{background:var(--bg2)!important;background-image:radial-gradient(ellipse at 20% 30%,#1a1a3a 0%,transparent 60%),radial-gradient(ellipse at 80% 70%,#0d0d2a 0%,transparent 60%)!important}
-/* ── 布局 ── */
-.container{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:0 16px 40px}
-.screen{display:none;padding-top:20px;animation:fadeIn .3s ease}
-.screen.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-/* ── Hero ── */
-.hero{padding:28px 20px 40px;text-align:center}
-.hero-badge{display:inline-block;background:var(--accent);color:#fff;font-size:12px;padding:4px 14px;border-radius:20px;margin-bottom:18px;letter-spacing:.5px}
-.hero-title{font-size:32px;font-weight:800;line-height:1.3;margin-bottom:14px;letter-spacing:-.5px}
-.hero-sub{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:22px}
-.hero-icons{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:28px}
-.hero-icon{background:var(--card2);padding:6px 12px;border-radius:8px;font-size:12px;color:var(--text2)}
-.hero-count{font-size:12px;color:var(--text3);margin-top:18px}
-.hero-version{margin-top:4px}
-/* ── Progress ── */
-.prog{position:sticky;top:0;z-index:10;background:var(--prog-bg);padding:10px 16px;border-bottom:1px solid var(--border);display:none}
-.prog.show{display:block}
-.prog-row{font-size:12px;color:var(--text2);margin-bottom:6px;text-align:center}
-.prog-bar{height:4px;background:var(--card2);border-radius:2px;overflow:hidden}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width .4s ease}
-/* ── Info Form ── */
-.info-pg{padding-top:10px}
-.card{background:var(--card);border-radius:16px;padding:24px 20px;margin-bottom:16px;box-shadow:var(--shadow);border:1px solid var(--border)}
-.q-num{font-size:11px;color:var(--accent);font-weight:700;letter-spacing:1px;margin-bottom:6px}
-.q-text{font-size:18px;font-weight:700;margin-bottom:4px}
-.q-sub{font-size:13px;color:var(--text2);margin-bottom:20px}
-.form-row{margin-bottom:20px}
-.form-row label{display:block;font-size:14px;font-weight:600;margin-bottom:10px}
-.num-input{width:100%;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;font-size:16px;color:var(--text);outline:none;text-align:center;transition:border-color .2s}
-.num-input:focus{border-color:var(--accent2)}
-/* 日期三联select */
-.date-split{display:flex;gap:8px}
-.date-sel{flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:12px 6px;font-size:15px;color:var(--text);outline:none;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation}
-.date-sel:focus{border-color:var(--accent2)}
-/* 生肖/星座预览区 */
-.preview-box{background:linear-gradient(135deg,#fdf6f0 0%,#f0f4ff 100%);border:1px solid #e8d5c4;border-radius:10px;padding:14px;margin-top:14px;display:none;animation:fadeIn .3s ease}
-.preview-box.show{display:block}
-.preview-label{font-size:11px;color:var(--text3);letter-spacing:1px;margin-bottom:8px}
-.preview-tags{display:flex;gap:10px;flex-wrap:wrap}
-.preview-tag{background:var(--card);border:1px solid var(--border2);border-radius:8px;padding:6px 14px;font-size:14px;font-weight:600}
-.preview-tag .emoji{font-size:16px;margin-right:4px}
-/* ── Toggle Switch ── */
-.cal-toggle{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:13px;color:var(--text2)}
-.cal-toggle label{flex:1;font-weight:600}
-.switch{position:relative;width:44px;height:24px;flex-shrink:0}
-.switch input{opacity:0;width:0;height:0}
-.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--card2);border:1px solid var(--border2);border-radius:12px;transition:.3s}
-.slider:before{position:absolute;content:'';height:18px;width:18px;left:2px;bottom:2px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.switch input:checked+.slider{background:var(--accent2);border-color:var(--accent2)}
-.switch input:checked+.slider:before{transform:translateX(20px)}
-/* ── Gender Options ── */
-.rg{display:flex;gap:8px;flex-wrap:wrap}
-.rg-opt{flex:1;min-width:calc(50% - 4px);background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:12px 8px;text-align:center;font-size:14px;cursor:pointer;transition:all .2s;user-select:none;-webkit-user-select:none}
-.rg-opt:active{transform:scale(.97)}
-.rg-opt.sel{background:var(--accent);color:#fff;border-color:var(--accent)}
-/* ── Quiz ── */
-.quiz-pg{padding-top:10px}
-.q-card{background:var(--card);border-radius:16px;padding:24px 20px;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid var(--border);animation:fadeIn .25s ease}
-.q-meta{font-size:11px;color:var(--accent);font-weight:700;letter-spacing:1px;margin-bottom:12px}
-.q-dim{font-size:12px;color:var(--text2);margin-bottom:8px}
-.q-q{font-size:17px;font-weight:700;line-height:1.5;margin-bottom:18px}
-.q-opts{display:flex;flex-direction:column;gap:10px}
-.q-opt{background:var(--card2);border:1.5px solid var(--border2);border-radius:12px;padding:14px 16px;font-size:14px;cursor:pointer;transition:all .15s;text-align:left;line-height:1.5}
-.q-opt:active{transform:scale(.98)}
-.q-opt.sel{border-color:var(--accent);background:rgba(192,57,43,.07)}
-/* ── Loading ── */
-.loading{text-align:center;padding:40px 0}
-.loading-icon{font-size:48px;animation:spin 1.2s linear infinite;display:inline-block}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading-text{font-size:15px;color:var(--text2);margin-top:14px}
-/* ── Result ── */
-.res{padding-top:10px;animation:fadeIn .4s ease}
-.res-badge{text-align:center;margin-bottom:18px}
-.res-badge span{background:var(--accent);color:#fff;font-size:12px;padding:4px 14px;border-radius:20px;letter-spacing:.5px}
-.res-name{text-align:center;font-size:26px;font-weight:900;margin:14px 0 4px;letter-spacing:-.3px}
-.res-type{text-align:center;font-size:15px;color:var(--accent);font-weight:700;margin-bottom:2px;letter-spacing:1px}
-.res-sub{text-align:center;font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.6}
-.res-card{background:var(--card);border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid var(--border)}
-.rst{font-size:12px;color:var(--text2);font-weight:700;letter-spacing:1px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-.rtags{display:flex;flex-wrap:wrap;gap:8px}
-.rtag{background:var(--card2);padding:4px 12px;border-radius:20px;font-size:12px;color:var(--text2)}
-.res-act{text-align:center;margin-top:16px}
-.act-btn{background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:12px 20px;font-size:14px;cursor:pointer;color:var(--text);width:100%;max-width:280px;transition:all .2s}
-.act-btn:active{transform:scale(.97)}
-.rt-btn{background:none;border:none;color:var(--text2);cursor:pointer;font-size:13px;padding:8px 16px;margin-top:8px;text-decoration:underline}
-.rt-btn:active{color:var(--accent)}
-/* ── 维度对比条（左右对称） ── */
-.dim-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.dim-lbl{font-size:12px;color:var(--text2);width:36px;flex-shrink:0;text-align:right}
-.dim-bar{flex:1;height:8px;background:var(--card2);border-radius:4px;overflow:hidden}
-.dim-fill{height:100%;border-radius:4px;transition:width 1.2s cubic-bezier(.22,1,.36,1)}
-.dim-val{font-size:11px;color:var(--text3);width:28px;flex-shrink:0}
-/* ── 人格对比 ── */
-.cp-card{display:flex;gap:14px;align-items:center;background:var(--card2);border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid var(--border2)}
-.cp-avatar{width:48px;height:48px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:2px solid var(--border2)}
-.cp-info{flex:1;min-width:0}
-.cp-name{font-size:14px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cp-type{font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.5px}
-.cp-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
-.cp-tag{background:var(--card);padding:2px 8px;border-radius:10px;font-size:10px;color:var(--text2);border:1px solid var(--border2)}
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS — 统一设计系统
+   ═══════════════════════════════════════════ */
+:root {
+  /* 主题色 */
+  --bg-primary: #faf8f5;
+  --bg-secondary: #f0ebe4;
+  --bg-card: #ffffff;
+  --bg-card-hover: #faf7f3;
+  
+  /* 文字色 */
+  --text-primary: #1a1a2e;
+  --text-secondary: #4a4a5a;
+  --text-muted: #8a8a9a;
+  
+  /* 强调色 */
+  --accent-primary: #e85a4f;
+  --accent-secondary: #d4a574;
+  --accent-tertiary: #8e7cc3;
+  --accent-success: #52b788;
+  
+  /* 渐变色 */
+  --gradient-gold: linear-gradient(135deg, #d4a574 0%, #e85a4f 100%);
+  --gradient-sky: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-dawn: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gradient-night: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
+  --gradient-preview: linear-gradient(135deg, #fef9f3 0%, #f5f0ff 100%);
+  
+  /* 阴影 */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
+  --shadow-glow: 0 0 30px rgba(232,90,79,0.15);
+  
+  /* 边框 */
+  --border-light: #e8e4df;
+  --border-medium: #d4cfc8;
+  
+  /* 间距 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+}
+
+/* 深色模式 */
+[data-theme=dark] {
+  --bg-primary: #0f0f1a;
+  --bg-secondary: #1a1a2e;
+  --bg-card: #252538;
+  --bg-card-hover: #2d2d44;
+  --text-primary: #f0f0f5;
+  --text-secondary: #a0a0b0;
+  --text-muted: #6a6a7a;
+  --border-light: #3a3a4a;
+  --border-medium: #4a4a5a;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.4);
+  --shadow-glow: 0 0 30px rgba(232,90,79,0.2);
+}
+
+/* ═══════════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════════ */
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent }
+html, body { height: 100%; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+.nosel { user-select: none; -webkit-user-select: none; }
+body.nosel, body.nosel * { user-select: none !important; -webkit-user-select: none !important }
+body.nosel { -webkit-touch-callout: none }
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════
+   STARS BACKGROUND (夜间模式)
+   ═══════════════════════════════════════════ */
+.stars {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 1s;
+  background: radial-gradient(ellipse at 20% 30%, #1a1a3a 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 70%, #0d0d2a 0%, transparent 60%);
+}
+
+.stars.show { opacity: 1; }
+
+.star {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  animation: twinkle var(--d, 2s) ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════
+   WATERMARK
+   ═══════════════════════════════════════════ */
+.watermark {
+  position: fixed;
+  bottom: 12px; right: 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+  opacity: 0.4;
+  line-height: 1.6;
+  z-index: 5;
+  text-align: right;
+  pointer-events: none;
+  display: none;
+}
+.watermark.show { display: block; }
+.watermark span { font-weight: 600; font-size: 12px; }
+
+/* ═══════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════ */
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 0 16px 40px;
+}
+
+.screen {
+  display: none;
+  padding-top: 20px;
+  animation: fadeInUp 0.4s ease;
+}
+.screen.active { display: block; }
+
+/* ═══════════════════════════════════════════
+   HERO SECTION
+   ═══════════════════════════════════════════ */
+.hero {
+  padding: 32px 20px 48px;
+  text-align: center;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--gradient-gold);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-md);
+}
+
+.hero-title {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 16px;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+
+.hero-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.hero-icon {
+  background: var(--bg-card);
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+  transition: all 0.2s;
+}
+
+.hero-icon:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  border-color: var(--accent-primary);
+}
+
+.hero-count {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 24px;
+}
+
+.hero-version {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ═══════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--accent-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 14px 32px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(232, 90, 79, 0.3);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(232, 90, 79, 0.4);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(232, 90, 79, 0.3);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-card-hover);
+  box-shadow: var(--shadow-md);
+}
+
+/* ═══════════════════════════════════════════
+   PROGRESS BAR
+   ═══════════════════════════════════════════ */
+.prog {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg-card);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light);
+  display: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.prog.show { display: block; }
+
+.prog-row {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.prog-bar {
+  height: 6px;
+  background: var(--bg-secondary);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.prog-fill {
+  height: 100%;
+  background: var(--gradient-gold);
+  border-radius: 3px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ═══════════════════════════════════════════
+   CARD
+   ═══════════════════════════════════════════ */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  padding: 28px 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+  transition: all 0.3s;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+/* ═══════════════════════════════════════════
+   INFO PAGE (日期选择 + 性别)
+   ═══════════════════════════════════════════ */
+.info-pg { padding-top: 12px; }
+
+.q-num {
+  font-size: 11px;
+  color: var(--accent-primary);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.q-text {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+}
+
+.q-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.form-row {
+  margin-bottom: 24px;
+}
+
+.form-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+/* ═══ 日期三联选择器 ═══ */
+.date-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 10px;
+}
+
+.date-select-wrapper {
+  position: relative;
+}
+
+.date-select-wrapper::after {
+  content: '';
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid var(--text-muted);
+  pointer-events: none;
+}
+
+.date-select {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 14px 32px 14px 14px;
+  font-size: 15px;
+  color: var(--text-primary);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: all 0.2s;
+}
+
+.date-select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(232, 90, 79, 0.1);
+}
+
+.date-select option {
+  padding: 8px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+/* ═══ 生肖星座预览区 ═══ */
+.preview-box {
+  background: var(--gradient-preview);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-top: 16px;
+  display: none;
+  animation: fadeInUp 0.4s ease;
+}
+
+.preview-box.show { display: block; }
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.preview-icon {
+  font-size: 16px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.preview-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.preview-content {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.preview-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 12px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s;
+}
+
+.preview-tag:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.preview-tag .emoji {
+  font-size: 24px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.preview-tag .zodiac {
+  color: var(--accent-primary);
+}
+
+.preview-tag .star {
+  color: var(--accent-tertiary);
+}
+
+.preview-tag .symbol {
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+/* ═══ 性别选择 ═══ */
+.gender-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.gender-option {
+  flex: 1;
+  min-width: calc(33.33% - 7px);
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 14px 8px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.gender-option:active {
+  transform: scale(0.97);
+}
+
+.gender-option.sel {
+  background: var(--accent-primary);
+  color: #fff;
+  border-color: var(--accent-primary);
+  box-shadow: 0 4px 15px rgba(232, 90, 79, 0.3);
+}
+
+.gender-option .icon {
+  font-size: 24px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* ═══ 按钮区域 ═══ */
+.btn-area {
+  margin-top: 8px;
+}
+
+.btn-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-lg);
+  padding: 16px 24px;
+  font-size: 15px;
+  font-weight: 500;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.btn-loading .spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border-light);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ═══════════════════════════════════════════
+   QUIZ PAGE
+   ═══════════════════════════════════════════ */
+.quiz-pg { padding-top: 12px; }
+
+.q-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  padding: 28px 24px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+  animation: fadeInUp 0.3s ease;
+}
+
+.q-meta {
+  font-size: 11px;
+  color: var(--accent-primary);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+}
+
+.q-dim {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.q-question {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+.q-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.q-option {
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.q-option:active {
+  transform: scale(0.98);
+}
+
+.q-option.sel {
+  border-color: var(--accent-primary);
+  background: rgba(232, 90, 79, 0.08);
+}
+
+.q-option.sel::before {
+  content: '✓ ';
+  color: var(--accent-primary);
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════
+   LOADING PAGE
+   ═══════════════════════════════════════════ */
+.loading {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.loading-animation {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 24px;
+}
+
+.loading-circle {
+  position: absolute;
+  inset: 0;
+  border: 3px solid var(--border-light);
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+}
+
+.loading-circle:nth-child(2) {
+  inset: 10px;
+  border-color: var(--accent-primary);
+  border-top-color: transparent;
+  animation-duration: 1s;
+  animation-direction: reverse;
+}
+
+.loading-circle:nth-child(3) {
+  inset: 20px;
+  border-color var(--accent-tertiary);
+  border-right-color: transparent;
+  animation-duration: 0.8s;
+}
+
+.loading-emoji {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.loading-text {
+  font-size: 16px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════
+   RESULT PAGE
+   ═══════════════════════════════════════════ */
+.result {
+  padding-top: 12px;
+  animation: fadeInUp 0.5s ease;
+}
+
+.result-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--gradient-gold);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+.result-name {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.result-type {
+  font-size: 14px;
+  color: var(--accent-primary);
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.result-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+/* 维度对比条 */
+.dim-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.dim-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  width: 72px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.dim-bar {
+  flex: 1;
+  height: 10px;
+  background: var(--bg-secondary);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.dim-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dim-value {
+  font-size: 12px;
+  color: var(--text-muted);
+  width: 32px;
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+/* CP组合 */
+.cp-card {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border-light);
+}
+
+.cp-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  border: 2px solid var(--border-light);
+}
+
+.cp-info { flex: 1; min-width: 0; }
+
+.cp-name {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cp-type {
+  font-size: 11px;
+  color: var(--accent-primary);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.cp-tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.cp-tag {
+  background: var(--bg-card);
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+}
+
+/* 标签 */
+.rtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rtag {
+  background: var(--bg-secondary);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+}
+
+/* 小标题 */
+.section-title {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 /* 重新测试确认框 */
-#restartModal{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.5);justify-content:center;align-items:center}
-#restartModal.show{display:flex}
-.rm-box{background:var(--card);border-radius:16px;padding:28px 24px;max-width:300px;width:90%;text-align:center}
-.rm-title{font-size:17px;font-weight:700;margin-bottom:8px}
-.rm-desc{font-size:13px;color:var(--text2);margin-bottom:20px;line-height:1.6}
-.rm-btns{display:flex;gap:10px}
-.rm-btn{flex:1;padding:12px;border-radius:10px;font-size:14px;cursor:pointer;border:none;font-weight:600;transition:opacity .2s}
-.rm-btn:active{opacity:.8}
-.rm-ok{background:var(--accent);color:#fff}
-.rm-cancel{background:var(--card2);color:var(--text)}
+#restartModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+#restartModal.show { display: flex; }
+
+.rm-box {
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  padding: 32px 28px;
+  max-width: 320px;
+  width: 90%;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.rm-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.rm-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.rm-btns {
+  display: flex;
+  gap: 12px;
+}
+
+.rm-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.rm-btn:active { opacity: 0.8; }
+
+.rm-ok {
+  background: var(--accent-primary);
+  color: #fff;
+}
+
+.rm-cancel {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.act-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-lg);
+  padding: 14px 24px;
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--text-primary);
+  width: 100%;
+  max-width: 280px;
+  transition: all 0.2s;
+}
+
+.act-btn:active { transform: scale(0.98); }
+
+.rt-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 10px 20px;
+  margin-top: 12px;
+  text-decoration: underline;
+}
+
+.rt-btn:active { color: var(--accent-primary); }
+
+.res-act { text-align: center; margin-top: 20px; }
+
+/* 隐藏域 */
+.hidden { display: none !important; }
 </style>
 </head>
 <body>
@@ -145,7 +1018,10 @@ body.nosel{-webkit-touch-callout:none}
 <div class="stars" id="stars"></div>
 
 <!-- 水印 -->
-<div class="watermark" id="watermark">中式人格测试<br><span id="wmType"></span></div>
+<div class="watermark" id="watermark">
+  中式人格测试<br>
+  <span id="wmType"></span>
+</div>
 
 <!-- Progress -->
 <div class="prog" id="prog">
@@ -174,14 +1050,14 @@ body.nosel{-webkit-touch-callout:none}
     </div>
     <button class="btn" type="button" onclick="window._show('sInfo')">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.5.0</div>
+    <div class="hero-version">v1.6.0</div>
   </div>
 </div>
 
 <!-- Screen: Info -->
 <div class="screen" id="sInfo">
   <div class="info-pg">
-    <div class="card" style="animation:none">
+    <div class="card">
       <div class="q-num">基本信息</div>
       <div class="q-text">先聊聊你的基本属性</div>
       <div class="q-sub">基本信息越准，人格画像越真</div>
@@ -189,32 +1065,57 @@ body.nosel{-webkit-touch-callout:none}
       <!-- 出生日期：年月日三联 -->
       <div class="form-row">
         <label>🎂 出生日期</label>
-        <div class="date-split">
-          <select id="fYear" class="date-sel"><option value="">年</option></select>
-          <select id="fMonth" class="date-sel"><option value="">月</option></select>
-          <select id="fDay" class="date-sel"><option value="">日</option></select>
+        <div class="date-grid">
+          <div class="date-select-wrapper">
+            <select id="fYear" class="date-select"><option value="">年</option></select>
+          </div>
+          <div class="date-select-wrapper">
+            <select id="fMonth" class="date-select"><option value="">月</option></select>
+          </div>
+          <div class="date-select-wrapper">
+            <select id="fDay" class="date-select"><option value="">日</option></select>
+          </div>
         </div>
         <input id="fDate" type="hidden">
         <input id="fBirth" type="hidden">
+        
         <!-- 生肖星座预览 -->
         <div class="preview-box" id="previewBox">
-          <div class="preview-label">✦ 系统推算结果（可改日期重算）</div>
-          <div class="preview-tags" id="previewTags"></div>
+          <div class="preview-header">
+            <span class="preview-icon">✨</span>
+            <span class="preview-label">系统推算结果 · 可调整日期重算</span>
+          </div>
+          <div class="preview-content" id="previewTags"></div>
         </div>
       </div>
 
       <!-- 性别 -->
       <div class="form-row">
         <label>⚧ 性别</label>
-        <div class="rg" id="fGender">
-          <div class="rg-opt" onclick="window.pick(this,'gender')">🙋‍♂️ 男</div>
-          <div class="rg-opt" onclick="window.pick(this,'gender')">🙋‍♀️ 女</div>
-          <div class="rg-opt" onclick="window.pick(this,'gender')">🤖 武装直升机</div>
+        <div class="gender-options" id="fGender">
+          <div class="gender-option" onclick="window.pick(this,'gender')">
+            <span class="icon">🙋‍♂️</span>
+            <span>男</span>
+          </div>
+          <div class="gender-option" onclick="window.pick(this,'gender')">
+            <span class="icon">🙋‍♀️</span>
+            <span>女</span>
+          </div>
+          <div class="gender-option" onclick="window.pick(this,'gender')">
+            <span class="icon">🤖</span>
+            <span>武装直升机</span>
+          </div>
         </div>
       </div>
 
-      <button class="btn" style="width:100%;margin-top:12px" id="btnPreview" onclick="showPreview()">正在进行的星辰属相测算 →</button>
-      <button class="btn" style="width:100%;margin-top:8px;background:var(--accent2);display:none" id="btnConfirm" onclick="beginQuiz()">确认，开始答题 →</button>
+      <div class="btn-area">
+        <button class="btn" style="width:100%" id="btnPreview" onclick="showPreview()">
+          🔮 正在进行的星辰属相测算 →
+        </button>
+        <button class="btn btn-secondary hidden" style="width:100%;margin-top:10px" id="btnConfirm" onclick="beginQuiz()">
+          ✅ 确认，开始答题 →
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -229,36 +1130,99 @@ body.nosel{-webkit-touch-callout:none}
 <!-- Screen: Loading -->
 <div class="screen" id="sLoad">
   <div class="loading">
-    <div class="loading-icon">⚙️</div>
+    <div class="loading-animation">
+      <div class="loading-circle"></div>
+      <div class="loading-circle"></div>
+      <div class="loading-circle"></div>
+      <div class="loading-emoji">🔮</div>
+    </div>
     <div class="loading-text">正在解读你的命盘...</div>
   </div>
 </div>
 
 <!-- Screen: Result -->
 <div class="screen" id="sRes">
-  <div class="res">
-    <div class="res-badge"><span id="rBadge">你的中式人格</span></div>
-    <div class="res-name" id="rName">加载中...</div>
-    <div class="res-type" id="rType"></div>
-    <div class="res-sub" id="rSub"></div>
-    <div class="card" id="rTxCard"><div class="rst">📝 深度解读</div><div id="rTx"></div></div>
-    <div class="card" id="rQuoteCard" style="display:none"><div id="rQuote"></div></div>
-    <div class="card"><div class="rst">🏷️ 人格标签</div><div class="rtags" id="rTags"></div></div>
-    <div class="card"><div class="rst" id="rAgeTag" style="display:none"></div><div id="rDesc"></div></div>
-    <div class="card"><div class="rst">🔮 命理忠告</div><div id="rZy"></div><div id="rAdvice" style="margin-top:10px;font-size:13px;color:var(--text2)"></div></div>
-    <div class="card" id="rPersonal"><div class="rst">🧩 性格画像</div><div id="rPersonalDetail"></div></div>
-    <div class="card" id="rRelation"><div class="rst">💞 人际情感</div><div id="rRelationDetail"></div></div>
-    <div class="card" id="rCareer"><div class="rst">💼 职场建议</div><div id="rCareerDetail"></div></div>
-    <div class="card" id="rLove"><div class="rst">💘 情感指南</div><div id="rLoveDetail"></div></div>
-    <div class="card" id="rGrow"><div class="rst">🌱 成长建议</div><div id="rGrowDetail"></div></div>
-    <div class="card"><div class="rst">📊 人格雷达</div><div id="rBars"></div></div>
-    <div class="card" id="rCp"><div class="rst">💑 最佳 CP 组合</div><div id="rCpList"></div></div>
-    <div class="card" id="rCompare"><div class="rst">🔍 人格对比</div><div id="rCompareList"></div></div>
+  <div class="result">
+    <div class="result-header">
+      <div class="result-badge" id="rBadge">你的中式人格</div>
+      <div class="result-name" id="rName">加载中...</div>
+      <div class="result-type" id="rType"></div>
+      <div class="result-sub" id="rSub"></div>
+    </div>
+
+    <div class="card" id="rTxCard">
+      <div class="section-title">📝 深度解读</div>
+      <div id="rTx"></div>
+    </div>
+
+    <div class="card" id="rQuoteCard" style="display:none">
+      <div id="rQuote"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">🏷️ 人格标签</div>
+      <div class="rtags" id="rTags"></div>
+    </div>
+
+    <div class="card" id="rAgeTag" style="display:none">
+      <div class="section-title"></div>
+      <div id="rDesc"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">🔮 命理忠告</div>
+      <div id="rZy"></div>
+      <div id="rAdvice" style="margin-top:12px;font-size:14px;color:var(--text-secondary);line-height:1.7"></div>
+    </div>
+
+    <div class="card" id="rPersonal">
+      <div class="section-title">🧩 性格画像</div>
+      <div id="rPersonalDetail"></div>
+    </div>
+
+    <div class="card" id="rRelation">
+      <div class="section-title">💞 人际情感</div>
+      <div id="rRelationDetail"></div>
+    </div>
+
+    <div class="card" id="rCareer">
+      <div class="section-title">💼 职场建议</div>
+      <div id="rCareerDetail"></div>
+    </div>
+
+    <div class="card" id="rLove">
+      <div class="section-title">💘 情感指南</div>
+      <div id="rLoveDetail"></div>
+    </div>
+
+    <div class="card" id="rGrow">
+      <div class="section-title">🌱 成长建议</div>
+      <div id="rGrowDetail"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">📊 人格雷达</div>
+      <div id="rBars"></div>
+    </div>
+
+    <div class="card" id="rCp">
+      <div class="section-title">💑 最佳 CP 组合</div>
+      <div id="rCpList"></div>
+    </div>
+
+    <div class="card" id="rCompare">
+      <div class="section-title">🔍 人格对比</div>
+      <div id="rCompareList"></div>
+    </div>
+
     <div class="res-act">
       <button class="act-btn" id="btnCopyLink" onclick="copyShareLink()">🔗 复制分享链接</button>
     </div>
-    <div style="margin-top:8px;font-size:12px;color:var(--text3)">📢 好友点开链接可直接看结果，无需重测</div>
-    <button class="rt-btn" style="font-size:12px;padding:8px 20px" onclick="doRestart()">🔄 重新测试</button>
+    <div style="margin-top:10px;font-size:12px;color:var(--text-muted);text-align:center">📢 好友点开链接可直接看结果，无需重测</div>
+
+    <div style="text-align:center;margin-top:16px">
+      <button class="rt-btn" onclick="doRestart()">🔄 重新测试</button>
+    </div>
   </div>
 </div>
 
@@ -280,64 +1244,70 @@ body.nosel{-webkit-touch-callout:none}
      JAVASCRIPT
      ═══════════════════════════════════════════════ -->
 
-<!-- 第一段：主题 + 星空生成（页面加载后立即执行） -->
+<!-- 第一段：主题 + 星空生成 -->
 <script>
 // ── 主题自适应 ──
 (function(){
   function setTheme(){
-    var h=new Date().getHours();
-    var dark=h>=19||h<7;
-    document.documentElement.setAttribute('data-theme',dark?'dark':'light');
-    var starsEl=document.getElementById('stars');
-    if(starsEl)starsEl.classList[dark?'add':'remove']('show');
+    var h = new Date().getHours();
+    var dark = h >= 19 || h < 7;
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    var starsEl = document.getElementById('stars');
+    if(starsEl) starsEl.classList[dark ? 'add' : 'remove']('show');
   }
   setTheme();
-  setInterval(setTheme,60000);
+  setInterval(setTheme, 60000);
 })();
 
 // ── 星空生成 ──
 (function(){
-  var s=document.getElementById('stars');
-  if(!s)return;
-  for(var i=0;i<90;i++){
-    var d=document.createElement('div');d.className='star';
-    d.style.cssText='position:absolute;left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;width:'+(Math.random()*2+1)+'px;height:'+(Math.random()*2+1)+'px;opacity:'+(Math.random()*.5+.1)+';background:#fff;border-radius:50%;animation:twinkle '+(Math.random()*3+1.5)+'s ease-in-out infinite alternate;animation-delay:'+(Math.random()*3)+'s';
+  var s = document.getElementById('stars');
+  if(!s) return;
+  for(var i = 0; i < 90; i++){
+    var d = document.createElement('div');
+    d.className = 'star';
+    d.style.cssText = 'position:absolute;left:' + (Math.random()*100) + '%;top:' + (Math.random()*100) + '%;width:' + (Math.random()*2+1) + 'px;height:' + (Math.random()*2+1) + 'px;opacity:' + (Math.random()*.5+.1) + ';animation:twinkle ' + (Math.random()*3+1.5) + 's ease-in-out infinite;animation-delay:' + (Math.random()*3) + 's';
     s.appendChild(d);
   }
 })();
 </script>
 
-<!-- 第二段：核心逻辑（包含题目数据和人格类型） -->
+<!-- 第二段：核心逻辑 -->
 <script>
 // ═══════════════════════════════════════════════
 // 反爬虫
 // ═══════════════════════════════════════════════
 (function(){
-  document.addEventListener('contextmenu',function(e){e.preventDefault()});
+  document.addEventListener('contextmenu', function(e){ e.preventDefault() });
   if(/HeadlessChrome|PhantomJS|Puppeteer|playwright|selenium/i.test(navigator.userAgent)){
-    document.title='404';document.body.innerHTML='';return;
+    document.title = '404';
+    document.body.innerHTML = '';
+    return;
   }
-  document.addEventListener('keydown',function(e){
-    if(e.ctrlKey&&e.key==='u')e.preventDefault();
-    if(e.key==='F12')e.preventDefault();
+  document.addEventListener('keydown', function(e){
+    if(e.ctrlKey && e.key === 'u') e.preventDefault();
+    if(e.key === 'F12') e.preventDefault();
   });
-  try{if(window!==window.top){document.write('');document.close()}}catch(e){}
+  try { if(window !== window.top) { document.write(''); document.close() } } catch(e) {}
 })();
 
 // ═══════════════════════════════════════════════
 // 全局状态
 // ═══════════════════════════════════════════════
-window.sZodiac='';
-window.sStar='';
-window.sGender='';
-window._manualZodiac=false;
-window._manualStar=false;
+window.sZodiac = '';
+window.sStar = '';
+window.sGender = '';
+window._manualZodiac = false;
+window._manualStar = false;
 
-window._show=function(id){
-  var el=document.getElementById(id);
-  if(!el){console.error('元素#'+id+'不存在');return}
-  var ss=document.querySelectorAll('.screen');
-  for(var i=0;i<ss.length;i++)ss[i].classList.remove('active');
+// ═══════════════════════════════════════════════
+// 屏幕切换
+// ═══════════════════════════════════════════════
+window._show = function(id){
+  var el = document.getElementById(id);
+  if(!el){ console.error('元素#' + id + '不存在'); return }
+  var ss = document.querySelectorAll('.screen');
+  for(var i = 0; i < ss.length; i++) ss[i].classList.remove('active');
   el.classList.add('active');
 };
 
@@ -345,68 +1315,108 @@ window._show=function(id){
 // 日期工具
 // ═══════════════════════════════════════════════
 function calcAge(birthStr){
-  if(!birthStr)return null;
-  var bd=new Date(birthStr);
-  var now=new Date();
-  var age=now.getFullYear()-bd.getFullYear();
-  var md=(now.getMonth()-bd.getMonth())*30+(now.getDate()-bd.getDate());
-  if(md<0)age--;
+  if(!birthStr) return null;
+  var bd = new Date(birthStr);
+  var now = new Date();
+  var age = now.getFullYear() - bd.getFullYear();
+  var md = (now.getMonth() - bd.getMonth()) * 30 + (now.getDate() - bd.getDate());
+  if(md < 0) age--;
   return age;
 }
 
 function getZodiacFromBirth(birthStr){
-  if(!birthStr)return null;
-  var bd=new Date(birthStr);
-  var year=bd.getFullYear();
-  var m=bd.getMonth()+1,d=bd.getDate();
-  var isBeforeLN=(m===1)||(m===2&&d<20);
-  var cy=isBeforeLN?year-1:year;
-  var animals=['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
-  return animals[(cy-1900)%12];
+  if(!birthStr) return null;
+  var bd = new Date(birthStr);
+  var year = bd.getFullYear();
+  var m = bd.getMonth() + 1, d = bd.getDate();
+  var isBeforeLN = (m === 1) || (m === 2 && d < 20);
+  var cy = isBeforeLN ? year - 1 : year;
+  var animals = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+  return animals[(cy - 1900) % 12];
 }
 
 function getStarFromBirth(birthStr){
-  if(!birthStr)return null;
-  var bd=new Date(birthStr);
-  var m=bd.getMonth()+1,d=bd.getDate();
-  var stars=[
-    [20,'魔羯','♑'],[19,'水瓶','♒'],[20,'双鱼','♓'],
-    [21,'白羊','♈'],[20,'金牛','♉'],[21,'双子','♊'],
-    [21,'巨蟹','♋'],[23,'狮子','♌'],[23,'处女','♍'],
-    [23,'天秤','♎'],[23,'天蝎','♏'],[22,'射手','♐'],
+  if(!birthStr) return null;
+  var bd = new Date(birthStr);
+  var m = bd.getMonth() + 1, d = bd.getDate();
+  var stars = [
+    [20,'魔羯','♑'],
+    [19,'水瓶','♒'],
+    [20,'双鱼','♓'],
+    [21,'白羊','♈'],
+    [20,'金牛','♉'],
+    [21,'双子','♊'],
+    [21,'巨蟹','♋'],
+    [23,'狮子','♌'],
+    [23,'处女','♍'],
+    [23,'天秤','♎'],
+    [23,'天蝎','♏'],
+    [22,'射手','♐'],
     [22,'魔羯','♑']
   ];
-  return stars[m-1][d<stars[m-1][0]?1:2];
+  var star = stars[m - 1];
+  return d < star[0] ? star : { 1: stars[m][1], 2: stars[m][2], symbol: stars[m][2], name: stars[m][1] };
 }
 
+var ZODIAC_EMOJI = {
+  '鼠':'🐭','牛':'🐮','虎':'🐯','兔':'🐰','龙':'🐉','蛇':'🐍',
+  '马':'🐎','羊':'🐑','猴':'🐵','鸡':'🐔','狗':'🐕','猪':'🐷'
+};
+
+var STAR_SYMBOLS = {
+  '魔羯':'♑','水瓶':'♒','双鱼':'♓','白羊':'♈','金牛':'♉','双子':'♊',
+  '巨蟹':'♋','狮子':'♌','处女':'♍','天秤':'♎','天蝎':'♏','射手':'♐'
+};
+
 // ═══════════════════════════════════════════════
-// 日期选择器初始化（年月日三联select）
+// 日期选择器初始化
 // ═══════════════════════════════════════════════
 function initDateSelectors(){
-  var yrSel=document.getElementById('fYear');
-  var moSel=document.getElementById('fMonth');
-  var dySel=document.getElementById('fDay');
-  if(!yrSel||!moSel||!dySel){console.error('日期select元素未找到');return}
-
-  var yr=new Date().getFullYear();
-  for(var y=yr;y>=yr-74;y--){
-    var o=document.createElement('option');o.value=y;o.textContent=y+'年';yrSel.appendChild(o);
-  }
-  for(var m=1;m<=12;m++){
-    var o=document.createElement('option');o.value=m;o.textContent=m+'月';moSel.appendChild(o);
-  }
-  for(var d=1;d<=31;d++){
-    var o=document.createElement('option');o.value=d;o.textContent=d+'日';dySel.appendChild(o);
+  var yrSel = document.getElementById('fYear');
+  var moSel = document.getElementById('fMonth');
+  var dySel = document.getElementById('fDay');
+  
+  if(!yrSel || !moSel || !dySel){
+    console.error('日期select元素未找到');
+    return false;
   }
 
+  var currentYear = new Date().getFullYear();
+  
+  // 年份选项
+  for(var y = currentYear; y >= currentYear - 74; y--){
+    var o = document.createElement('option');
+    o.value = y;
+    o.textContent = y + '年';
+    yrSel.appendChild(o);
+  }
+  
+  // 月份选项
+  for(var m = 1; m <= 12; m++){
+    var o = document.createElement('option');
+    o.value = m;
+    o.textContent = m + '月';
+    moSel.appendChild(o);
+  }
+  
+  // 日期选项
+  for(var d = 1; d <= 31; d++){
+    var o = document.createElement('option');
+    o.value = d;
+    o.textContent = d + '日';
+    dySel.appendChild(o);
+  }
+  
   // 默认预设 2000-01-01
-  yrSel.value=2000;
-  moSel.value=1;
-  dySel.value=1;
-
+  yrSel.value = 2000;
+  moSel.value = 1;
+  dySel.value = 1;
+  
   // 同步到隐藏字段，触发生肖星座推算
   updateFDate();
   onNativeDateChange();
+  
+  return true;
 }
 
 // 年月日任一变化 → 同步 fDate + 更新预览
@@ -417,53 +1427,75 @@ function onDateChange(){
 
 // 将年月日同步到隐藏 fDate 字段
 function updateFDate(){
-  var yr=document.getElementById('fYear').value;
-  var mo=document.getElementById('fMonth').value;
-  var dy=document.getElementById('fDay').value;
-  var dInput=document.getElementById('fDate');
-  if(yr&&mo&&dy){
-    dInput.value=yr+'-'+String(mo).padStart(2,'0')+'-'+String(dy).padStart(2,'0');
+  var yr = document.getElementById('fYear').value;
+  var mo = document.getElementById('fMonth').value;
+  var dy = document.getElementById('fDay').value;
+  var dInput = document.getElementById('fDate');
+  
+  if(yr && mo && dy){
+    dInput.value = yr + '-' + String(mo).padStart(2, '0') + '-' + String(dy).padStart(2, '0');
   } else {
-    dInput.value='';
+    dInput.value = '';
   }
 }
 
 // 出生日期变化 → 自动推算生肖/星座，更新预览区
 function onNativeDateChange(){
-  var dInput=document.getElementById('fDate');
-  if(!dInput)return;
-  var val=dInput.value;
-  if(!val)return;
-
-  document.getElementById('fBirth').value=val;
-
-  var zodiac=getZodiacFromBirth(val);
-  var star=getStarFromBirth(val);
-
+  var dInput = document.getElementById('fDate');
+  if(!dInput) return;
+  
+  var val = dInput.value;
+  if(!val) return;
+  
+  document.getElementById('fBirth').value = val;
+  
+  var zodiac = getZodiacFromBirth(val);
+  var starData = getStarFromBirth(val);
+  
   if(zodiac){
-    window.sZodiac=zodiac;
-    var zMap={'鼠':'🐭','牛':'🐮','虎':'🐯','兔':'🐰','龙':'🐉','蛇':'🐍','马':'🐎','羊':'🐑','猴':'🐵','鸡':'🐔','狗':'🐕','猪':'🐷'};
-    document.getElementById('previewTags').innerHTML=
-      '<span class="preview-tag"><span class="emoji">'+zMap[zodiac]+'</span>'+zodiac+'年</span>'+
-      (star?' <span class="preview-tag"><span class="emoji">'+star[2]+'</span>'+star[1]+'宫</span>':'');
-    document.getElementById('previewBox').classList.add('show');
+    window.sZodiac = zodiac;
+    var emoji = ZODIAC_EMOJI[zodiac] || '❓';
+    
+    var html = '';
+    
+    // 生肖标签
+    html += '<div class="preview-tag">';
+    html += '<span class="emoji">' + emoji + '</span>';
+    html += '<span class="zodiac">' + zodiac + '年</span>';
+    html += '</div>';
+    
+    // 星座标签
+    if(starData && starData.name){
+      var symbol = STAR_SYMBOLS[starData.name] || '☀️';
+      html += '<div class="preview-tag">';
+      html += '<span class="emoji">' + symbol + '</span>';
+      html += '<span class="star">' + starData.name + '宫</span>';
+      html += '</div>';
+    }
+    
+    var previewTags = document.getElementById('previewTags');
+    var previewBox = document.getElementById('previewBox');
+    
+    if(previewTags) previewTags.innerHTML = html;
+    if(previewBox) previewBox.classList.add('show');
   }
 }
 
 // ═══════════════════════════════════════════════
-// 性别选择（window.pick 全局挂载）
+// 性别选择
 // ═══════════════════════════════════════════════
-window.pick=function(el,type,val){
-  var g=document.getElementById('fGender');
-  if(!g)return;
+window.pick = function(el, type, val){
+  var g = document.getElementById('fGender');
+  if(!g) return;
+  
   if(el.classList.contains('sel')){
     el.classList.remove('sel');
-    window.sGender='';
+    window.sGender = '';
   } else {
-    var items=g.querySelectorAll('.rg-opt');
-    for(var i=0;i<items.length;i++)items[i].classList.remove('sel');
+    var items = g.querySelectorAll('.gender-option');
+    for(var i = 0; i < items.length; i++) items[i].classList.remove('sel');
     el.classList.add('sel');
-    window.sGender=el.textContent.trim();
+    window.sGender = el.textContent.trim();
   }
 };
 
@@ -471,75 +1503,83 @@ window.pick=function(el,type,val){
 // 预览 & 开始答题
 // ═══════════════════════════════════════════════
 function showPreview(){
-  var btn=document.getElementById('btnPreview');
-  if(!btn)return;
-  btn.textContent='⚙ 正在测算中...';
-  btn.disabled=true;
-  btn.style.opacity='0.7';
+  var btn = document.getElementById('btnPreview');
+  if(!btn) return;
+  
+  btn.innerHTML = '<div class="btn-loading"><div class="spinner"></div>正在测算中...</div>';
+  btn.disabled = true;
+  
   setTimeout(function(){
-    btn.style.display='none';
-    var cb=document.getElementById('btnConfirm');
-    if(cb)cb.style.display='block';
-  },800);
+    btn.classList.add('hidden');
+    var cb = document.getElementById('btnConfirm');
+    if(cb) cb.classList.remove('hidden');
+  }, 1000);
 }
 
 function beginQuiz(){
-  var dateVal=document.getElementById('fDate').value;
-  var gender=window.sGender;
-  if(!dateVal){alert('请选择出生日期');return}
-  if(!gender){alert('请选择性别');return}
+  var dateVal = document.getElementById('fDate').value;
+  var gender = window.sGender;
+  
+  if(!dateVal){ alert('请选择出生日期'); return; }
+  if(!gender){ alert('请选择性别'); return; }
+  
   window._show('sQuiz');
   document.getElementById('prog').classList.add('show');
-  ci=0;answers=[];window._show('sQuiz');startQuiz();
+  ci = 0;
+  answers = [];
+  window._show('sQuiz');
+  startQuiz();
 }
 
 // ═══════════════════════════════════════════════
 // 分享链接
 // ═══════════════════════════════════════════════
-function getShareUrl(pt,utm){
-  var base=location.href.split('?')[0].split('#')[0];
-  var p={t:pt.t,n:pt.cn||pt.name,src:utm||'share'};
-  return base+'?'+Object.keys(p).map(function(k){return k+'='+encodeURIComponent(p[k])}).join('&');
+function getShareUrl(pt, utm){
+  var base = location.href.split('?')[0].split('#')[0];
+  var p = { t: pt.t, n: pt.cn || pt.name, src: utm || 'share' };
+  return base + '?' + Object.keys(p).map(function(k){ return k + '=' + encodeURIComponent(p[k]) }).join('&');
 }
 
 function copyShareLink(){
   try{
-    var dims=calc();
-    var pt=matchType(dims,parseInt(window.sAge||25));
-    var url=getShareUrl(pt,'copy');
-    var cn=pt.cn||pt.name||'';
-    var si=pt.selfIntro||pt.s||'命中注定与众不同';
-    var txt='我是「'+(cn||pt.name)+'（'+pt.t+'）」，我的特点是【'+si+'】。查看链接：'+url+' #中式命格测试';
-    if(navigator.clipboard&&navigator.clipboard.writeText){
-      navigator.clipboard.writeText(txt).then(function(){showCopySuccess()}).catch(function(){fallbackCopy(txt)});
+    var dims = calc();
+    var pt = matchType(dims, parseInt(window.sAge || 25));
+    var url = getShareUrl(pt, 'copy');
+    var cn = pt.cn || pt.name || '';
+    var si = pt.selfIntro || pt.s || '命中注定与众不同';
+    var txt = '我是「' + (cn || pt.name) + '（' + pt.t + '）」，我的特点是【' + si + '】。查看链接：' + url + ' #中式命格测试';
+    
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){ showCopySuccess() }).catch(function(){ fallbackCopy(txt) });
     } else {
       fallbackCopy(txt);
     }
   } catch(e){
-    var btn=document.getElementById('btnCopyLink');
-    if(btn)btn.textContent='⚠️ 复制失败，请手动长按复制';
+    var btn = document.getElementById('btnCopyLink');
+    if(btn) btn.textContent = '⚠️ 复制失败，请手动长按复制';
   }
 }
 
 function showCopySuccess(){
-  var btn=document.getElementById('btnCopyLink');
-  if(!btn)return;
-  var old=btn.innerHTML;
-  btn.innerHTML='✅ 已复制！去粘贴给好友吧~';
-  setTimeout(function(){if(btn)btn.innerHTML=old},2500);
+  var btn = document.getElementById('btnCopyLink');
+  if(!btn) return;
+  var old = btn.innerHTML;
+  btn.innerHTML = '✅ 已复制！去粘贴给好友吧~';
+  setTimeout(function(){ if(btn) btn.innerHTML = old }, 2500);
 }
 
 function fallbackCopy(txt){
   try{
-    var ta=document.createElement('textarea');
-    ta.value=txt;
-    ta.style.cssText='position:fixed;top:0;left:0;opacity:0';
+    var ta = document.createElement('textarea');
+    ta.value = txt;
+    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
     document.body.appendChild(ta);
-    ta.focus();ta.select();
-    var ok=document.execCommand('copy');
+    ta.focus();
+    ta.select();
+    var ok = document.execCommand('copy');
     document.body.removeChild(ta);
-    if(ok)showCopySuccess();
-  } catch(e){}
+    if(ok) showCopySuccess();
+  } catch(e) {}
 }
 
 // ═══════════════════════════════════════════════
@@ -657,70 +1697,99 @@ const STAR_BONUS={
   '天蝎':{a:1.1,j:1.1,r:1.1,m:1.0,s:1.0,i:0.9,c:0.9,g:0.9,w:0.9,h:0.9,l:0.9,d:0.9,t:0.9},
   '射手':{j:1.1,w:1.1,g:1.0,s:1.0,i:1.0,a:0.9,r:0.9,m:0.9,c:0.9,h:0.9,l:0.9,d:0.9,t:0.9}
 };
-const DCOLORS=['#e74c3c','#f39c12','#9b59b6','#e91e63','#1abc9c'];
+const DCOLORS=['#e85a4f','#d4a574','#8e7cc3','#52b788','#667eea'];
 
 // ═══════════════════════════════════════════════
 // 题目展示 & 答题
 // ═══════════════════════════════════════════════
-var ci=0,answers=[];
+var ci = 0, answers = [];
+
 function startQuiz(){
   renderQ();
 }
+
 function renderQ(){
-  if(ci>=QS.length){doResult();return}
-  var q=QS[ci];
-  var pct=(ci/QS.length*100).toFixed(1);
-  document.getElementById('qN').textContent=ci+1;
-  document.getElementById('qT').textContent=QS.length;
-  document.getElementById('pFill').style.width=pct+'%';
-  var html='<div class="q-card"><div class="q-meta">第 '+(ci+1)+' / '+QS.length+' 题</div><div class="q-dim">'+['社交享乐','理性规划','人际和谐','数码生活','消费观念','工作态度','身心健康','情绪管理','沟通表达','决策风格'][['s','m','r','i','c','w','g','h','a','j'].indexOf(q.d)]+'</div><div class="q-q">'+q.q+'</div><div class="q-opts">';
-  q.o.forEach(function(opt,idx){
-    html+='<div class="q-opt" onclick="selectOpt(this,'+idx+')">'+opt+'</div>';
+  if(ci >= QS.length){ doResult(); return }
+  var q = QS[ci];
+  var pct = (ci / QS.length * 100).toFixed(1);
+  
+  document.getElementById('qN').textContent = ci + 1;
+  document.getElementById('qT').textContent = QS.length;
+  document.getElementById('pFill').style.width = pct + '%';
+  
+  var dims = ['社交享乐','理性规划','人际和谐','数码生活','消费观念','工作态度','身心健康','情绪管理','沟通表达','决策风格'];
+  var dimKeys = ['s','m','r','i','c','w','g','h','a','j'];
+  var dimIdx = dimKeys.indexOf(q.d);
+  
+  var html = '<div class="q-card">';
+  html += '<div class="q-meta">第 ' + (ci + 1) + ' / ' + QS.length + ' 题</div>';
+  html += '<div class="q-dim">' + dims[dimIdx >= 0 ? dimIdx : 0] + '</div>';
+  html += '<div class="q-question">' + q.q + '</div>';
+  html += '<div class="q-options">';
+  
+  q.o.forEach(function(opt, idx){
+    html += '<div class="q-option" onclick="selectOpt(this,' + idx + ')">' + opt + '</div>';
   });
-  html+='</div></div>';
-  document.getElementById('quizArea').innerHTML=html;
+  
+  html += '</div></div>';
+  document.getElementById('quizArea').innerHTML = html;
 }
-window.selectOpt=function(el,idx){
-  document.querySelectorAll('.q-opt').forEach(function(o){o.classList.remove('sel')});
+
+window.selectOpt = function(el, idx){
+  document.querySelectorAll('.q-option').forEach(function(o){ o.classList.remove('sel') });
   el.classList.add('sel');
-  answers.push({d:QS[ci].d,o:idx});
+  answers.push({ d: QS[ci].d, o: idx });
   ci++;
-  setTimeout(renderQ,120);
+  setTimeout(renderQ, 120);
 };
 
 // ═══════════════════════════════════════════════
 // 计算核心
 // ═══════════════════════════════════════════════
 function calc(){
-  var ds={s:0,m:0,r:0,i:0,c:0,w:0,g:0,h:0,a:0,j:0,l:0,d:0,t:0};
+  var ds = {s:0,m:0,r:0,i:0,c:0,w:0,g:0,h:0,a:0,j:0,l:0,d:0,t:0};
+  
   answers.forEach(function(ans){
-    var wt=[3,2,1,0];
-    ds[ans.d]+=(wt[ans.o]||0);
+    var wt = [3,2,1,0];
+    ds[ans.d] += (wt[ans.o] || 0);
   });
-  var keys=Object.keys(ds);
+  
+  var keys = Object.keys(ds);
   keys.forEach(function(k){
-    ds[k]*=(DIM_COEF[k]||1);
-    if(ZODIAC_BONUS[window.sZodiac]&&ZODIAC_BONUS[window.sZodiac][k])ds[k]*=ZODIAC_BONUS[window.sZodiac][k];
-    if(window.sStar&&STAR_BONUS[window.sStar]&&STAR_BONUS[window.sStar][k])ds[k]*=STAR_BONUS[window.sStar][k];
-    if(window.sGender==='🙋‍♀️ 女'||window.sGender==='🤖 武装直升机'){var fadj={'s':.92,'g':1.08,'r':1.05,'w':1.05,'h':1.03,'j':.95};if(fadj[k])ds[k]*=fadj[k];}
+    ds[k] *= (DIM_COEF[k] || 1);
+    if(ZODIAC_BONUS[window.sZodiac] && ZODIAC_BONUS[window.sZodiac][k]) ds[k] *= ZODIAC_BONUS[window.sZodiac][k];
+    if(window.sStar && STAR_BONUS[window.sStar] && STAR_BONUS[window.sStar][k]) ds[k] *= STAR_BONUS[window.sStar][k];
+    if(window.sGender === '🙋‍♀️ 女' || window.sGender === '🤖 武装直升机'){
+      var fadj = {'s':.92,'g':1.08,'r':1.05,'w':1.05,'h':1.03,'j':.95};
+      if(fadj[k]) ds[k] *= fadj[k];
+    }
   });
-  if(window.sAge&&window.sAge<22){var ymad={'g':1.1,'w':1.15,'i':1.1,'j':.9};Object.keys(ymad).forEach(function(k){ds[k]*=ymad[k]})}
-  if(window.sAge&&window.sAge>40){var omad={'g':1.12,'h':1.1,'r':1.08};Object.keys(omad).forEach(function(k){ds[k]*=omad[k]})}
+  
+  if(window.sAge && window.sAge < 22){
+    var ymad = {'g':1.1,'w':1.15,'i':1.1,'j':.9};
+    Object.keys(ymad).forEach(function(k){ ds[k] *= ymad[k] });
+  }
+  
+  if(window.sAge && window.sAge > 40){
+    var omad = {'g':1.12,'h':1.1,'r':1.08};
+    Object.keys(omad).forEach(function(k){ ds[k] *= omad[k] });
+  }
+  
   return ds;
 }
 
-function matchType(ds,age){
-  var minD=Infinity,best=null;
+function matchType(ds, age){
+  var minD = Infinity, best = null;
   Object.keys(TYPES).forEach(function(k){
-    var t=TYPES[k],s=0;
-    (t.dcols||[]).forEach(function(dc){
-      var kv=dc.split(':');
-      var dv=ds[kv[0]]||0;
-      s+=Math.abs(dv-parseFloat(kv[1]));
+    var t = TYPES[k], s = 0;
+    (t.dcols || []).forEach(function(dc){
+      var kv = dc.split(':');
+      var dv = ds[kv[0]] || 0;
+      s += Math.abs(dv - parseFloat(kv[1]));
     });
-    if(s<minD){minD=s;best=t}
+    if(s < minD){ minD = s; best = t }
   });
-  return best||TYPES[Object.keys(TYPES)[0]];
+  return best || TYPES[Object.keys(TYPES)[0]];
 }
 
 // ═══════════════════════════════════════════════
@@ -729,100 +1798,162 @@ function matchType(ds,age){
 function doResult(){
   window._show('sLoad');
   setTimeout(function(){
-    var dims=calc();
-    var age=calcAge(document.getElementById('fDate').value);
-    window.sAge=age;
-    var pt=matchType(dims,age);
-    var cn=(pt.cn||'').replace(/undefined/g,'');
-    var en=(pt.name||'').replace(/undefined/g,'');
-    document.getElementById('rName').textContent=(cn&&cn!==en)?cn+' · '+en:(cn||en||pt.t||'');
-    document.getElementById('rType').textContent=pt.t;
-    document.getElementById('rSub').textContent=pt.d;
-    var tx=pt.tx||pt.n||pt.name||'';
-    document.getElementById('rTx').innerHTML=(tx?'<p style="font-size:15px;color:var(--accent);font-weight:600;margin-bottom:8px">'+tx+'</p>':'')+(pt.d2||'');
-    document.getElementById('rQuote').innerHTML=(pt.q?'<p style="font-size:14px;color:var(--text2);line-height:1.8;font-style:italic">💬 '+pt.q+'</p>':'');
-    document.getElementById('rDesc').innerHTML=(pt.d2?'<p style="font-size:14px;line-height:1.7;color:var(--text2);margin-bottom:8px">'+pt.d2+'</p>':'')+(pt.r2?'<p style="font-size:13px;color:var(--accent2)">⚠️ 注意：'+pt.r2+'</p>':'');
-    document.getElementById('rAdvice').textContent=pt.tx2||'';
-    var zy=pt.zy||'';
-    document.getElementById('rZy').innerHTML=(zy?'<p style="font-size:14px;line-height:1.7;margin-bottom:8px">'+zy+'</p>':'');
-    var tags='';
-  (pt.tags||[]).forEach(function(tag){tags+='<span class="rtag">'+tag+'</span>'});
-    document.getElementById('rTags').innerHTML=tags;
-    document.getElementById('rAgeTag').textContent='出生于 '+document.getElementById('fDate').value+(window.sZodiac?'，属'+window.sZodiac:'')+(window.sStar?'，'+window.sStar[1]+'座':'')+(window.sGender?'，'+window.sGender:'');
+    var dims = calc();
+    var age = calcAge(document.getElementById('fDate').value);
+    window.sAge = age;
+    var pt = matchType(dims, age);
+    
+    var cn = (pt.cn || '').replace(/undefined/g,'');
+    var en = (pt.name || '').replace(/undefined/g,'');
+    
+    document.getElementById('rName').textContent = (cn && cn !== en) ? cn + ' · ' + en : (cn || en || pt.t || '');
+    document.getElementById('rType').textContent = pt.t;
+    document.getElementById('rSub').textContent = pt.d;
+    
+    var tx = pt.tx || pt.n || pt.name || '';
+    document.getElementById('rTx').innerHTML = (tx ? '<p style="font-size:15px;color:var(--accent-primary);font-weight:600;margin-bottom:10px">' + tx + '</p>' : '') + (pt.d2 || '');
+    
+    var qel = document.getElementById('rQuote');
+    qel.innerHTML = (pt.q ? '<p style="font-size:14px;color:var(--text-secondary);line-height:1.8;font-style:italic">💬 ' + pt.q + '</p>' : '');
+    qel.style.display = pt.q ? 'block' : 'none';
+    
+    var tags = '';
+    (pt.tags || []).forEach(function(tag){ tags += '<span class="rtag">' + tag + '</span>' });
+    document.getElementById('rTags').innerHTML = tags;
+    
+    document.getElementById('rAgeTag').style.display = 'block';
+    document.getElementById('rAgeTag').querySelector('.section-title').textContent = 
+      '👤 出生于 ' + document.getElementById('fDate').value + 
+      (window.sZodiac ? '，属' + window.sZodiac : '') + 
+      (window.sStar && window.sStar.name ? '，' + window.sStar.name + '座' : '') + 
+      (window.sGender ? '，' + window.sGender : '');
+    
+    document.getElementById('rDesc').innerHTML = (pt.d2 ? '<p style="font-size:14px;line-height:1.7;color:var(--text-secondary);margin-bottom:10px">' + pt.d2 + '</p>' : '') + (pt.r2 ? '<p style="font-size:13px;color:var(--accent-primary)">⚠️ 注意：' + pt.r2 + '</p>' : '');
+    
+    document.getElementById('rAdvice').textContent = pt.tx2 || '';
+    
+    var zy = pt.zy || '';
+    document.getElementById('rZy').innerHTML = zy ? '<p style="font-size:14px;line-height:1.7;margin-bottom:8px">' + zy + '</p>' : '';
+    
     // 各维度
-    var barsHtml='';
-    var dims2=[{k:'s',n:'社交指数'},{k:'m',n:'财运指数'},{k:'r',n:'人缘指数'},{k:'i',n:'数码指数'},{k:'c',n:'消费指数'},{k:'w',n:'网瘾指数'},{k:'g',n:'搞钱指数'},{k:'h',n:'作息指数'},{k:'a',n:'记仇指数'},{k:'j',n:'卷王指数'},{k:'l',n:'话痨指数'},{k:'d',n:'独立指数'},{k:'t',n:'社恐指数'}];
-    dims2.forEach(function(dim,idx){
-      var v=Math.min(100,Math.max(0,dims[dim.k]||0));
-      barsHtml+='<div class="dim-row"><div class="dim-lbl">'+dim.n+'</div><div class="dim-bar"><div class="dim-fill" style="width:'+v+'%;background:'+DCOLORS[idx%5]+'"></div></div><div class="dim-val">'+Math.round(v)+'</div></div>';
+    var dims2 = [
+      {k:'s',n:'社交指数'},
+      {k:'m',n:'财运指数'},
+      {k:'r',n:'人缘指数'},
+      {k:'i',n:'数码指数'},
+      {k:'c',n:'消费指数'},
+      {k:'w',n:'网瘾指数'},
+      {k:'g',n:'搞钱指数'},
+      {k:'h',n:'作息指数'},
+      {k:'a',n:'记仇指数'},
+      {k:'j',n:'卷王指数'},
+      {k:'l',n:'话痨指数'},
+      {k:'d',n:'独立指数'},
+      {k:'t',n:'社恐指数'}
+    ];
+    
+    var barsHtml = '';
+    dims2.forEach(function(dim, idx){
+      var v = Math.min(100, Math.max(0, dims[dim.k] || 0));
+      barsHtml += '<div class="dim-row">';
+      barsHtml += '<div class="dim-label">' + dim.n + '</div>';
+      barsHtml += '<div class="dim-bar"><div class="dim-fill" style="width:' + v + '%;background:' + DCOLORS[idx % 5] + '"></div></div>';
+      barsHtml += '<div class="dim-value">' + Math.round(v) + '</div>';
+      barsHtml += '</div>';
     });
-    document.getElementById('rBars').innerHTML=barsHtml;
+    document.getElementById('rBars').innerHTML = barsHtml;
+    
     // CP组合
-    var cpHtml='';
-    var cpKeys=Object.keys(TYPES).filter(function(k){return k!==pt.cn&&k!==pt.name});
-    cpKeys.slice(0,3).forEach(function(k){
-      var cp=TYPES[k];
-      cpHtml+='<div class="cp-card"><div class="cp-avatar">'+(cp.tags&&cp.tags[0]?cp.tags[0].charAt(0):'?')+'</div><div class="cp-info"><div class="cp-name">'+(cp.cn||cp.name||'')+'</div><div class="cp-type">'+cp.t+'</div><div class="cp-tags">'+(cp.tags||[]).slice(0,2).map(function(t){return'<span class="cp-tag">'+t+'</span>'}).join('')+'</div></div></div>';
+    var cpHtml = '';
+    var cpKeys = Object.keys(TYPES).filter(function(k){ return k !== pt.cn && k !== pt.name });
+    cpKeys.slice(0, 3).forEach(function(k){
+      var cp = TYPES[k];
+      cpHtml += '<div class="cp-card">';
+      cpHtml += '<div class="cp-avatar">' + (cp.tags && cp.tags[0] ? cp.tags[0].charAt(0) : '?') + '</div>';
+      cpHtml += '<div class="cp-info">';
+      cpHtml += '<div class="cp-name">' + (cp.cn || cp.name || '') + '</div>';
+      cpHtml += '<div class="cp-type">' + cp.t + '</div>';
+      cpHtml += '<div class="cp-tags">' + (cp.tags || []).slice(0, 2).map(function(t){ return '<span class="cp-tag">' + t + '</span>' }).join('') + '</div>';
+      cpHtml += '</div></div>';
     });
-    document.getElementById('rCpList').innerHTML=cpHtml;
-    // 人格对比
-    document.getElementById('rPersonalDetail').innerHTML='<p style="font-size:14px;color:var(--text2);line-height:1.7">'+(pt.d2||pt.d||'')+'</p>';
-    document.getElementById('rRelationDetail').innerHTML='<p style="font-size:14px;color:var(--text2);line-height:1.7">'+(pt.r2||'你的人际关系处理方式独特，需要了解你的人才能真正读懂你。')+'</p>';
-    document.getElementById('rCareerDetail').innerHTML='<p style="font-size:14px;color:var(--text2);line-height:1.7">适合你的职业方向需要发挥你的核心优势。'+(pt.c2?'推荐：'+pt.c2+'。':'')+'</p>';
-    document.getElementById('rLoveDetail').innerHTML='<p style="font-size:14px;color:var(--text2);line-height:1.7">你的情感模式是'+(pt.s2||'独特')+'的，需要一个能理解你深层需求的人。'+(pt.tx2?'核心忠告：'+pt.tx2.replace(/[「」]/g,''):'')+'</p>';
-    document.getElementById('rGrowDetail').innerHTML='<p style="font-size:14px;color:var(--text2);line-height:1.7">'+(pt.zy||'每个人都有自己的节奏，不必和别人比较。专注自己的成长，你就是你。')+'</p>';
-    document.getElementById('rCompareList').innerHTML=cpHtml;
+    document.getElementById('rCpList').innerHTML = cpHtml;
+    
+    // 详细解读
+    document.getElementById('rPersonalDetail').innerHTML = '<p style="font-size:14px;color:var(--text-secondary);line-height:1.7">' + (pt.d2 || pt.d || '') + '</p>';
+    document.getElementById('rRelationDetail').innerHTML = '<p style="font-size:14px;color:var(--text-secondary);line-height:1.7">' + (pt.r2 || '你的人际关系处理方式独特，需要了解你的人才能真正读懂你。') + '</p>';
+    document.getElementById('rCareerDetail').innerHTML = '<p style="font-size:14px;color:var(--text-secondary);line-height:1.7">适合你的职业方向需要发挥你的核心优势。' + (pt.c2 ? '推荐：' + pt.c2 + '。' : '') + '</p>';
+    document.getElementById('rLoveDetail').innerHTML = '<p style="font-size:14px;color:var(--text-secondary);line-height:1.7">你的情感模式是' + (pt.s2 || '独特') + '的，需要一个能理解你深层需求的人。' + (pt.tx2 ? '核心忠告：' + pt.tx2.replace(/[「」]/g,'') : '') + '</p>';
+    document.getElementById('rGrowDetail').innerHTML = '<p style="font-size:14px;color:var(--text-secondary);line-height:1.7">' + (pt.zy || '每个人都有自己的节奏，不必和别人比较。专注自己的成长，你就是你。') + '</p>';
+    document.getElementById('rCompareList').innerHTML = cpHtml;
+    
     document.getElementById('watermark').classList.add('show');
-    document.getElementById('wmType').textContent=pt.name;
+    document.getElementById('wmType').textContent = pt.name;
+    
     window._show('sRes');
     document.getElementById('prog').classList.remove('show');
     document.body.classList.add('nosel');
+    
     // 分享URL
-    var params=new URLSearchParams(location.search);
+    var params = new URLSearchParams(location.search);
     if(!params.get('t')){
-      var n=cn||en||pt.t||'';
-      var newUrl=location.pathname+'?t='+encodeURIComponent(pt.t||'')+'&n='+encodeURIComponent(n);
-      history.replaceState(null,'',newUrl);
+      var n = cn || en || pt.t || '';
+      var newUrl = location.pathname + '?t=' + encodeURIComponent(pt.t || '') + '&n=' + encodeURIComponent(n);
+      history.replaceState(null, '', newUrl);
     }
-  },1200);
+  }, 1200);
 }
 
 // ═══════════════════════════════════════════════
 // 重新测试
 // ═══════════════════════════════════════════════
-window._showRestartConfirm=function(callback){
-  var modal=document.getElementById('restartModal');
-  if(!modal){callback&&callback(false);return}
+window._showRestartConfirm = function(callback){
+  var modal = document.getElementById('restartModal');
+  if(!modal){ callback && callback(false); return }
   modal.classList.add('show');
-  var ok=document.getElementById('modalOk');
-  var cancel=document.getElementById('modalCancel');
-  function cleanup(){modal.classList.remove('show');ok.onclick=null;cancel.onclick=null}
-  ok.onclick=function(){cleanup();callback&&callback(true)};
-  cancel.onclick=function(){cleanup();callback&&callback(false)};
+  var ok = document.getElementById('modalOk');
+  var cancel = document.getElementById('modalCancel');
+  
+  function cleanup(){ modal.classList.remove('show'); ok.onclick = null; cancel.onclick = null }
+  ok.onclick = function(){ cleanup(); callback && callback(true) };
+  cancel.onclick = function(){ cleanup(); callback && callback(false) };
 };
 
 function doRestart(){
   window._showRestartConfirm(function(ok){
-    if(!ok)return;
-    ci=0;answers=[];window.sZodiac='';window.sStar='';window.sGender='';
-    document.getElementById('quizArea').innerHTML='';
-    document.getElementById('btnPreview').style.display='block';
-    document.getElementById('btnPreview').textContent='正在进行的星辰属相测算 →';
-    document.getElementById('btnPreview').disabled=false;
-    document.getElementById('btnPreview').style.opacity='1';
-    document.getElementById('btnConfirm').style.display='none';
-    document.getElementById('previewBox').classList.remove('show');
-    document.getElementById('previewTags').innerHTML='';
-    document.querySelectorAll('.rg-opt').forEach(function(o){o.classList.remove('sel')});
-    // 重置日期为2000-01-01
-    var yr=document.getElementById('fYear');
-    var mo=document.getElementById('fMonth');
-    var dy=document.getElementById('fDay');
-    if(yr)yr.value=2000;
-    if(mo)mo.value=1;
-    if(dy)dy.value=1;
+    if(!ok) return;
+    ci = 0;
+    answers = [];
+    window.sZodiac = '';
+    window.sStar = '';
+    window.sGender = '';
+    
+    document.getElementById('quizArea').innerHTML = '';
+    
+    var btnPreview = document.getElementById('btnPreview');
+    if(btnPreview){
+      btnPreview.classList.remove('hidden');
+      btnPreview.innerHTML = '🔮 正在进行的星辰属相测算 →';
+      btnPreview.disabled = false;
+    }
+    
+    var btnConfirm = document.getElementById('btnConfirm');
+    if(btnConfirm) btnConfirm.classList.add('hidden');
+    
+    var previewBox = document.getElementById('previewBox');
+    if(previewBox) previewBox.classList.remove('show');
+    
+    document.querySelectorAll('.gender-option').forEach(function(o){ o.classList.remove('sel') });
+    
+    // 重置日期
+    var yr = document.getElementById('fYear');
+    var mo = document.getElementById('fMonth');
+    var dy = document.getElementById('fDay');
+    if(yr) yr.value = 2000;
+    if(mo) mo.value = 1;
+    if(dy) dy.value = 1;
     updateFDate();
     onNativeDateChange();
+    
     window._show('sHero');
     document.body.classList.remove('nosel');
   });
@@ -831,54 +1962,84 @@ function doRestart(){
 // ═══════════════════════════════════════════════
 // 页面初始化
 // ═══════════════════════════════════════════════
-// 检查分享链接
 (function(){
+  // 检查分享链接
   try{
-    var params=new URLSearchParams(location.search);
-    var t=params.get('t'),n=params.get('n'),src=params.get('src');
-    if(t&&n){
-      var keys=Object.keys(TYPES);
-      var pt=null;
-      for(var ki=0;ki<keys.length;ki++){if(TYPES[keys[ki]].t===t){pt=TYPES[keys[ki]];break}}
-      if(!pt)pt=TYPES[keys[0]];
-      document.title=n+'的中式人格 · 中式命格测试';
-      document.getElementById('rBadge').textContent=n+'的中式人格';
-      document.getElementById('rAgeTag').style.display='block';
-      document.getElementById('rAgeTag').textContent='👀 这是好友分享的结果';
-      document.getElementById('rType').textContent=pt.t;
-      document.getElementById('rTx').innerHTML=(pt.tx?'<p style="font-size:15px;color:var(--accent);font-weight:600;margin-bottom:8px">'+pt.tx+'</p>':'')+(pt.d2||'');
-      var cn2=(pt.cn||'').replace(/undefined/g,'');
-      var en2=(pt.name||'').replace(/undefined/g,'');
-      document.getElementById('rName').textContent=(cn2&&cn2!==en2)?cn2+' · '+en2:(cn2||en2||'');
-      document.getElementById('rSub').textContent=pt.d;
-      var qel2=document.getElementById('rQuote');
-      qel2.innerHTML=(pt.q?'💬 '+pt.q:'')+(pt.tx2?'<br>⚡ '+pt.tx2:'');
-      qel2.style.display=pt.q||pt.tx2?'block':'none';
-      document.getElementById('rDesc').innerHTML=(pt.d2?'<p style="font-size:14px;line-height:1.7;color:var(--text2);margin-bottom:8px">'+pt.d2+'</p>':'')+(pt.r2?'<p style="font-size:13px;color:var(--accent2)">⚠️ 注意：'+pt.r2+'</p>':'');
-      document.getElementById('rPersonal').innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:12px">🔒 完整性格画像仅本人测试后可见</div>';
-      document.getElementById('rRelation').innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:12px">🔒 完整人际分析仅本人测试后可见</div>';
-      document.getElementById('rCareer').innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:12px">🔒 完整职场分析仅本人测试后可见</div>';
-      document.getElementById('rLove').innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:12px">🔒 完整情感指南仅本人测试后可见</div>';
-      document.getElementById('rGrow').innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:12px">🔒 完整成长建议仅本人测试后可见</div>';
-      document.getElementById('rAdvice').textContent='（完整忠告仅本人测试后可见）';
-      document.getElementById('rZy').innerHTML=(pt.zy?'<span style="font-size:12px;color:var(--accent2);font-weight:600;margin-right:6px">🔮</span>'+pt.zy+'<br><span style="color:var(--text3);font-size:11px;margin-top:4px;display:block">完整命理解读需本人测试后查看</span>':'（完整命理解读需本人测试后查看）');
-      document.getElementById('rBars').innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:12px">🔒 人格雷达仅本人测试后可见</div>';
-      document.getElementById('rCp').innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:8px">🔒 完整人格对比仅本人测试后可见</div>';
-      document.getElementById('rCompare').innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:8px">🔒 完整人格对比仅本人测试后可见</div>';
-      var th='';
-      (pt.tags||[]).forEach(function(tag){th+='<span class="rtag">'+tag+'</span>'});
-      document.getElementById('rTags').innerHTML=th;
+    var params = new URLSearchParams(location.search);
+    var t = params.get('t'), n = params.get('n'), src = params.get('src');
+    
+    if(t && n){
+      var keys = Object.keys(TYPES);
+      var pt = null;
+      for(var ki = 0; ki < keys.length; ki++){
+        if(TYPES[keys[ki]].t === t){ pt = TYPES[keys[ki]]; break }
+      }
+      if(!pt) pt = TYPES[keys[0]];
+      
+      document.title = n + '的中式人格 · 中式命格测试';
+      document.getElementById('rBadge').textContent = n + '的中式人格';
+      document.getElementById('rAgeTag').style.display = 'block';
+      document.getElementById('rAgeTag').querySelector('.section-title').textContent = '👀 这是好友分享的结果';
+      document.getElementById('rType').textContent = pt.t;
+      
+      var tx = pt.tx || pt.n || pt.name || '';
+      document.getElementById('rTx').innerHTML = (tx ? '<p style="font-size:15px;color:var(--accent-primary);font-weight:600;margin-bottom:10px">' + tx + '</p>' : '') + (pt.d2 || '');
+      
+      var cn2 = (pt.cn || '').replace(/undefined/g,'');
+      var en2 = (pt.name || '').replace(/undefined/g,'');
+      document.getElementById('rName').textContent = (cn2 && cn2 !== en2) ? cn2 + ' · ' + en2 : (cn2 || en2 || '');
+      document.getElementById('rSub').textContent = pt.d;
+      
+      var qel2 = document.getElementById('rQuote');
+      qel2.innerHTML = (pt.q ? '💬 ' + pt.q : '') + (pt.tx2 ? '<br>⚡ ' + pt.tx2 : '');
+      qel2.style.display = pt.q || pt.tx2 ? 'block' : 'none';
+      
+      document.getElementById('rDesc').innerHTML = (pt.d2 ? '<p style="font-size:14px;line-height:1.7;color:var(--text-secondary);margin-bottom:10px">' + pt.d2 + '</p>' : '') + (pt.r2 ? '<p style="font-size:13px;color:var(--accent-primary)">⚠️ 注意：' + pt.r2 + '</p>' : '');
+      
+      document.getElementById('rPersonal').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:16px">🔒 完整性格画像仅本人测试后可见</div>';
+      document.getElementById('rRelation').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:16px">🔒 完整人际分析仅本人测试后可见</div>';
+      document.getElementById('rCareer').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:16px">🔒 完整职场分析仅本人测试后可见</div>';
+      document.getElementById('rLove').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:16px">🔒 完整情感指南仅本人测试后可见</div>';
+      document.getElementById('rGrow').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:16px">🔒 完整成长建议仅本人测试后可见</div>';
+      document.getElementById('rAdvice').textContent = '（完整忠告仅本人测试后可见）';
+      document.getElementById('rZy').innerHTML = (pt.zy ? '<span style="font-size:12px;color:var(--accent-primary);font-weight:600;margin-right:6px">🔮</span>' + pt.zy + '<br><span style="color:var(--text-muted);font-size:11px;margin-top:4px;display:block">完整命理解读需本人测试后查看</span>' : '（完整命理解读需本人测试后查看）');
+      document.getElementById('rBars').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:16px">🔒 人格雷达仅本人测试后可见</div>';
+      document.getElementById('rCp').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px">🔒 完整人格对比仅本人测试后可见</div>';
+      document.getElementById('rCompare').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px">🔒 完整人格对比仅本人测试后可见</div>';
+      
+      var th = '';
+      (pt.tags || []).forEach(function(tag){ th += '<span class="rtag">' + tag + '</span>' });
+      document.getElementById('rTags').innerHTML = th;
+      
       document.getElementById('watermark').classList.add('show');
-      document.getElementById('wmType').textContent=pt.name;
-      document.querySelector('.res-act').innerHTML='<button class="btn" onclick="location.href=location.pathname" style="font-size:14px;padding:13px 36px">🎯 我也要测！</button>';
+      document.getElementById('wmType').textContent = pt.name;
+      document.querySelector('.res-act').innerHTML = '<button class="btn" onclick="location.href=location.pathname" style="font-size:14px;padding:14px 36px">🎯 我也要测！</button>';
       document.body.classList.add('nosel');
       window._show('sRes');
       return;
     }
-  }catch(e){}
+  } catch(e) {}
+  
   // 正常流程：初始化日期选择器
-  initDateSelectors();
+  var initOk = initDateSelectors();
+  if(!initOk){
+    // 备用方案：使用 DOMContentLoaded
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', initDateSelectors);
+    }
+  }
 })();
+
+// 日期选择器 change 事件监听
+document.addEventListener('DOMContentLoaded', function(){
+  var yrSel = document.getElementById('fYear');
+  var moSel = document.getElementById('fMonth');
+  var dySel = document.getElementById('fDay');
+  
+  if(yrSel) yrSel.addEventListener('change', onDateChange);
+  if(moSel) moSel.addEventListener('change', onDateChange);
+  if(dySel) dySel.addEventListener('change', onDateChange);
+});
 </script>
 
 </body>
