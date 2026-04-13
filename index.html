@@ -269,7 +269,7 @@ window._showRestartConfirm=function(callback){
     </div>
     <button class="btn" type="button" onclick="(function(){var el=document.getElementById('sInfo');if(el){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});el.classList.add('active');}}())">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.2.8</div>
+    <div class="hero-version">v1.2.9</div>
   </div>
 </div>
 
@@ -1596,12 +1596,13 @@ window._manualZodiac=false; // 用户手动选了生肖
 window._manualStar=false;   // 用户手动选了星座
 window._show=function(id){try{var el=document.getElementById(id);if(!el){alert('元素#'+id+'不存在');return}var ss=document.querySelectorAll('.screen');for(var i=0;i<ss.length;i++)ss[i].classList.remove('active');el.classList.add('active');}catch(e){alert('show错误:'+e.message)}};
 
-function pick(el,type,val){
+// pick 必须挂到 window，否则 HTML onclick="pick(...)" 找不到
+window.pick=function(el,type,val){
   // 严格隔离：只清除同type同容器内的选项
-  const gId=type==='gender'?'fGender':type==='zodiac'?'fZodiac':'fStar';
-  const g=document.getElementById(gId);
+  var gId=type==='gender'?'fGender':type==='zodiac'?'fZodiac':'fStar';
+  var g=document.getElementById(gId);
   if(!g)return;
-  const cls=type==='gender'?'rg-opt':type==='zodiac'?'zg-opt':'sg-opt';
+  var cls=type==='gender'?'rg-opt':type==='zodiac'?'zg-opt':'sg-opt';
   // toggle：点击已选 → 取消；否则清本组 → 选中
   if(el.classList.contains('sel')){
     el.classList.remove('sel');
@@ -1609,22 +1610,23 @@ function pick(el,type,val){
     else if(type==='star'){window.sStar='';window._manualStar=false;}
     else{window.sGender='';}
   }else{
-    // 只清本组容器内的选项，绝对不跨组
-    Array.from(g.children).forEach(function(o){if(o.classList.contains(cls))o.classList.remove('sel');});
+    // 只清本组容器内的同类选项，绝对不跨组
+    var items=g.querySelectorAll('.'+cls);
+    for(var i=0;i<items.length;i++){items[i].classList.remove('sel');}
     el.classList.add('sel');
     if(type==='zodiac'){
       window.sZodiac=val;window._manualZodiac=true;
-      const hint=document.getElementById('autoHintZodiac');
+      var hint=document.getElementById('autoHintZodiac');
       if(hint)hint.style.display='none';
     }else if(type==='star'){
       window.sStar=val;window._manualStar=true;
-      const hint=document.getElementById('autoHintStar');
-      if(hint)hint.style.display='none';
+      var hint2=document.getElementById('autoHintStar');
+      if(hint2)hint2.style.display='none';
     }else{
       window.sGender=el.textContent.trim();
     }
   }
-}
+};
 
 function beginQuiz(){
   // 支持年龄数字或出生日期
