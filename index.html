@@ -91,6 +91,9 @@ body.nosel select,body.nosel select *,body.nosel input,body.nosel textarea{
 .preview-notice{font-size:12px;color:var(--text3);margin-top:10px}
 .num-input{width:100%;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:10px 12px;font-size:15px;color:var(--text);outline:none;transition:border .2s;-webkit-appearance:auto;appearance:auto;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .num-input:focus{border-color:var(--accent2)}
+.date-split{display:flex;gap:8px}
+.date-sel{flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:10px 6px;font-size:15px;color:var(--text);outline:none;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation}
+.date-sel:focus{border-color:var(--accent2)}
 /* 原生日期选择器 */
 .native-date{color:var(--text);cursor:pointer}
 /* 暗黑/亮色主题下日期选择器 */
@@ -275,7 +278,7 @@ window._showRestartConfirm=function(callback){
     </div>
     <button class="btn" type="button" onclick="(function(){var el=document.getElementById('sInfo');if(el){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});el.classList.add('active');}}())">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.4.0</div>
+    <div class="hero-version">v1.4.1</div>
   </div>
 </div>
 
@@ -289,10 +292,19 @@ window._showRestartConfirm=function(callback){
 
       <div class="form-row">
         <label>🎂 出生日期</label>
-        <input type="date" id="fDate" class="num-input native-date"
-          style="width:100%;font-size:15px;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation"
-          onchange="onNativeDateChange()">
-        <!-- 保留此字段：lunar代码依赖；内容始终等于fDate.value -->
+        <div class="date-split">
+          <select id="fYear" class="date-sel" onchange="onDateChange()">
+            <option value="">年</option>
+          </select>
+          <select id="fMonth" class="date-sel" onchange="onDateChange()">
+            <option value="">月</option>
+          </select>
+          <select id="fDay" class="date-sel" onchange="onDateChange()">
+            <option value="">日</option>
+          </select>
+        </div>
+        <!-- 隐藏字段：兼容原有lunar代码 -->
+        <input class="num-input" id="fDate" type="hidden" value="">
         <input class="num-input" id="fBirth" type="hidden">
       </div>
 
@@ -315,7 +327,7 @@ window._showRestartConfirm=function(callback){
         <div class="preview-notice">如有误差可在上方调整出生日期</div>
       </div>
 
-      <button class="btn" style="width:100%;margin-top:12px" id="btnPreview" onclick="showPreview()">查看推算结果 →</button>
+      <button class="btn" style="width:100%;margin-top:12px" id="btnPreview" onclick="showPreview()">正在进行的星辰属相测算 →</button>
       <button class="btn" style="width:100%;margin-top:8px;background:var(--accent2);display:none" id="btnConfirm" onclick="beginQuiz()">确认，开始答题 →</button>
     </div>
   </div>
@@ -513,16 +525,56 @@ function getZodiacFromBirth(birthStr){
   return animals[(cy-1900)%12];
 }
 
-// 初始化日期选择器（原生 date input）
+// 初始化年月日选择器
 function initDateSelectors(){
-  const dInput=document.getElementById('fDate');
-  if(!dInput)return;
-  const yr=new Date().getFullYear();
-  dInput.min=`${yr-74}-01-01`;
-  dInput.max=`${yr}-12-31`;
-  // 默认预设 2000-01-01，触发 onBirthDateChange 自动选中生肖和星座
-  dInput.value='2000-01-01';
+  var yrSel=document.getElementById('fYear');
+  var moSel=document.getElementById('fMonth');
+  var dySel=document.getElementById('fDay');
+  if(!yrSel||!moSel||!dySel)return;
+  var yr=new Date().getFullYear();
+  // 填充年选项（1940~今年）
+  for(var y=yr;y>=yr-74;y--){
+    var o=document.createElement('option');
+    o.value=y;o.textContent=y+'年';
+    yrSel.appendChild(o);
+  }
+  // 填充月选项（1~12）
+  for(var m=1;m<=12;m++){
+    var o=document.createElement('option');
+    o.value=m;o.textContent=m+'月';
+    moSel.appendChild(o);
+  }
+  // 填充日选项（1~31）
+  for(var d=1;d<=31;d++){
+    var o=document.createElement('option');
+    o.value=d;o.textContent=d+'日';
+    dySel.appendChild(o);
+  }
+  // 默认预设 2000-01-01
+  yrSel.value=2000;
+  moSel.value=1;
+  dySel.value=1;
+  // 同步到 fDate 并触发生肖星座推算
+  updateFDate();
+}
+// 年月日任一变化时调用，同步到 fDate
+function onDateChange(){
+  updateFDate();
   onNativeDateChange();
+}
+// 将年月日同步到 fDate 隐藏字段
+function updateFDate(){
+  var yr=document.getElementById('fYear').value;
+  var mo=document.getElementById('fMonth').value;
+  var dy=document.getElementById('fDay').value;
+  var dInput=document.getElementById('fDate');
+  if(yr&&mo&&dy){
+    var mm=String(mo).padStart(2,'0');
+    var dd=String(dy).padStart(2,'0');
+    dInput.value=yr+'-'+mm+'-'+dd;
+  } else {
+    dInput.value='';
+  }
 }
 // 原生日期选择器 change handler → 自动推算生肖和星座，更新预览区
 function onNativeDateChange(){
@@ -560,19 +612,19 @@ function onNativeDateChange(){
   }
 }
 
-// 显示预览 → 重置按钮状态
+// 点击"正在进行的星辰属相测算" → 显示加载动画，然后切到确认按钮
 function showPreview(){
-  const dInput=document.getElementById('fDate');
-  const val=dInput&&dInput.value;
-  // 必须有日期才能预览
-  if(!val){
-    dInput.style.borderColor='#e74c3c';
-    setTimeout(()=>{dInput.style.borderColor='';},1500);
-    return;
-  }
-  // 重置预览按钮状态
-  document.getElementById('btnPreview').style.display='none';
-  document.getElementById('btnConfirm').style.display='block';
+  var btn=document.getElementById('btnPreview');
+  if(!btn)return;
+  // 显示loading动画
+  btn.textContent='⚙ 正在测算中...';
+  btn.disabled=true;
+  btn.style.opacity='0.7';
+  setTimeout(function(){
+    btn.style.display='none';
+    var confirmBtn=document.getElementById('btnConfirm');
+    if(confirmBtn)confirmBtn.style.display='block';
+  },800);
 }
 
 // ═══════════════════════════════════════════════
