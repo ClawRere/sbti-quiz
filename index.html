@@ -269,7 +269,7 @@ window._showRestartConfirm=function(callback){
     </div>
     <button class="btn" type="button" onclick="(function(){var el=document.getElementById('sInfo');if(el){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});el.classList.add('active');}}())">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.2.9</div>
+    <div class="hero-version">v1.3.0</div>
   </div>
 </div>
 
@@ -283,33 +283,9 @@ window._showRestartConfirm=function(callback){
 
       <div class="form-row">
         <label>🎂 出生日期</label>
-        <div class="cal-toggle">
-          <span class="cal-toggle-label">☀️ 阳历</span>
-          <label class="cal-toggle-switch">
-            <input type="checkbox" id="isLunar" onchange="onCalendarToggle()">
-            <span class="cal-toggle-slider"></span>
-          </label>
-          <span class="cal-toggle-label">🌙 阴历</span>
-        </div>
-        <div id="solarDateRow">
-          <input type="date" id="fDate" class="num-input native-date"
-            style="width:100%;font-size:15px;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation"
-            onchange="onNativeDateChange()">
-        </div>
-        <div id="lunarDateRow" style="display:none">
-          <div style="display:flex;gap:6px;align-items:center">
-            <select id="fLunarYear" class="num-input" style="flex:1;font-size:14px;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation" onchange="onLunarDateChange()">
-              <option value="">年</option>
-            </select>
-            <select id="fLunarMonth" class="num-input" style="flex:1;font-size:14px;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation" onchange="onLunarDateChange()">
-              <option value="">月</option>
-            </select>
-            <select id="fLunarDay" class="num-input" style="flex:1;font-size:14px;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation" onchange="onLunarDateChange()">
-              <option value="">日</option>
-            </select>
-          </div>
-        </div>
-        <div id="lunarHint" class="lunar-hint"></div>
+        <input type="date" id="fDate" class="num-input native-date"
+          style="width:100%;font-size:15px;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation"
+          onchange="onNativeDateChange()">
         <div style="display:none">
           <input class="num-input" id="fBirth" type="hidden" onchange="onBirthDateChange()">
         </div>
@@ -573,7 +549,9 @@ function initDateSelectors(){
   const yr=new Date().getFullYear();
   dInput.min=`${yr-74}-01-01`;
   dInput.max=`${yr}-12-31`;
-  initLunarSelectors();
+  // 默认预设 2000-01-01，触发 onBirthDateChange 自动选中生肖和星座
+  dInput.value='2000-01-01';
+  onNativeDateChange();
 }
 // 原生日期选择器 change handler
 function onNativeDateChange(){
@@ -586,8 +564,12 @@ function onNativeDateChange(){
     onBirthDateChange();
   } else {
     fBirth.value='';
-    // 清空生肖/星座
+    // 清空生肖/星座标记，允许重新手动选择
     document.querySelectorAll('#fZodiac .sel,#fStar .sel').forEach(el=>el.classList.remove('sel'));
+    window._manualZodiac=false;
+    window._manualStar=false;
+    window.sZodiac='';
+    window.sStar='';
     document.getElementById('autoHintZodiac').style.display='none';
     document.getElementById('autoHintStar').style.display='none';
   }
@@ -1870,16 +1852,10 @@ function doRestart(){
     document.getElementById('fBirth').value='';
     document.getElementById('autoHintZodiac').style.display='none';
     document.getElementById('autoHintStar').style.display='none';
-    document.getElementById('fDate').value='';
-    document.getElementById('lunarHint').textContent='';
-    document.getElementById('lunarHint').style.display='none';
+    // 重置日期为默认 2000-01-01，触发自动推算
+    document.getElementById('fDate').value='2000-01-01';
     document.querySelectorAll('.rg-opt,.zg-opt,.sg-opt').forEach(o=>o.classList.remove('sel'));
-    // 重置阳历/阴历切换
-    const isLunarChk=document.getElementById('isLunar');
-    if(isLunarChk)isLunarChk.checked=false;
-    document.getElementById('solarDateRow').style.display='block';
-    document.getElementById('lunarDateRow').style.display='none';
-    document.getElementById('lunarHint').style.display='none';
+    onNativeDateChange();
     document.getElementById('prog').classList.remove('show');
     document.body.classList.remove('nosel');
     window._show('sHero');
