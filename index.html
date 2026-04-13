@@ -175,6 +175,11 @@ body.nosel { -webkit-touch-callout: none }
 .preview-tag .emoji { font-size: 36px; animation: pulse 2s ease-in-out infinite; }
 .preview-tag .zodiac { color: var(--accent-primary); font-size: 18px; }
 .preview-tag .star { color: var(--accent-tertiary); font-size: 18px; letter-spacing: 1px; }
+@media (max-width: 480px) {
+  .preview-tag { padding: 10px 14px; font-size: 13px; min-width: 130px; gap: 6px; }
+  .preview-tag .emoji { font-size: 22px; }
+  .preview-tag .zodiac, .preview-tag .star { font-size: 13px; }
+}
 .gender-options { display: flex; gap: 10px; flex-wrap: wrap; }
 .gender-option {
   flex: 1; min-width: calc(33.33% - 7px); background: var(--bg-secondary);
@@ -892,7 +897,7 @@ function calc(){
   Object.keys(ds).forEach(function(k){
     var zodiacBonus = ZODIAC_BONUS[window.sZodiac] && ZODIAC_BONUS[window.sZodiac][k] ? ZODIAC_BONUS[window.sZodiac][k] - 1 : 0;
     var starBonus = (window.sStar && window.sStar.name && STAR_BONUS[window.sStar.name] && STAR_BONUS[window.sStar.name][k]) ? STAR_BONUS[window.sStar.name][k] - 1 : 0;
-    var bonus = (zodiacBonus + starBonus) * 15; // 加成范围 [-15, +15]
+    var bonus = (zodiacBonus + starBonus) * 3; // 加成范围 [-3, +3]，降低生肖星座对结果的干扰
     ds[k] = Math.max(0, Math.min(100, ds[k] + bonus));
   });
 
@@ -989,13 +994,13 @@ function doResult(){
     (pt.zy_tags || genZyTags(dims)).forEach(function(tag){ tagHtml += '<span class="zy-tag">' + tag + '</span>' });
     document.getElementById('rTags').innerHTML = tagHtml;
 
-    // 反向属性对比
+    // 反向属性对比（6对全部用不同维度，确保有对比意义）
     var oppPairs = [
-      {k:'s',n:'社交达人',nk:'s',nn:'独处爱好者',c:'#e85a4f',nc:'#52b788'},
-      {k:'g',n:'消费自由',nk:'g',nn:'存钱节俭',c:'#d4a574',nc:'#52b788'},
-      {k:'h',n:'作息规律',nk:'h',nn:'熬夜选手',c:'#8e7cc3',nc:'#667eea'},
+      {k:'s',n:'社交达人',nk:'r',nn:'独处爱好者',c:'#e85a4f',nc:'#52b788'},
+      {k:'g',n:'消费自由',nk:'c',nn:'存钱节俭',c:'#d4a574',nc:'#52b788'},
+      {k:'h',n:'作息规律',nk:'w',nn:'熬夜选手',c:'#8e7cc3',nc:'#667eea'},
       {k:'j',n:'内卷达人',nk:'t',nn:'躺平选手',c:'#e85a4f',nc:'#52b788'},
-      {k:'a',n:'记仇模式',nk:'a',nn:'大度模式',c:'#d4a574',nc:'#52b788'},
+      {k:'a',n:'记仇模式',nk:'h',nn:'大度模式',c:'#d4a574',nc:'#52b788'},
       {k:'l',n:'群聊话痨',nk:'d',nn:'独来独往',c:'#8e7cc3',nc:'#667eea'}
     ];
 
@@ -1004,17 +1009,18 @@ function doResult(){
       var v1 = Math.min(100, Math.max(0, dims[pair.k] || 0));
       var v2 = Math.min(100, Math.max(0, dims[pair.nk] || 0));
       var total = v1 + v2 || 1;
-      var leftW = (v2 / total) * 50;
-      var rightW = (v1 / total) * 50;
+      // 标签：n 在左（=v1=左侧条），nn 在右（=v2=右侧条）
+      var leftW = (v1 / total) * 50;
+      var rightW = (v2 / total) * 50;
       barsHtml += '<div class="opp-row">';
       barsHtml += '<div class="opp-header">';
-      barsHtml += '<span class="opp-label" style="color:' + pair.nc + '">' + pair.nn + '</span>';
-      barsHtml += '<span class="opp-center">' + Math.round(v2) + ' vs ' + Math.round(v1) + '</span>';
       barsHtml += '<span class="opp-label" style="color:' + pair.c + '">' + pair.n + '</span>';
+      barsHtml += '<span class="opp-center">' + Math.round(v1) + ' vs ' + Math.round(v2) + '</span>';
+      barsHtml += '<span class="opp-label" style="color:' + pair.nc + '">' + pair.nn + '</span>';
       barsHtml += '</div>';
       barsHtml += '<div class="opp-bar-wrap">';
-      barsHtml += '<div class="opp-bar-left" style="width:' + leftW + '%;background:' + pair.nc + '"></div>';
-      barsHtml += '<div class="opp-bar-right" style="width:' + rightW + '%;background:' + pair.c + '"></div>';
+      barsHtml += '<div class="opp-bar-left" style="width:' + leftW + '%;background:' + pair.c + '"></div>';
+      barsHtml += '<div class="opp-bar-right" style="width:' + rightW + '%;background:' + pair.nc + '"></div>';
       barsHtml += '<div class="opp-tick"></div>';
       barsHtml += '</div></div>';
     });
