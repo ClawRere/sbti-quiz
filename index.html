@@ -83,6 +83,12 @@ body.nosel select,body.nosel select *,body.nosel input,body.nosel textarea{
 .q-sub{font-size:11px;color:var(--text3);font-style:italic;margin-bottom:8px}
 .form-row{margin-bottom:14px}
 .form-row label{display:block;font-size:14px;font-weight:600;margin-bottom:6px;color:var(--text)}
+/* 预览区 */
+.preview-box{background:var(--bg2);border-radius:12px;padding:14px 16px;margin-top:4px}
+.preview-label{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px}
+.preview-tags{display:flex;gap:10px;flex-wrap:wrap}
+.preview-tags .rtag{display:inline-block;background:var(--accent);color:#fff;font-size:14px;font-weight:600;border-radius:20px;padding:6px 14px}
+.preview-notice{font-size:12px;color:var(--text3);margin-top:10px}
 .num-input{width:100%;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:10px 12px;font-size:15px;color:var(--text);outline:none;transition:border .2s;-webkit-appearance:auto;appearance:auto;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .num-input:focus{border-color:var(--accent2)}
 /* 原生日期选择器 */
@@ -269,7 +275,7 @@ window._showRestartConfirm=function(callback){
     </div>
     <button class="btn" type="button" onclick="(function(){var el=document.getElementById('sInfo');if(el){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});el.classList.add('active');}}())">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.3.1</div>
+    <div class="hero-version">v1.4.0</div>
   </div>
 </div>
 
@@ -286,66 +292,31 @@ window._showRestartConfirm=function(callback){
         <input type="date" id="fDate" class="num-input native-date"
           style="width:100%;font-size:15px;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation"
           onchange="onNativeDateChange()">
-        <div style="display:none">
-          <input class="num-input" id="fBirth" type="hidden" onchange="onBirthDateChange()">
-        </div>
-        <div id="birthHint" style="font-size:11px;color:var(--text3);margin-top:5px;display:none">系统自动推算年龄和生肖星座</div>
-      </div>
-
-      <div class="form-row">
-        <label>🎯 或直接填年龄</label>
-        <div style="display:flex;gap:8px">
-          <input class="num-input" id="fAge" type="number" placeholder="如28" min="1" max="120" style="flex:1" oninput="onAgeOrDateChange()">
-          <span style="color:var(--text3);line-height:48px;font-size:13px">岁</span>
-        </div>
+        <!-- 保留此字段：lunar代码依赖；内容始终等于fDate.value -->
+        <input class="num-input" id="fBirth" type="hidden">
       </div>
 
       <div class="form-row">
         <label>⚧ 性别</label>
         <div class="rg" id="fGender" data-group="gender">
-          <div class="rg-opt" data-group="gender" onclick="pick(this,'gender')">🙋‍♂️ 男</div>
-          <div class="rg-opt" data-group="gender" onclick="pick(this,'gender')">🙋‍♀️ 女</div>
-          <div class="rg-opt" data-group="gender" onclick="pick(this,'gender')">🤖 武装直升机</div>
+          <div class="rg-opt" data-group="gender" onclick="window.pick(this,'gender')">🙋‍♂️ 男</div>
+          <div class="rg-opt" data-group="gender" onclick="window.pick(this,'gender')">🙋‍♀️ 女</div>
+          <div class="rg-opt" data-group="gender" onclick="window.pick(this,'gender')">🤖 武装直升机</div>
         </div>
       </div>
 
-      <div class="form-row">
-        <label>🐉 生肖 <span id="autoHintZodiac" style="font-size:11px;color:var(--accent2);display:none">（系统按出生日期自动填入）</span></label>
-        <div class="zg" id="fZodiac">
-          <div class="zg-opt" onclick="pick(this,'zodiac','鼠')"><span class="emoji">🐀</span>鼠</div>
-          <div class="zg-opt" onclick="pick(this,'zodiac','牛')"><span class="emoji">🐂</span>牛</div>
-          <div class="zg-opt" onclick="pick(this,'zodiac','虎')"><span class="emoji">🐅</span>虎</div>
-          <div class="zg-opt" onclick="pick(this,'zodiac','兔')"><span class="emoji">🐇</span>兔</div>
-          <div class="zg-opt" onclick="pick(this,'zodiac','龙')"><span class="emoji">🐉</span>龙</div>
-          <div class="zg-opt" onclick="pick(this,'zodiac','蛇')"><span class="emoji">🐍</span>蛇</div>
-          <div class="zg-opt" onclick="pick(this,'zodiac','马')"><span class="emoji">🐎</span>马</div>
-          <div class="zg-opt" onclick="pick(this,'zodiac','羊')"><span class="emoji">🐑</span>羊</div>
-          <div class="zg-opt" onclick="pick(this,'zodiac','猴')"><span class="emoji">🐒</span>猴</div>
-          <div class="zg-opt" onclick="pick(this,'zodiac','鸡')"><span class="emoji">🐓</span>鸡</div>
-          <div class="zg-opt" onclick="pick(this,'zodiac','狗')"><span class="emoji">🐕</span>狗</div>
-          <div class="zg-opt" onclick="pick(this,'zodiac','猪')"><span class="emoji">🐖</span>猪</div>
+      <!-- 自动推算预览区 -->
+      <div class="preview-box" id="previewBox" style="display:none">
+        <div class="preview-label">🐉 生肖 &amp; ☀️ 黄道宫（自动推算）</div>
+        <div class="preview-tags" id="previewTags">
+          <span class="rtag" id="prevZodiac">🐉 --年</span>
+          <span class="rtag" id="prevStar">☀️ --宫</span>
         </div>
+        <div class="preview-notice">如有误差可在上方调整出生日期</div>
       </div>
 
-      <div class="form-row">
-        <label>☀️ 十二黄道宫 <span id="autoHintStar" style="font-size:11px;color:var(--accent2);display:none">（系统按出生日期自动填入）</span></label>
-        <div class="sg" id="fStar">
-          <div class="sg-opt" onclick="pick(this,'star','白羊')"><span class="icon">♈</span>白羊</div>
-          <div class="sg-opt" onclick="pick(this,'star','金牛')"><span class="icon">♉</span>金牛</div>
-          <div class="sg-opt" onclick="pick(this,'star','双子')"><span class="icon">♊</span>双子</div>
-          <div class="sg-opt" onclick="pick(this,'star','巨蟹')"><span class="icon">♋</span>巨蟹</div>
-          <div class="sg-opt" onclick="pick(this,'star','狮子')"><span class="icon">♌</span>狮子</div>
-          <div class="sg-opt" onclick="pick(this,'star','处女')"><span class="icon">♍</span>处女</div>
-          <div class="sg-opt" onclick="pick(this,'star','天秤')"><span class="icon">♎</span>天秤</div>
-          <div class="sg-opt" onclick="pick(this,'star','天蝎')"><span class="icon">♏</span>天蝎</div>
-          <div class="sg-opt" onclick="pick(this,'star','射手')"><span class="icon">♐</span>射手</div>
-          <div class="sg-opt" onclick="pick(this,'star','摩羯')"><span class="icon">♑</span>摩羯</div>
-          <div class="sg-opt" onclick="pick(this,'star','水瓶')"><span class="icon">♒</span>水瓶</div>
-          <div class="sg-opt" onclick="pick(this,'star','双鱼')"><span class="icon">♓</span>双鱼</div>
-        </div>
-      </div>
-
-      <button class="btn" style="width:100%;margin-top:8px" onclick="beginQuiz()">开始答题 →</button>
+      <button class="btn" style="width:100%;margin-top:12px" id="btnPreview" onclick="showPreview()">查看推算结果 →</button>
+      <button class="btn" style="width:100%;margin-top:8px;background:var(--accent2);display:none" id="btnConfirm" onclick="beginQuiz()">确认，开始答题 →</button>
     </div>
   </div>
 </div>
@@ -553,26 +524,55 @@ function initDateSelectors(){
   dInput.value='2000-01-01';
   onNativeDateChange();
 }
-// 原生日期选择器 change handler
+// 原生日期选择器 change handler → 自动推算生肖和星座，更新预览区
 function onNativeDateChange(){
   const dInput=document.getElementById('fDate');
-  const fBirth=document.getElementById('fBirth');
-  if(!dInput||!fBirth)return;
+  if(!dInput)return;
   const val=dInput.value; // "YYYY-MM-DD"
   if(val){
-    fBirth.value=val;
-    onBirthDateChange();
+    document.getElementById('fBirth').value=val;
+    // 自动计算生肖和星座，写入全局变量
+    const zodiac=getZodiacFromBirth(val);
+    const star=getStarFromBirth(val);
+    window.sZodiac=zodiac||'';
+    window.sStar=star||'';
+    // 计算年龄
+    const age=calcAge(val);
+    if(age>0&&age<120){
+      document.getElementById('fAge').value=age;
+      window.sAge=age;
+    }
+    // 更新预览区
+    const pBox=document.getElementById('previewBox');
+    if(zodiac||star){
+      document.getElementById('prevZodiac').textContent= zodiac ? '🐉 '+zodiac+'年' : '';
+      document.getElementById('prevStar').textContent= star ? '☀️ '+star+'宫' : '';
+      if(pBox)pBox.style.display='block';
+    } else {
+      if(pBox)pBox.style.display='none';
+    }
   } else {
-    fBirth.value='';
-    // 清空生肖/星座标记，允许重新手动选择
-    document.querySelectorAll('#fZodiac .sel,#fStar .sel').forEach(el=>el.classList.remove('sel'));
-    window._manualZodiac=false;
-    window._manualStar=false;
     window.sZodiac='';
     window.sStar='';
-    document.getElementById('autoHintZodiac').style.display='none';
-    document.getElementById('autoHintStar').style.display='none';
+    document.getElementById('fBirth').value='';
+    const pBox=document.getElementById('previewBox');
+    if(pBox)pBox.style.display='none';
   }
+}
+
+// 显示预览 → 重置按钮状态
+function showPreview(){
+  const dInput=document.getElementById('fDate');
+  const val=dInput&&dInput.value;
+  // 必须有日期才能预览
+  if(!val){
+    dInput.style.borderColor='#e74c3c';
+    setTimeout(()=>{dInput.style.borderColor='';},1500);
+    return;
+  }
+  // 重置预览按钮状态
+  document.getElementById('btnPreview').style.display='none';
+  document.getElementById('btnConfirm').style.display='block';
 }
 
 // ═══════════════════════════════════════════════
@@ -1611,16 +1611,24 @@ window.pick=function(el,type,val){
 };
 
 function beginQuiz(){
-  // 支持年龄数字或出生日期
-  let age=document.getElementById('fAge').value;
-  if(!age){
-    const bd=document.getElementById('fBirth').value;
-    if(bd){
-      age=calcAge(bd);
-    }
+  // 必须有日期
+  const dInput=document.getElementById('fDate');
+  const dateVal=dInput&&dInput.value;
+  if(!dateVal){
+    dInput.style.borderColor='#e74c3c';
+    setTimeout(()=>{dInput.style.borderColor='';},1500);
+    return;
   }
-  if(!age||age<1||age>120){document.getElementById('fAge').style.borderColor='#e74c3c';document.getElementById('fAge').placeholder='请输入年龄或选出生日期';return;}
-  document.getElementById('fAge').style.borderColor='';
+  // 年龄从日期计算（全局变量已在 onNativeDateChange 写入）
+  let age=window.sAge;
+  if(!age||age<1||age>120){
+    age=calcAge(dateVal);
+  }
+  if(!age||age<1||age>120){
+    dInput.style.borderColor='#e74c3c';
+    setTimeout(()=>{dInput.style.borderColor='';},1500);
+    return;
+  }
   window.sAge=age;
   ci=0;answers=[];
   window._show('sQuiz');
@@ -1847,15 +1855,14 @@ function doRestart(){
   window._showRestartConfirm(function(ok){
     if(!ok)return;
     ci=0;answers=[];window.sZodiac='';window.sStar='';window.sGender='';
-    window._manualZodiac=false;window._manualStar=false;
     document.getElementById('fAge').value='';
-    document.getElementById('fBirth').value='';
-    document.getElementById('autoHintZodiac').style.display='none';
-    document.getElementById('autoHintStar').style.display='none';
+    document.querySelectorAll('.rg-opt').forEach(o=>o.classList.remove('sel'));
     // 重置日期为默认 2000-01-01，触发自动推算
     document.getElementById('fDate').value='2000-01-01';
-    document.querySelectorAll('.rg-opt,.zg-opt,.sg-opt').forEach(o=>o.classList.remove('sel'));
     onNativeDateChange();
+    // 重置预览按钮状态
+    document.getElementById('btnPreview').style.display='block';
+    document.getElementById('btnConfirm').style.display='none';
     document.getElementById('prog').classList.remove('show');
     document.body.classList.remove('nosel');
     window._show('sHero');
