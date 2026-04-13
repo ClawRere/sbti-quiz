@@ -648,12 +648,12 @@ function getCpList(pt, allTypes) {
   var result = [];
   var myKey = pt.cn || pt.name || pt.t;
 
-  // 1. 最佳CP
+  // 1. 命定CP（从 cp_with 固定配置）
   if (pt.cp_with && allTypes[pt.cp_with]) {
     var cp = allTypes[pt.cp_with];
     result.push({
       type: 'best',
-      label: '最佳CP',
+      label: '命定CP',
       icon: '💑',
       name: cp.cn || cp.name || cp.t,
       t: cp.t,
@@ -663,7 +663,42 @@ function getCpList(pt, allTypes) {
     });
   }
 
-  // 2. 反差CP
+  // 2. 最佳拍档（友情契合度最高）
+  var keys = Object.keys(allTypes);
+  var bp = null, bpScore = -Infinity;
+  keys.forEach(function(k) {
+    if (k === myKey || k === pt.cp_with || k === pt.opp_with) return;
+    var t = allTypes[k];
+    var score = 0;
+    if (t.dcols && pt.dcols) {
+      // 计算维度相似度（友情需要互补而非完全相同）
+      t.dcols.forEach(function(dc) {
+        var kv = dc.split(':');
+        var myVal = pt.dcols.find(function(d){ return d.split(':')[0] === kv[0] });
+        if (myVal) {
+          var diff = Math.abs(parseFloat(kv[1]) - parseFloat(myVal.split(':')[1]));
+          // 友情契合：40~60差异最佳（互补），完全相同或完全相反都偏低
+          if (diff >= 35 && diff <= 65) score += (65 - Math.abs(50 - diff)) * 1.5;
+          else score += Math.max(0, 30 - diff * 0.5);
+        }
+      });
+    }
+    if (score > bpScore) { bpScore = score; bp = t }
+  });
+  if (bp && result.length < 3) {
+    result.push({
+      type: 'buddy',
+      label: '最佳拍档',
+      icon: '🤝',
+      name: bp.cn || bp.name || bp.t,
+      t: bp.t,
+      tags: bp.tags || [],
+      desc: '你们做朋友时默契十足，一个眼神就懂对方，是可以互相依靠的搭档。',
+      compat: 88
+    });
+  }
+
+  // 3. 反差CP
   if (pt.opp_with && allTypes[pt.opp_with]) {
     var opp = allTypes[pt.opp_with];
     result.push({
@@ -675,36 +710,6 @@ function getCpList(pt, allTypes) {
       tags: opp.tags || [],
       desc: '你们在性格上形成互补，彼此能学到对方的长处，是很有火花的一对。',
       compat: 78
-    });
-  }
-
-  // 3. 灵魂伴侣（最高维度匹配）
-  var keys = Object.keys(allTypes);
-  var bestMatch = null, bestScore = 0;
-  keys.forEach(function(k) {
-    if (k === myKey || k === pt.cp_with || k === pt.opp_with) return;
-    var t = allTypes[k];
-    var score = 0;
-    if (t.dcols) {
-      t.dcols.forEach(function(dc) {
-        var kv = dc.split(':');
-        var myVal = (pt.dcols || []).find(function(d){ return d.split(':')[0] === kv[0] });
-        if (myVal) score += 100 - Math.abs(parseFloat(kv[1]) - parseFloat(myVal.split(':')[1]));
-      });
-    }
-    if (score > bestScore) { bestScore = score; bestMatch = t }
-  });
-
-  if (bestMatch && result.length < 3) {
-    result.push({
-      type: 'soulmate',
-      label: '灵魂伴侣',
-      icon: '✨',
-      name: bestMatch.cn || bestMatch.name || bestMatch.t,
-      t: bestMatch.t,
-      tags: bestMatch.tags || [],
-      desc: '你们在灵魂深处有共鸣，聊不完的话题，可能是最懂彼此的那种人。',
-      compat: 85
     });
   }
 
@@ -737,20 +742,32 @@ function getCompareList(pt, allTypes) {
   var myKey = pt.cn || pt.name || pt.t;
   var keys = Object.keys(allTypes);
 
-  // 找一个人格相似的
+  // 找一个人格相似的（余弦相似度最高，排除自己）
   var similar = null, simScore = -Infinity;
   keys.forEach(function(k) {
     if (k === myKey) return;
     var t = allTypes[k];
-    var score = 0;
-    if (t.dcols && pt.dcols) {
+    var dot = 0, dLen = 0, tLen = 0;
+    var td = {};
+    if (t.dcols) {
       t.dcols.forEach(function(dc) {
         var kv = dc.split(':');
-        var myVal = pt.dcols.find(function(d){ return d.split(':')[0] === kv[0] });
-        if (myVal) score += 100 - Math.abs(parseFloat(kv[1]) - parseFloat(myVal.split(':')[1]));
+        td[kv[0]] = parseFloat(kv[1]);
       });
     }
-    if (score > simScore) { simScore = score; similar = t }
+    if (pt.dcols) {
+      pt.dcols.forEach(function(dc) {
+        var kv = dc.split(':');
+        var dv = parseFloat(kv[1]);
+        dLen += dv * dv;
+        if (td[kv[0]] !== undefined) {
+          dot += dv * td[kv[0]];
+          tLen += td[kv[0]] * td[kv[0]];
+        }
+      });
+    }
+    var cos = (dLen > 0 && tLen > 0) ? dot / (Math.sqrt(dLen) * Math.sqrt(tLen)) : 0;
+    if (cos > simScore) { simScore = cos; similar = t }
   });
 
   if (similar) {
@@ -765,20 +782,33 @@ function getCompareList(pt, allTypes) {
     });
   }
 
-  // 找一个人格相反的
+  // 找一个人格相反的（余弦相似度最低，排除自己和相似的）
+  var simKey = similar ? (similar.cn || similar.name || similar.t) : null;
   var opposite = null, oppScore = Infinity;
   keys.forEach(function(k) {
-    if (k === myKey) return;
+    if (k === myKey || k === simKey) return;
     var t = allTypes[k];
-    var score = 0;
-    if (t.dcols && pt.dcols) {
+    var dot = 0, dLen = 0, tLen = 0;
+    var td = {};
+    if (t.dcols) {
       t.dcols.forEach(function(dc) {
         var kv = dc.split(':');
-        var myVal = pt.dcols.find(function(d){ return d.split(':')[0] === kv[0] });
-        if (myVal) score += Math.abs(parseFloat(kv[1]) - parseFloat(myVal.split(':')[1]));
+        td[kv[0]] = parseFloat(kv[1]);
       });
     }
-    if (score < oppScore) { oppScore = score; opposite = t }
+    if (pt.dcols) {
+      pt.dcols.forEach(function(dc) {
+        var kv = dc.split(':');
+        var dv = parseFloat(kv[1]);
+        dLen += dv * dv;
+        if (td[kv[0]] !== undefined) {
+          dot += dv * td[kv[0]];
+          tLen += td[kv[0]] * td[kv[0]];
+        }
+      });
+    }
+    var cos = (dLen > 0 && tLen > 0) ? dot / (Math.sqrt(dLen) * Math.sqrt(tLen)) : 0;
+    if (cos < oppScore) { oppScore = cos; opposite = t }
   });
 
   if (opposite) {
@@ -793,19 +823,28 @@ function getCompareList(pt, allTypes) {
     });
   }
 
-  // 找一个人格互补的
+  // 找一个人格互补的（维度差异在40~65之间，排除自己、相似、相反）
+  var oppKey = opposite ? (opposite.cn || opposite.name || opposite.t) : null;
   var comp = null, compScore = -Infinity;
   keys.forEach(function(k) {
-    if (k === myKey || k === (similar && (similar.cn || similar.name || similar.t)) || k === (opposite && (opposite.cn || opposite.name || opposite.t))) return;
+    if (k === myKey || k === simKey || k === oppKey) return;
     var t = allTypes[k];
     var score = 0;
-    if (t.dcols && pt.dcols) {
+    var td = {};
+    if (t.dcols) {
       t.dcols.forEach(function(dc) {
         var kv = dc.split(':');
-        var myVal = pt.dcols.find(function(d){ return d.split(':')[0] === kv[0] });
-        if (myVal) {
-          var diff = Math.abs(parseFloat(kv[1]) - parseFloat(myVal.split(':')[1]));
-          if (diff > 20 && diff < 60) score += diff;
+        td[kv[0]] = parseFloat(kv[1]);
+      });
+    }
+    if (pt.dcols) {
+      pt.dcols.forEach(function(dc) {
+        var kv = dc.split(':');
+        var myVal = parseFloat(kv[1]);
+        if (td[kv[0]] !== undefined) {
+          var diff = Math.abs(myVal - td[kv[0]]);
+          if (diff >= 40 && diff <= 65) score += (65 - Math.abs(52.5 - diff)) * 1.2;
+          else score += Math.max(0, 20 - diff * 0.3);
         }
       });
     }
