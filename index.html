@@ -10,48 +10,33 @@
    DESIGN TOKENS — 统一设计系统
    ═══════════════════════════════════════════ */
 :root {
-  /* 主题色 */
   --bg-primary: #faf8f5;
   --bg-secondary: #f0ebe4;
   --bg-card: #ffffff;
   --bg-card-hover: #faf7f3;
-  
-  /* 文字色 */
   --text-primary: #1a1a2e;
   --text-secondary: #4a4a5a;
   --text-muted: #8a8a9a;
-  
-  /* 强调色 */
   --accent-primary: #e85a4f;
   --accent-secondary: #d4a574;
   --accent-tertiary: #8e7cc3;
   --accent-success: #52b788;
-  
-  /* 渐变色 */
   --gradient-gold: linear-gradient(135deg, #d4a574 0%, #e85a4f 100%);
   --gradient-sky: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --gradient-dawn: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   --gradient-night: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
   --gradient-preview: linear-gradient(135deg, #fef9f3 0%, #f5f0ff 100%);
-  
-  /* 阴影 */
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
   --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
   --shadow-lg: 0 8px 40px rgba(0,0,0,0.08);
   --shadow-glow: 0 0 30px rgba(232,90,79,0.15);
-  
-  /* 边框 */
   --border-light: #e8e4df;
   --border-medium: #d4cfc8;
-  
-  /* 间距 */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 24px;
 }
-
-/* 深色模式 */
 [data-theme=dark] {
   --bg-primary: #0f0f1a;
   --bg-secondary: #1a1a2e;
@@ -67,13 +52,8 @@
   --shadow-lg: 0 8px 40px rgba(0,0,0,0.4);
   --shadow-glow: 0 0 30px rgba(232,90,79,0.2);
 }
-
-/* ═══════════════════════════════════════════
-   BASE STYLES
-   ═══════════════════════════════════════════ */
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent }
 html, body { height: 100%; }
-
 body {
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
   background: var(--bg-primary);
@@ -83,1052 +63,271 @@ body {
   overflow-x: hidden;
   line-height: 1.6;
 }
-
 .nosel { user-select: none; -webkit-user-select: none; }
 body.nosel, body.nosel * { user-select: none !important; -webkit-user-select: none !important }
 body.nosel { -webkit-touch-callout: none }
-
-/* ═══════════════════════════════════════════
-   ANIMATIONS
-   ═══════════════════════════════════════════ */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.02); }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.2); }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes countUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ═══════════════════════════════════════════
-   STARS BACKGROUND (夜间模式)
-   ═══════════════════════════════════════════ */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+@keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+@keyframes twinkle { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes countUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .stars {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0;
-  transition: opacity 1s;
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0; opacity: 0; transition: opacity 1s;
   background: radial-gradient(ellipse at 20% 30%, #1a1a3a 0%, transparent 60%),
               radial-gradient(ellipse at 80% 70%, #0d0d2a 0%, transparent 60%);
 }
-
 .stars.show { opacity: 1; }
-
-.star {
-  position: absolute;
-  background: #fff;
-  border-radius: 50%;
-  animation: twinkle var(--d, 2s) ease-in-out infinite;
-}
-
-/* ═══════════════════════════════════════════
-   WATERMARK
-   ═══════════════════════════════════════════ */
+.star { position: absolute; background: #fff; border-radius: 50%; animation: twinkle var(--d, 2s) ease-in-out infinite; }
 .watermark {
-  position: fixed;
-  bottom: 12px; right: 12px;
-  font-size: 11px;
-  color: var(--text-muted);
-  opacity: 0.4;
-  line-height: 1.6;
-  z-index: 5;
-  text-align: right;
-  pointer-events: none;
-  display: none;
+  position: fixed; bottom: 12px; right: 12px; font-size: 11px; color: var(--text-muted);
+  opacity: 0.4; line-height: 1.6; z-index: 5; text-align: right;
+  pointer-events: none; display: none;
 }
 .watermark.show { display: block; }
 .watermark span { font-weight: 600; font-size: 12px; }
-
-/* ═══════════════════════════════════════════
-   LAYOUT
-   ═══════════════════════════════════════════ */
-.container {
-  position: relative;
-  z-index: 1;
-  max-width: 520px;
-  margin: 0 auto;
-  padding: 0 16px 40px;
-}
-
-.screen {
-  display: none;
-  padding-top: 20px;
-  animation: fadeInUp 0.4s ease;
-}
+.container { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; padding: 0 16px 40px; }
+.screen { display: none; padding-top: 20px; animation: fadeInUp 0.4s ease; }
 .screen.active { display: block; }
-
-/* ═══════════════════════════════════════════
-   HERO SECTION
-   ═══════════════════════════════════════════ */
-.hero {
-  padding: 32px 20px 48px;
-  text-align: center;
-}
-
+.hero { padding: 32px 20px 48px; text-align: center; }
 .hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--gradient-gold);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 6px 16px;
-  border-radius: 20px;
-  margin-bottom: 24px;
-  letter-spacing: 0.5px;
-  box-shadow: var(--shadow-md);
+  display: inline-flex; align-items: center; gap: 6px; background: var(--gradient-gold);
+  color: #fff; font-size: 12px; font-weight: 600; padding: 6px 16px;
+  border-radius: 20px; margin-bottom: 24px; letter-spacing: 0.5px; box-shadow: var(--shadow-md);
 }
-
 .hero-title {
-  font-size: 36px;
-  font-weight: 800;
-  line-height: 1.25;
-  margin-bottom: 16px;
-  letter-spacing: -1px;
-  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 36px; font-weight: 800; line-height: 1.25; margin-bottom: 16px;
+  letter-spacing: -1px; background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-
-.hero-sub {
-  font-size: 15px;
-  color: var(--text-secondary);
-  line-height: 1.8;
-  margin-bottom: 28px;
-}
-
-.hero-icons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  margin-bottom: 32px;
-}
-
+.hero-sub { font-size: 15px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 28px; }
+.hero-icons { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 32px; }
 .hero-icon {
-  background: var(--bg-card);
-  padding: 8px 14px;
-  border-radius: var(--radius-md);
-  font-size: 13px;
-  color: var(--text-secondary);
-  border: 1px solid var(--border-light);
-  transition: all 0.2s;
+  background: var(--bg-card); padding: 8px 14px; border-radius: var(--radius-md);
+  font-size: 13px; color: var(--text-secondary); border: 1px solid var(--border-light); transition: all 0.2s;
 }
-
-.hero-icon:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
-  border-color: var(--accent-primary);
-}
-
-.hero-count {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 24px;
-}
-
-.hero-version {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-
-/* ═══════════════════════════════════════════
-   BUTTONS
-   ═══════════════════════════════════════════ */
+.hero-icon:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); border-color: var(--accent-primary); }
+.hero-count { font-size: 12px; color: var(--text-muted); margin-top: 24px; }
+.hero-version { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: var(--accent-primary);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-lg);
-  padding: 14px 32px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--accent-primary); color: #fff; border: none; border-radius: var(--radius-lg);
+  padding: 14px 32px; font-size: 15px; font-weight: 600; cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 15px rgba(232, 90, 79, 0.3);
-  user-select: none;
-  -webkit-user-select: none;
+  box-shadow: 0 4px 15px rgba(232, 90, 79, 0.3); user-select: none; -webkit-user-select: none;
 }
-
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(232, 90, 79, 0.4);
-}
-
-.btn:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 10px rgba(232, 90, 79, 0.3);
-}
-
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.btn-secondary {
-  background: var(--bg-card);
-  color: var(--text-primary);
-  border: 1px solid var(--border-medium);
-  box-shadow: var(--shadow-sm);
-}
-
-.btn-secondary:hover {
-  background: var(--bg-card-hover);
-  box-shadow: var(--shadow-md);
-}
-
-/* ═══════════════════════════════════════════
-   PROGRESS BAR
-   ═══════════════════════════════════════════ */
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(232, 90, 79, 0.4); }
+.btn:active { transform: translateY(0); box-shadow: 0 2px 10px rgba(232, 90, 79, 0.3); }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-medium); box-shadow: var(--shadow-sm); }
+.btn-secondary:hover { background: var(--bg-card-hover); box-shadow: var(--shadow-md); }
 .prog {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: var(--bg-card);
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border-light);
-  display: none;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  position: sticky; top: 0; z-index: 10; background: var(--bg-card); padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light); display: none;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
 }
 .prog.show { display: block; }
-
-.prog-row {
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin-bottom: 8px;
-  text-align: center;
-  font-weight: 500;
-}
-
-.prog-bar {
-  height: 6px;
-  background: var(--bg-secondary);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.prog-fill {
-  height: 100%;
-  background: var(--gradient-gold);
-  border-radius: 3px;
-  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ═══════════════════════════════════════════
-   CARD
-   ═══════════════════════════════════════════ */
+.prog-row { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; text-align: center; font-weight: 500; }
+.prog-bar { height: 6px; background: var(--bg-secondary); border-radius: 3px; overflow: hidden; }
+.prog-fill { height: 100%; background: var(--gradient-gold); border-radius: 3px; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
 .card {
-  background: var(--bg-card);
-  border-radius: var(--radius-xl);
-  padding: 28px 24px;
-  margin-bottom: 16px;
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-light);
-  transition: all 0.3s;
+  background: var(--bg-card); border-radius: var(--radius-xl); padding: 28px 24px;
+  margin-bottom: 16px; box-shadow: var(--shadow-md); border: 1px solid var(--border-light); transition: all 0.3s;
 }
-
-.card:hover {
-  box-shadow: var(--shadow-lg);
-}
-
-/* ═══════════════════════════════════════════
-   INFO PAGE (日期选择 + 性别)
-   ═══════════════════════════════════════════ */
+.card:hover { box-shadow: var(--shadow-lg); }
 .info-pg { padding-top: 12px; }
-
-.q-num {
-  font-size: 11px;
-  color: var(--accent-primary);
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-}
-
-.q-text {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 6px;
-  color: var(--text-primary);
-}
-
-.q-sub {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: 24px;
-}
-
-.form-row {
-  margin-bottom: 24px;
-}
-
-.form-row label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: var(--text-primary);
-}
-
-/* ═══ 日期三联选择器 ═══ */
-.date-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr 1fr;
-  gap: 10px;
-}
-
-.date-select-wrapper {
-  position: relative;
-}
-
+.q-num { font-size: 11px; color: var(--accent-primary); font-weight: 700; letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; }
+.q-text { font-size: 20px; font-weight: 700; margin-bottom: 6px; color: var(--text-primary); }
+.q-sub { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; }
+.form-row { margin-bottom: 24px; }
+.form-row label { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text-primary); }
+.date-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 10px; }
+.date-select-wrapper { position: relative; }
 .date-select-wrapper::after {
-  content: '';
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 6px solid var(--text-muted);
-  pointer-events: none;
+  content: ''; position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent;
+  border-top: 6px solid var(--text-muted); pointer-events: none;
 }
-
 .date-select {
-  width: 100%;
-  background: var(--bg-secondary);
-  border: 1.5px solid var(--border-light);
-  border-radius: var(--radius-md);
-  padding: 14px 32px 14px 14px;
-  font-size: 15px;
-  color: var(--text-primary);
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  transition: all 0.2s;
+  width: 100%; background: var(--bg-secondary); border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-md); padding: 14px 32px 14px 14px; font-size: 15px;
+  color: var(--text-primary); cursor: pointer; appearance: none; -webkit-appearance: none; transition: all 0.2s;
 }
-
-.date-select:focus {
-  outline: none;
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(232, 90, 79, 0.1);
-}
-
-.date-select option {
-  padding: 8px;
-  background: var(--bg-card);
-  color: var(--text-primary);
-}
-
-/* ═══ 生肖星座预览区 ═══ */
+.date-select:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 0 3px rgba(232, 90, 79, 0.1); }
+.date-select option { padding: 8px; background: var(--bg-card); color: var(--text-primary); }
 .preview-box {
-  background: var(--gradient-preview);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  margin-top: 16px;
-  display: none;
-  animation: fadeInUp 0.4s ease;
+  background: var(--gradient-preview); border: 1px solid var(--border-light); border-radius: var(--radius-lg);
+  padding: 20px; margin-top: 16px; display: none; animation: fadeInUp 0.4s ease;
 }
-
 .preview-box.show { display: block; }
-
-.preview-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-
-.preview-icon {
-  font-size: 16px;
-  animation: float 3s ease-in-out infinite;
-}
-
-.preview-label {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-weight: 500;
-  letter-spacing: 0.5px;
-}
-
-.preview-content {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
+.preview-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.preview-icon { font-size: 16px; animation: float 3s ease-in-out infinite; }
+.preview-label { font-size: 12px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.5px; }
+.preview-content { display: flex; gap: 12px; flex-wrap: wrap; }
 .preview-tag {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
-  padding: 12px 18px;
-  font-size: 15px;
-  font-weight: 600;
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s;
+  display: flex; align-items: center; gap: 8px; background: var(--bg-card); border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg); padding: 12px 18px; font-size: 15px; font-weight: 600;
+  box-shadow: var(--shadow-sm); transition: all 0.3s;
 }
-
-.preview-tag:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.preview-tag .emoji {
-  font-size: 24px;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.preview-tag .zodiac {
-  color: var(--accent-primary);
-}
-
-.preview-tag .star {
-  color: var(--accent-tertiary);
-}
-
-.preview-tag .symbol {
-  font-size: 18px;
-  opacity: 0.8;
-}
-
-/* ═══ 性别选择 ═══ */
-.gender-options {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
+.preview-tag:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.preview-tag .emoji { font-size: 24px; animation: pulse 2s ease-in-out infinite; }
+.preview-tag .zodiac { color: var(--accent-primary); }
+.preview-tag .star { color: var(--accent-tertiary); }
+.gender-options { display: flex; gap: 10px; flex-wrap: wrap; }
 .gender-option {
-  flex: 1;
-  min-width: calc(33.33% - 7px);
-  background: var(--bg-secondary);
-  border: 1.5px solid var(--border-light);
-  border-radius: var(--radius-md);
-  padding: 14px 8px;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-  user-select: none;
-  -webkit-user-select: none;
+  flex: 1; min-width: calc(33.33% - 7px); background: var(--bg-secondary);
+  border: 1.5px solid var(--border-light); border-radius: var(--radius-md); padding: 14px 8px;
+  text-align: center; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s;
+  user-select: none; -webkit-user-select: none;
 }
-
-.gender-option:active {
-  transform: scale(0.97);
-}
-
-.gender-option.sel {
-  background: var(--accent-primary);
-  color: #fff;
-  border-color: var(--accent-primary);
-  box-shadow: 0 4px 15px rgba(232, 90, 79, 0.3);
-}
-
-.gender-option .icon {
-  font-size: 24px;
-  display: block;
-  margin-bottom: 4px;
-}
-
-/* ═══ 按钮区域 ═══ */
-.btn-area {
-  margin-top: 8px;
-}
-
+.gender-option:active { transform: scale(0.97); }
+.gender-option.sel { background: var(--accent-primary); color: #fff; border-color: var(--accent-primary); box-shadow: 0 4px 15px rgba(232, 90, 79, 0.3); }
+.gender-option .icon { font-size: 24px; display: block; margin-bottom: 4px; }
+.btn-area { margin-top: 8px; }
 .btn-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background: var(--bg-card);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-lg);
-  padding: 16px 24px;
-  font-size: 15px;
-  font-weight: 500;
-  animation: pulse 1.5s ease-in-out infinite;
+  display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--bg-card);
+  color: var(--text-secondary); border: 1px solid var(--border-medium); border-radius: var(--radius-lg);
+  padding: 16px 24px; font-size: 15px; font-weight: 500; animation: pulse 1.5s ease-in-out infinite;
 }
-
 .btn-loading .spinner {
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--border-light);
-  border-top-color: var(--accent-primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  width: 18px; height: 18px; border: 2px solid var(--border-light);
+  border-top-color: var(--accent-primary); border-radius: 50%; animation: spin 0.8s linear infinite;
 }
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* ═══════════════════════════════════════════
-   QUIZ PAGE
-   ═══════════════════════════════════════════ */
+@keyframes spin { to { transform: rotate(360deg); } }
 .quiz-pg { padding-top: 12px; }
-
 .q-card {
-  background: var(--bg-card);
-  border-radius: var(--radius-xl);
-  padding: 28px 24px;
-  margin-bottom: 14px;
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-light);
-  animation: fadeInUp 0.3s ease;
+  background: var(--bg-card); border-radius: var(--radius-xl); padding: 28px 24px;
+  margin-bottom: 14px; box-shadow: var(--shadow-md); border: 1px solid var(--border-light); animation: fadeInUp 0.3s ease;
 }
-
-.q-meta {
-  font-size: 11px;
-  color: var(--accent-primary);
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  margin-bottom: 12px;
-}
-
-.q-dim {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 10px;
-  font-weight: 500;
-}
-
-.q-question {
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1.5;
-  margin-bottom: 20px;
-  color: var(--text-primary);
-}
-
-.q-options {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
+.q-meta { font-size: 11px; color: var(--accent-primary); font-weight: 700; letter-spacing: 1.5px; margin-bottom: 12px; }
+.q-dim { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; font-weight: 500; }
+.q-question { font-size: 18px; font-weight: 600; line-height: 1.5; margin-bottom: 20px; color: var(--text-primary); }
+.q-options { display: flex; flex-direction: column; gap: 10px; }
 .q-option {
-  background: var(--bg-secondary);
-  border: 1.5px solid var(--border-light);
-  border-radius: var(--radius-md);
-  padding: 16px 18px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: left;
-  line-height: 1.5;
-  color: var(--text-primary);
+  background: var(--bg-secondary); border: 1.5px solid var(--border-light); border-radius: var(--radius-md);
+  padding: 16px 18px; font-size: 14px; cursor: pointer; transition: all 0.2s; text-align: left;
+  line-height: 1.5; color: var(--text-primary);
 }
-
-.q-option:active {
-  transform: scale(0.98);
+.q-option:active { transform: scale(0.98); }
+.q-option.sel { border-color: var(--accent-primary); background: rgba(232, 90, 79, 0.08); }
+.q-option.sel::before { content: '✓ '; color: var(--accent-primary); font-weight: 700; }
+.loading { text-align: center; padding: 80px 20px; }
+.loading-animation { position: relative; width: 120px; height: 120px; margin: 0 auto 24px; }
+.loading-circle { position: absolute; inset: 0; border: 3px solid var(--border-light); border-radius: 50%; animation: spin 1.5s linear infinite; }
+.loading-circle:nth-child(2) { inset: 10px; border-color: var(--accent-primary); border-top-color: transparent; animation-duration: 1s; animation-direction: reverse; }
+.loading-circle:nth-child(3) { inset: 20px; border-color: var(--accent-tertiary); border-right-color: transparent; animation-duration: 0.8s; }
+.loading-emoji { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 32px; animation: pulse 1s ease-in-out infinite; }
+.loading-text { font-size: 16px; color: var(--text-secondary); font-weight: 500; }
+.result { padding-top: 12px; animation: fadeInUp 0.5s ease; }
+.result-header { text-align: center; margin-bottom: 24px; }
+.result-badge {
+  display: inline-flex; align-items: center; gap: 6px; background: var(--gradient-gold);
+  color: #fff; font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 20px; margin-bottom: 16px;
 }
-
-.q-option.sel {
-  border-color: var(--accent-primary);
-  background: rgba(232, 90, 79, 0.08);
+.result-name { font-size: 32px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.result-type { font-size: 14px; color: var(--accent-primary); font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
+.result-sub { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px; }
+.dim-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.dim-label { font-size: 13px; color: var(--text-secondary); width: 72px; flex-shrink: 0; text-align: right; }
+.dim-bar { flex: 1; height: 10px; background: var(--bg-secondary); border-radius: 5px; overflow: hidden; }
+.dim-fill { height: 100%; border-radius: 5px; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+.dim-value { font-size: 12px; color: var(--text-muted); width: 32px; flex-shrink: 0; font-weight: 600; }
+.cp-card {
+  display: flex; gap: 14px; align-items: center; background: var(--bg-secondary);
+  border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px; border: 1px solid var(--border-light);
 }
-
-.q-option.sel::before {
-  content: '✓ ';
-  color: var(--accent-primary);
-  font-weight: 700;
+.cp-avatar {
+  width: 48px; height: 48px; border-radius: 50%; background: var(--bg-card); display: flex;
+  align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; border: 2px solid var(--border-light);
 }
+.cp-info { flex: 1; min-width: 0; }
+.cp-name { font-size: 15px; font-weight: 700; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cp-type { font-size: 11px; color: var(--accent-primary); font-weight: 700; letter-spacing: 0.5px; }
+.cp-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.cp-tag { background: var(--bg-card); padding: 3px 10px; border-radius: 10px; font-size: 11px; color: var(--text-secondary); border: 1px solid var(--border-light); }
+.cp-compat { font-size: 12px; font-weight: 600; margin-top: 4px; }
+.cp-compat span { color: var(--accent-success); }
+.cp-desc { font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
+.rtags { display: flex; flex-wrap: wrap; gap: 8px; }
+.rtag { background: var(--bg-secondary); padding: 6px 14px; border-radius: 20px; font-size: 13px; color: var(--text-secondary); border: 1px solid var(--border-light); }
+.zy-tag { background: linear-gradient(135deg, #fef9f3 0%, #f5f0ff 100%); padding: 6px 14px; border-radius: 20px; font-size: 13px; color: var(--accent-tertiary); border: 1px solid rgba(142,124,195,0.3); font-weight: 500; }
+.section-title { font-size: 12px; color: var(--text-muted); font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 6px; }
+.compare-card { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 16px; margin-bottom: 10px; border: 1px solid var(--border-light); }
+.compare-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.compare-icon { font-size: 18px; }
+.compare-name { font-size: 14px; font-weight: 700; }
+.compare-type { font-size: 11px; color: var(--accent-primary); margin-left: auto; font-weight: 600; }
+.compare-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+.compare-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+.compare-tag { background: var(--bg-card); padding: 2px 8px; border-radius: 8px; font-size: 11px; color: var(--text-muted); border: 1px solid var(--border-light); }
+#restartModal { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+#restartModal.show { display: flex; }
+.rm-box { background: var(--bg-card); border-radius: var(--radius-xl); padding: 32px 28px; max-width: 320px; width: 90%; text-align: center; box-shadow: var(--shadow-lg); }
+.rm-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+.rm-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6; }
+.rm-btns { display: flex; gap: 12px; }
+.rm-btn { flex: 1; padding: 14px; border-radius: var(--radius-md); font-size: 14px; cursor: pointer; border: none; font-weight: 600; transition: all 0.2s; }
+.rm-btn:active { opacity: 0.8; }
+.rm-ok { background: var(--accent-primary); color: #fff; }
+.rm-cancel { background: var(--bg-secondary); color: var(--text-primary); }
+.act-btn { background: var(--bg-card); border: 1px solid var(--border-medium); border-radius: var(--radius-lg); padding: 14px 24px; font-size: 14px; cursor: pointer; color: var(--text-primary); width: 100%; max-width: 280px; transition: all 0.2s; }
+.act-btn:active { transform: scale(0.98); }
+.rt-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 13px; padding: 10px 20px; margin-top: 12px; text-decoration: underline; }
+.rt-btn:active { color: var(--accent-primary); }
+.res-act { text-align: center; margin-top: 20px; }
+.opp-row { margin-bottom: 14px; }
+.opp-row:last-child { margin-bottom: 0; }
+.opp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.opp-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+.opp-center { font-size: 11px; color: var(--text-muted); text-align: center; }
+.opp-bar-wrap { position: relative; height: 10px; background: var(--bg-secondary); border-radius: 5px; overflow: visible; }
+.opp-bar-left { position: absolute; right: 50%; height: 100%; border-radius: 5px 0 0 5px; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+.opp-bar-right { position: absolute; left: 50%; height: 100%; border-radius: 0 5px 5px 0; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+.opp-tick { position: absolute; left: 50%; top: -2px; width: 2px; height: 14px; background: var(--border-medium); transform: translateX(-50%); }
+.radar-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
+.radar-item { display: flex; align-items: center; gap: 8px; }
+.radar-key { font-size: 12px; color: var(--text-secondary); width: 70px; flex-shrink: 0; text-align: right; }
+.radar-track { flex: 1; height: 8px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden; }
+.radar-fill { height: 100%; border-radius: 4px; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+.radar-val { font-size: 11px; color: var(--text-muted); width: 28px; flex-shrink: 0; font-weight: 600; }
+.hidden { display: none !important; }
 
-/* ═══════════════════════════════════════════
-   LOADING PAGE
-   ═══════════════════════════════════════════ */
-.loading {
+/* ═══ 金句展示框 ═══ */
+.golden-quote {
+  background: linear-gradient(135deg, #fef9f3 0%, #f5f0ff 100%);
+  border: 1.5px solid rgba(142, 124, 195, 0.25);
+  border-radius: var(--radius-xl);
+  padding: 20px 24px;
+  margin-bottom: 16px;
   text-align: center;
-  padding: 80px 20px;
-}
-
-.loading-animation {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  margin: 0 auto 24px;
-}
-
-.loading-circle {
-  position: absolute;
-  inset: 0;
-  border: 3px solid var(--border-light);
-  border-radius: 50%;
-  animation: spin 1.5s linear infinite;
-}
-
-.loading-circle:nth-child(2) {
-  inset: 10px;
-  border-color: var(--accent-primary);
-  border-top-color: transparent;
-  animation-duration: 1s;
-  animation-direction: reverse;
-}
-
-.loading-circle:nth-child(3) {
-  inset: 20px;
-  border-color var(--accent-tertiary);
-  border-right-color: transparent;
-  animation-duration: 0.8s;
-}
-
-.loading-emoji {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 32px;
-  animation: pulse 1s ease-in-out infinite;
-}
-
-.loading-text {
-  font-size: 16px;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-/* ═══════════════════════════════════════════
-   RESULT PAGE
-   ═══════════════════════════════════════════ */
-.result {
-  padding-top: 12px;
   animation: fadeInUp 0.5s ease;
 }
-
-.result-header {
-  text-align: center;
-  margin-bottom: 24px;
-}
-
-.result-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--gradient-gold);
-  color: #fff;
-  font-size: 12px;
+.golden-quote-text {
+  font-size: 17px;
   font-weight: 600;
-  padding: 6px 16px;
-  border-radius: 20px;
-  margin-bottom: 16px;
-}
-
-.result-name {
-  font-size: 32px;
-  font-weight: 800;
-  margin-bottom: 8px;
-  letter-spacing: -0.5px;
-  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.result-type {
-  font-size: 14px;
   color: var(--accent-primary);
-  font-weight: 700;
-  letter-spacing: 1px;
-  margin-bottom: 4px;
-}
-
-.result-sub {
-  font-size: 14px;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  margin-bottom: 20px;
-}
-
-/* 维度对比条 */
-.dim-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-
-.dim-label {
-  font-size: 13px;
-  color: var(--text-secondary);
-  width: 72px;
-  flex-shrink: 0;
-  text-align: right;
-}
-
-.dim-bar {
-  flex: 1;
-  height: 10px;
-  background: var(--bg-secondary);
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.dim-fill {
-  height: 100%;
-  border-radius: 5px;
-  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.dim-value {
-  font-size: 12px;
-  color: var(--text-muted);
-  width: 32px;
-  flex-shrink: 0;
-  font-weight: 600;
-}
-
-/* CP组合 */
-.cp-card {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  background: var(--bg-secondary);
-  border-radius: var(--radius-md);
-  padding: 16px;
-  margin-bottom: 12px;
-  border: 1px solid var(--border-light);
-}
-
-.cp-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--bg-card);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  flex-shrink: 0;
-  border: 2px solid var(--border-light);
-}
-
-.cp-info { flex: 1; min-width: 0; }
-
-.cp-name {
-  font-size: 15px;
-  font-weight: 700;
-  margin-bottom: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.cp-type {
-  font-size: 11px;
-  color: var(--accent-primary);
-  font-weight: 700;
+  line-height: 1.6;
   letter-spacing: 0.5px;
 }
-
-.cp-tags {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-  margin-top: 6px;
-}
-
-.cp-tag {
-  background: var(--bg-card);
-  padding: 3px 10px;
-  border-radius: 10px;
+.golden-quote-label {
   font-size: 11px;
-  color: var(--text-secondary);
-  border: 1px solid var(--border-light);
-}
-
-/* 标签 */
-.rtags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.rtag {
-  background: var(--bg-secondary);
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  border: 1px solid var(--border-light);
-}
-
-/* 小标题 */
-.section-title {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-weight: 700;
+  color: var(--accent-tertiary);
+  font-weight: 600;
   letter-spacing: 1px;
-  margin-bottom: 12px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-light);
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
 }
-
-/* 重新测试确认框 */
-#restartModal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  background: rgba(0,0,0,0.5);
-  justify-content: center;
-  align-items: center;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-#restartModal.show { display: flex; }
-
-.rm-box {
-  background: var(--bg-card);
-  border-radius: var(--radius-xl);
-  padding: 32px 28px;
-  max-width: 320px;
-  width: 90%;
-  text-align: center;
-  box-shadow: var(--shadow-lg);
-}
-
-.rm-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.rm-desc {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: 24px;
-  line-height: 1.6;
-}
-
-.rm-btns {
-  display: flex;
-  gap: 12px;
-}
-
-.rm-btn {
-  flex: 1;
-  padding: 14px;
-  border-radius: var(--radius-md);
-  font-size: 14px;
-  cursor: pointer;
-  border: none;
-  font-weight: 600;
-  transition: all 0.2s;
-}
-
-.rm-btn:active { opacity: 0.8; }
-
-.rm-ok {
-  background: var(--accent-primary);
-  color: #fff;
-}
-
-.rm-cancel {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-}
-
-.act-btn {
-  background: var(--bg-card);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-lg);
-  padding: 14px 24px;
-  font-size: 14px;
-  cursor: pointer;
-  color: var(--text-primary);
-  width: 100%;
-  max-width: 280px;
-  transition: all 0.2s;
-}
-
-.act-btn:active { transform: scale(0.98); }
-
-.rt-btn {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  font-size: 13px;
-  padding: 10px 20px;
-  margin-top: 12px;
-  text-decoration: underline;
-}
-
-.rt-btn:active { color: var(--accent-primary); }
-
-.res-act { text-align: center; margin-top: 20px; }
-
-/* ═══ 反向属性对比条 ═══ */
-.opp-row {
-  margin-bottom: 14px;
-}
-.opp-row:last-child { margin-bottom: 0; }
-
-.opp-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 6px;
-}
-
-.opp-label {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.opp-center {
-  font-size: 11px;
-  color: var(--text-muted);
-  text-align: center;
-}
-
-.opp-bar-wrap {
-  position: relative;
-  height: 10px;
-  background: var(--bg-secondary);
-  border-radius: 5px;
-  overflow: visible;
-}
-
-.opp-bar-left {
-  position: absolute;
-  right: 50%;
-  height: 100%;
-  border-radius: 5px 0 0 5px;
-  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.opp-bar-right {
-  position: absolute;
-  left: 50%;
-  height: 100%;
-  border-radius: 0 5px 5px 0;
-  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.opp-tick {
-  position: absolute;
-  left: 50%;
-  top: -2px;
-  width: 2px;
-  height: 14px;
-  background: var(--border-medium);
-  transform: translateX(-50%);
-}
-
-/* ═══ 雷达迷你图（纯CSS/文字替代） ═══ */
-.radar-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 4px;
-}
-
-.radar-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.radar-key {
-  font-size: 12px;
-  color: var(--text-secondary);
-  width: 70px;
-  flex-shrink: 0;
-  text-align: right;
-}
-
-.radar-track {
-  flex: 1;
-  height: 8px;
-  background: var(--bg-secondary);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.radar-fill {
-  height: 100%;
-  border-radius: 4px;
-  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.radar-val {
-  font-size: 11px;
-  color: var(--text-muted);
-  width: 28px;
-  flex-shrink: 0;
-  font-weight: 600;
-}
-
-/* 隐藏域 */
-.hidden { display: none !important; }
 </style>
 </head>
 <body>
 
-<!-- 星空容器 -->
 <div class="stars" id="stars"></div>
+<div class="watermark" id="watermark">中式人格测试<br><span id="wmType"></span></div>
 
-<!-- 水印 -->
-<div class="watermark" id="watermark">
-  中式人格测试<br>
-  <span id="wmType"></span>
-</div>
-
-<!-- Progress -->
 <div class="prog" id="prog">
-  <div class="prog-row">第 <span id="qN">1</span> / <span id="qT">35</span> 题</div>
+  <div class="prog-row">第 <span id="qN">1</span> / <span id="qT">20</span> 题</div>
   <div class="prog-bar"><div class="prog-fill" id="pFill" style="width:0%"></div></div>
 </div>
 
@@ -1139,7 +338,7 @@ body.nosel { -webkit-touch-callout: none }
   <div class="hero">
     <div class="hero-badge">🔥 中式专属人格测试</div>
     <h1 class="hero-title">你是哪种<br>「中式命格」？</h1>
-    <p class="hero-sub">生肖 · 黄道宫 · 出生日期 · 日常修为<br>25道随机题，测出你刻在命盘里的中国人属性</p>
+    <p class="hero-sub">生肖 · 黄道宫 · 出生日期 · 日常修为<br>随机题目测试，测出你刻在命盘里的中国人属性</p>
     <div class="hero-icons">
       <span class="hero-icon">🧧 红包命格</span>
       <span class="hero-icon">🐉 生肖气运</span>
@@ -1153,7 +352,7 @@ body.nosel { -webkit-touch-callout: none }
     </div>
     <button class="btn" type="button" onclick="window._show('sInfo')">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.7.0</div>
+    <div class="hero-version">v1.8.0</div>
   </div>
 </div>
 
@@ -1164,8 +363,6 @@ body.nosel { -webkit-touch-callout: none }
       <div class="q-num">基本信息</div>
       <div class="q-text">先聊聊你的基本属性</div>
       <div class="q-sub">基本信息越准，人格画像越真</div>
-
-      <!-- 出生日期：年月日三联 -->
       <div class="form-row">
         <label>🎂 出生日期</label>
         <div class="date-grid">
@@ -1181,8 +378,6 @@ body.nosel { -webkit-touch-callout: none }
         </div>
         <input id="fDate" type="hidden">
         <input id="fBirth" type="hidden">
-        
-        <!-- 生肖星座预览 -->
         <div class="preview-box" id="previewBox">
           <div class="preview-header">
             <span class="preview-icon">✨</span>
@@ -1191,33 +386,23 @@ body.nosel { -webkit-touch-callout: none }
           <div class="preview-content" id="previewTags"></div>
         </div>
       </div>
-
-      <!-- 性别 -->
       <div class="form-row">
         <label>⚧ 性别</label>
         <div class="gender-options" id="fGender">
           <div class="gender-option" onclick="window.pick(this,'gender')">
-            <span class="icon">🙋‍♂️</span>
-            <span>男</span>
+            <span class="icon">🙋‍♂️</span><span>男</span>
           </div>
           <div class="gender-option" onclick="window.pick(this,'gender')">
-            <span class="icon">🙋‍♀️</span>
-            <span>女</span>
+            <span class="icon">🙋‍♀️</span><span>女</span>
           </div>
           <div class="gender-option" onclick="window.pick(this,'gender')">
-            <span class="icon">🤖</span>
-            <span>武装直升机</span>
+            <span class="icon">🤖</span><span>武装直升机</span>
           </div>
         </div>
       </div>
-
       <div class="btn-area">
-        <button class="btn" style="width:100%" id="btnPreview" onclick="showPreview()">
-          🔮 正在进行的星辰属相测算 →
-        </button>
-        <button class="btn btn-secondary hidden" style="width:100%;margin-top:10px" id="btnConfirm" onclick="beginQuiz()">
-          ✅ 确认，开始答题 →
-        </button>
+        <button class="btn" style="width:100%" id="btnPreview" onclick="showPreview()">🔮 正在进行的星辰属相测算 →</button>
+        <button class="btn btn-secondary hidden" style="width:100%;margin-top:10px" id="btnConfirm" onclick="beginQuiz()">✅ 确认，开始答题 →</button>
       </div>
     </div>
   </div>
@@ -1253,79 +438,95 @@ body.nosel { -webkit-touch-callout: none }
       <div class="result-sub" id="rSub"></div>
     </div>
 
+    <!-- 一句话金句（新增） -->
+    <div class="golden-quote" id="rGoldenQuote" style="display:none">
+      <div class="golden-quote-label">✦ 命理金句</div>
+      <div class="golden-quote-text" id="rGoldenText"></div>
+    </div>
+
+    <!-- 出生信息卡片 -->
     <div class="card" id="rAgeTag" style="display:none">
       <div class="section-title"></div>
       <div id="rDesc"></div>
     </div>
 
-    <!-- 人格雷达 + 反向属性对比 -->
-    <div class="card" id="rRadarCard">
-      <div class="section-title">📊 人格雷达</div>
-      <div id="rRadar"></div>
-      <div class="section-title" style="margin-top:20px">⚖️ 性格天平 · 反向对照</div>
+    <!-- 性格天平（保留位置不变） -->
+    <div class="card" id="rBarsCard">
+      <div class="section-title">⚖️ 性格天平 · 反向对照</div>
       <div id="rBars"></div>
     </div>
 
+    <!-- 深度解读 -->
     <div class="card" id="rTxCard">
       <div class="section-title">📝 深度解读</div>
       <div id="rTx"></div>
     </div>
 
-    <div class="card" id="rQuoteCard" style="display:none">
-      <div id="rQuote"></div>
-    </div>
-
-    <div class="card">
-      <div class="section-title">🏷️ 人格标签</div>
-      <div class="rtags" id="rTags"></div>
-    </div>
-
+    <!-- 命理忠告 -->
     <div class="card">
       <div class="section-title">🔮 命理忠告</div>
       <div id="rZy"></div>
       <div id="rAdvice" style="margin-top:12px;font-size:14px;color:var(--text-secondary);line-height:1.7"></div>
     </div>
 
+    <!-- 性格画像 -->
     <div class="card" id="rPersonal">
       <div class="section-title">🧩 性格画像</div>
       <div id="rPersonalDetail"></div>
     </div>
 
+    <!-- 人际情感 -->
     <div class="card" id="rRelation">
       <div class="section-title">💞 人际情感</div>
       <div id="rRelationDetail"></div>
     </div>
 
+    <!-- 职场建议 -->
     <div class="card" id="rCareer">
       <div class="section-title">💼 职场建议</div>
       <div id="rCareerDetail"></div>
     </div>
 
+    <!-- 情感指南 -->
     <div class="card" id="rLove">
       <div class="section-title">💘 情感指南</div>
       <div id="rLoveDetail"></div>
     </div>
 
+    <!-- 成长建议 -->
     <div class="card" id="rGrow">
       <div class="section-title">🌱 成长建议</div>
       <div id="rGrowDetail"></div>
     </div>
 
+    <!-- 人格标签（含中式命理标签） -->
+    <div class="card">
+      <div class="section-title">🏷️ 人格标签</div>
+      <div class="rtags" id="rTags"></div>
+    </div>
+
+    <!-- 最佳CP组合 -->
     <div class="card" id="rCp">
       <div class="section-title">💑 最佳 CP 组合</div>
       <div id="rCpList"></div>
     </div>
 
+    <!-- 人格对比 -->
     <div class="card" id="rCompare">
       <div class="section-title">🔍 人格对比</div>
       <div id="rCompareList"></div>
+    </div>
+
+    <!-- 人格雷达（移至最底部） -->
+    <div class="card" id="rRadarCard">
+      <div class="section-title">📊 人格雷达 · 十三维度</div>
+      <div id="rRadar"></div>
     </div>
 
     <div class="res-act">
       <button class="act-btn" id="btnCopyLink" onclick="copyShareLink()">🔗 复制分享链接</button>
     </div>
     <div style="margin-top:10px;font-size:12px;color:var(--text-muted);text-align:center">📢 好友点开链接可直接看结果，无需重测</div>
-
     <div style="text-align:center;margin-top:16px">
       <button class="rt-btn" onclick="doRestart()">🔄 重新测试</button>
     </div>
@@ -1347,12 +548,11 @@ body.nosel { -webkit-touch-callout: none }
 </div><!-- /.container -->
 
 <!-- ═══════════════════════════════════════════════
-     JAVASCRIPT
+     JAVASCRIPT — 分段加载
      ═══════════════════════════════════════════════ -->
 
 <!-- 第一段：主题 + 星空生成 -->
 <script>
-// ── 主题自适应 ──
 (function(){
   function setTheme(){
     var h = new Date().getHours();
@@ -1364,8 +564,6 @@ body.nosel { -webkit-touch-callout: none }
   setTheme();
   setInterval(setTheme, 60000);
 })();
-
-// ── 星空生成 ──
 (function(){
   var s = document.getElementById('stars');
   if(!s) return;
@@ -1378,17 +576,12 @@ body.nosel { -webkit-touch-callout: none }
 })();
 </script>
 
-<!-- 第二段：核心逻辑 -->
+<!-- 第二段：反爬虫 -->
 <script>
-// ═══════════════════════════════════════════════
-// 反爬虫
-// ═══════════════════════════════════════════════
 (function(){
   document.addEventListener('contextmenu', function(e){ e.preventDefault() });
   if(/HeadlessChrome|PhantomJS|Puppeteer|playwright|selenium/i.test(navigator.userAgent)){
-    document.title = '404';
-    document.body.innerHTML = '';
-    return;
+    document.title = '404'; document.body.innerHTML = ''; return;
   }
   document.addEventListener('keydown', function(e){
     if(e.ctrlKey && e.key === 'u') e.preventDefault();
@@ -1396,19 +589,22 @@ body.nosel { -webkit-touch-callout: none }
   });
   try { if(window !== window.top) { document.write(''); document.close() } } catch(e) {}
 })();
+</script>
 
-// ═══════════════════════════════════════════════
-// 全局状态
-// ═══════════════════════════════════════════════
+<!-- 第三段：题库数据 + 人格数据 -->
+<script src="quiz-data.js"></script>
+<script src="personality-data.js"></script>
+
+<!-- 第四段：核心逻辑 -->
+<script>
+// ═══ 全局状态 ═══
 window.sZodiac = '';
 window.sStar = '';
 window.sGender = '';
 window._manualZodiac = false;
 window._manualStar = false;
 
-// ═══════════════════════════════════════════════
-// 屏幕切换
-// ═══════════════════════════════════════════════
+// ═══ 屏幕切换 ═══
 window._show = function(id){
   var el = document.getElementById(id);
   if(!el){ console.error('元素#' + id + '不存在'); return }
@@ -1417,9 +613,7 @@ window._show = function(id){
   el.classList.add('active');
 };
 
-// ═══════════════════════════════════════════════
-// 日期工具
-// ═══════════════════════════════════════════════
+// ═══ 日期工具 ═══
 function calcAge(birthStr){
   if(!birthStr) return null;
   var bd = new Date(birthStr);
@@ -1446,103 +640,51 @@ function getStarFromBirth(birthStr){
   var bd = new Date(birthStr);
   var m = bd.getMonth() + 1, d = bd.getDate();
   var stars = [
-    [20,'魔羯','♑'],
-    [19,'水瓶','♒'],
-    [20,'双鱼','♓'],
-    [21,'白羊','♈'],
-    [20,'金牛','♉'],
-    [21,'双子','♊'],
-    [21,'巨蟹','♋'],
-    [23,'狮子','♌'],
-    [23,'处女','♍'],
-    [23,'天秤','♎'],
-    [23,'天蝎','♏'],
-    [22,'射手','♐'],
+    [20,'魔羯','♑'],[19,'水瓶','♒'],[20,'双鱼','♓'],[21,'白羊','♈'],
+    [20,'金牛','♉'],[21,'双子','♊'],[21,'巨蟹','♋'],[23,'狮子','♌'],
+    [23,'处女','♍'],[23,'天秤','♎'],[23,'天蝎','♏'],[22,'射手','♐'],
     [22,'魔羯','♑']
   ];
   var star = stars[m - 1];
   if(d >= star[0]){
-    // 月末边界：m=12 时 m%12=0 回到 stars[0]（魔羯）
     var next = stars[m % 12];
     return { name: next[1], symbol: next[2] };
   }
   return { name: star[1], symbol: star[2] };
 }
 
-var ZODIAC_EMOJI = {
-  '鼠':'🐭','牛':'🐮','虎':'🐯','兔':'🐰','龙':'🐉','蛇':'🐍',
-  '马':'🐎','羊':'🐑','猴':'🐵','鸡':'🐔','狗':'🐕','猪':'🐷'
-};
+var ZODIAC_EMOJI = {'鼠':'🐭','牛':'🐮','虎':'🐯','兔':'🐰','龙':'🐉','蛇':'🐍','马':'🐎','羊':'🐑','猴':'🐵','鸡':'🐔','狗':'🐕','猪':'🐷'};
+var STAR_SYMBOLS = {'魔羯':'♑','水瓶':'♒','双鱼':'♓','白羊':'♈','金牛':'♉','双子':'♊','巨蟹':'♋','狮子':'♌','处女':'♍','天秤':'♎','天蝎':'♏','射手':'♐'};
 
-var STAR_SYMBOLS = {
-  '魔羯':'♑','水瓶':'♒','双鱼':'♓','白羊':'♈','金牛':'♉','双子':'♊',
-  '巨蟹':'♋','狮子':'♌','处女':'♍','天秤':'♎','天蝎':'♏','射手':'♐'
-};
-
-// ═══════════════════════════════════════════════
-// 日期选择器初始化
-// ═══════════════════════════════════════════════
+// ═══ 日期选择器初始化 ═══
 function initDateSelectors(){
   var yrSel = document.getElementById('fYear');
   var moSel = document.getElementById('fMonth');
   var dySel = document.getElementById('fDay');
-  
-  if(!yrSel || !moSel || !dySel){
-    console.error('日期select元素未找到');
-    return false;
-  }
+  if(!yrSel || !moSel || !dySel){ console.error('日期select元素未找到'); return false; }
 
   var currentYear = new Date().getFullYear();
-  
-  // 年份选项
   for(var y = currentYear; y >= currentYear - 74; y--){
-    var o = document.createElement('option');
-    o.value = y;
-    o.textContent = y + '年';
-    yrSel.appendChild(o);
+    var o = document.createElement('option'); o.value = y; o.textContent = y + '年'; yrSel.appendChild(o);
   }
-  
-  // 月份选项
   for(var m = 1; m <= 12; m++){
-    var o = document.createElement('option');
-    o.value = m;
-    o.textContent = m + '月';
-    moSel.appendChild(o);
+    var o = document.createElement('option'); o.value = m; o.textContent = m + '月'; moSel.appendChild(o);
   }
-  
-  // 日期选项
   for(var d = 1; d <= 31; d++){
-    var o = document.createElement('option');
-    o.value = d;
-    o.textContent = d + '日';
-    dySel.appendChild(o);
+    var o = document.createElement('option'); o.value = d; o.textContent = d + '日'; dySel.appendChild(o);
   }
-  
-  // 默认预设 2000-01-01
-  yrSel.value = 2000;
-  moSel.value = 1;
-  dySel.value = 1;
-  
-  // 同步到隐藏字段，触发生肖星座推算
+
+  yrSel.value = 2000; moSel.value = 1; dySel.value = 1;
   updateFDate();
   onNativeDateChange();
-  
   return true;
 }
 
-// 年月日任一变化 → 同步 fDate + 更新预览
-function onDateChange(){
-  updateFDate();
-  onNativeDateChange();
-}
-
-// 将年月日同步到隐藏 fDate 字段
 function updateFDate(){
   var yr = document.getElementById('fYear').value;
   var mo = document.getElementById('fMonth').value;
   var dy = document.getElementById('fDay').value;
   var dInput = document.getElementById('fDate');
-  
   if(yr && mo && dy){
     dInput.value = yr + '-' + String(mo).padStart(2, '0') + '-' + String(dy).padStart(2, '0');
   } else {
@@ -1550,55 +692,35 @@ function updateFDate(){
   }
 }
 
-// 出生日期变化 → 自动推算生肖/星座，更新预览区
 function onNativeDateChange(){
   var dInput = document.getElementById('fDate');
   if(!dInput) return;
-  
   var val = dInput.value;
   if(!val) return;
-  
   document.getElementById('fBirth').value = val;
-  
   var zodiac = getZodiacFromBirth(val);
   var starData = getStarFromBirth(val);
-  
+
   if(zodiac){
     window.sZodiac = zodiac;
     var emoji = ZODIAC_EMOJI[zodiac] || '❓';
-    
     var html = '';
-    
-    // 生肖标签
-    html += '<div class="preview-tag">';
-    html += '<span class="emoji">' + emoji + '</span>';
-    html += '<span class="zodiac">' + zodiac + '年</span>';
-    html += '</div>';
-    
-    // 星座标签
+    html += '<div class="preview-tag"><span class="emoji">' + emoji + '</span><span class="zodiac">' + zodiac + '年</span></div>';
     if(starData && starData.name){
       var symbol = STAR_SYMBOLS[starData.name] || '☀️';
-      html += '<div class="preview-tag">';
-      html += '<span class="emoji">' + symbol + '</span>';
-      html += '<span class="star">' + starData.name + '宫</span>';
-      html += '</div>';
+      html += '<div class="preview-tag"><span class="emoji">' + symbol + '</span><span class="star">' + starData.name + '宫</span></div>';
     }
-    
     var previewTags = document.getElementById('previewTags');
     var previewBox = document.getElementById('previewBox');
-    
     if(previewTags) previewTags.innerHTML = html;
     if(previewBox) previewBox.classList.add('show');
   }
 }
 
-// ═══════════════════════════════════════════════
-// 性别选择
-// ═══════════════════════════════════════════════
+// ═══ 性别选择 ═══
 window.pick = function(el, type, val){
   var g = document.getElementById('fGender');
   if(!g) return;
-  
   if(el.classList.contains('sel')){
     el.classList.remove('sel');
     window.sGender = '';
@@ -1610,16 +732,12 @@ window.pick = function(el, type, val){
   }
 };
 
-// ═══════════════════════════════════════════════
-// 预览 & 开始答题
-// ═══════════════════════════════════════════════
+// ═══ 预览 & 开始答题 ═══
 function showPreview(){
   var btn = document.getElementById('btnPreview');
   if(!btn) return;
-  
   btn.innerHTML = '<div class="btn-loading"><div class="spinner"></div>正在测算中...</div>';
   btn.disabled = true;
-  
   setTimeout(function(){
     btn.classList.add('hidden');
     var cb = document.getElementById('btnConfirm');
@@ -1630,10 +748,8 @@ function showPreview(){
 function beginQuiz(){
   var dateVal = document.getElementById('fDate').value;
   var gender = window.sGender;
-  
   if(!dateVal){ alert('请选择出生日期'); return; }
   if(!gender){ alert('请选择性别'); return; }
-  
   window._show('sQuiz');
   document.getElementById('prog').classList.add('show');
   ci = 0;
@@ -1642,9 +758,7 @@ function beginQuiz(){
   startQuiz();
 }
 
-// ═══════════════════════════════════════════════
-// 分享链接
-// ═══════════════════════════════════════════════
+// ═══ 分享链接 ═══
 function getShareUrl(pt, utm){
   var base = location.href.split('?')[0].split('#')[0];
   var p = { t: pt.t, n: pt.cn || pt.name, src: utm || 'share' };
@@ -1657,14 +771,11 @@ function copyShareLink(){
     var pt = matchType(dims, parseInt(window.sAge || 25));
     var url = getShareUrl(pt, 'copy');
     var cn = pt.cn || pt.name || '';
-    var si = pt.selfIntro || pt.s || '命中注定与众不同';
+    var si = pt.s || pt.selfIntro || '命中注定与众不同';
     var txt = '我是「' + (cn || pt.name) + '（' + pt.t + '）」，我的特点是【' + si + '】。查看链接：' + url + ' #中式命格测试';
-    
     if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(txt).then(function(){ showCopySuccess() }).catch(function(){ fallbackCopy(txt) });
-    } else {
-      fallbackCopy(txt);
-    }
+    } else { fallbackCopy(txt); }
   } catch(e){
     var btn = document.getElementById('btnCopyLink');
     if(btn) btn.textContent = '⚠️ 复制失败，请手动长按复制';
@@ -1693,260 +804,11 @@ function fallbackCopy(txt){
   } catch(e) {}
 }
 
-// ═══════════════════════════════════════════════
-// 题目数据
-// ═══════════════════════════════════════════════
-// ═══ 新题库：25题随机抽取，每题多维度映射 ═══
-// 每个选项格式：{t:'选项文字', s:{dim:分值, dim:分值}}，总分=3
-const QS=[
-  {q:'周末你最喜欢？',o:[
-    {t:'睡觉，睡到自然醒',s:{h:3}},
-    {t:'出门浪，探索新店',s:{s:2,l:1}},
-    {t:'在家刷剧/打游戏',s:{w:2,a:1}},
-    {t:'学习或搞钱',s:{g:3}}
-  ]},
-  {q:'微信红包你通常？',o:[
-    {t:'不点，假装没看到',s:{a:2,m:1}},
-    {t:'抢完还要嚎一嗓子',s:{s:2,l:1}},
-    {t:'一分也是爱，必回',s:{r:3}},
-    {t:'只收不发自得其乐',s:{m:1,d:2}}
-  ]},
-  {q:'点外卖你通常？',o:[
-    {t:'同一品类点同一家',s:{c:3}},
-    {t:'哪家便宜点哪家',s:{m:2,g:1}},
-    {t:'贵的不在乎，品质第一',s:{c:1,s:2}},
-    {t:'纠结半小时最后不点了',s:{a:2,d:1}}
-  ]},
-  {q:'你平均每天用几个小时手机？',o:[
-    {t:'2小时以内，自控力强',s:{h:3}},
-    {t:'3-5小时，正常水平',s:{w:1,h:1,g:1}},
-    {t:'6-8小时，手机奴隶',s:{w:3}},
-    {t:'8小时以上，深度成瘾',s:{w:2,m:1}}
-  ]},
-  {q:'你记账吗？',o:[
-    {t:'每月必记，财务清晰',s:{g:3}},
-    {t:'偶尔想起来记一下',s:{g:1,m:1,c:1}},
-    {t:'从不记账，钱花就花了',s:{c:3}},
-    {t:'记了三天就放弃了',s:{c:2,d:1}}
-  ]},
-  {q:'睡前最后一件事通常是？',o:[
-    {t:'刷手机停不下来',s:{w:3}},
-    {t:'看书或听播客',s:{h:2,g:1}},
-    {t:'躺着发呆放空',s:{d:3}},
-    {t:'制定明天的计划',s:{j:2,a:1}}
-  ]},
-  {q:'你对「已读不回」的态度？',o:[
-    {t:'记仇，三天不理人',s:{a:3}},
-    {t:'假装没看到，心里记着',s:{a:1,h:1,m:1}},
-    {t:'立刻回，不回难受',s:{s:2,r:1}},
-    {t:'无所谓，不在乎',s:{d:3}}
-  ]},
-  {q:'朋友找你借钱，你？',o:[
-    {t:'借，但心里默默记着',s:{r:3}},
-    {t:'直接拒绝，不留余地',s:{a:2,r:1}},
-    {t:'看关系和金额定',s:{g:2,s:1}},
-    {t:'找借口拖，拖到对方忘',s:{d:2,a:1}}
-  ]},
-  {q:'在群里你通常是？',o:[
-    {t:'表情包狂人，必回',s:{l:3,s:1}},
-    {t:'偶尔发表情附和',s:{l:1,s:1,d:1}},
-    {t:'纯文字党，不发表情',s:{d:2,s:1}},
-    {t:'看心情',s:{d:3}}
-  ]},
-  {q:'你更喜欢哪种相处模式？',o:[
-    {t:'偶尔见面，平时各自忙碌',s:{d:3}},
-    {t:'每天都要保持联系',s:{s:3}},
-    {t:'需要时在，不需要时自由',s:{d:1,g:1,r:1}},
-    {t:'深度绑定，恨不得住一起',s:{s:2,r:1}}
-  ]},
-  {q:'过年回家最怕什么？',o:[
-    {t:'被催婚催生',s:{t:3}},
-    {t:'亲戚间的比较和攀比',s:{a:2,t:1}},
-    {t:'无聊，没事做',s:{t:0,d:2,h:1}},
-    {t:'什么都不怕',s:{d:2,t:0,g:1}}
-  ]},
-  {q:'你每月工资大部分花在哪？',o:[
-    {t:'吃喝玩乐享受生活',s:{s:2,c:1}},
-    {t:'存起来，看着数字开心',s:{g:3}},
-    {t:'买买买，购物治百病',s:{c:3}},
-    {t:'投资自己或还贷',s:{g:2,i:1}}
-  ]},
-  {q:'你觉得自己是个？',o:[
-    {t:'情绪化，但真实',s:{a:2,r:1}},
-    {t:'理性克制，冷静',s:{g:2,j:1}},
-    {t:'时而天使时而魔鬼',s:{s:1,a:1,d:1}},
-    {t:'佛系，什么都行',s:{d:2,h:1}}
-  ]},
-  {q:'你去一个新城市，会？',o:[
-    {t:'做好攻略，计划周全',s:{j:2,g:1}},
-    {t:'随机漫游，随遇而安',s:{d:3}},
-    {t:'问本地人推荐',s:{r:2,s:1}},
-    {t:'去网红地标打卡',s:{s:2,l:1}}
-  ]},
-  {q:'你倾向哪种工作方式？',o:[
-    {t:'稳定编制，铁饭碗',s:{j:3}},
-    {t:'自由职业，自己当老板',s:{d:2,g:1}},
-    {t:'大公司，福利好',s:{j:1,g:1,r:1}},
-    {t:'创业，博一把大的',s:{j:2,g:1,a:1}}
-  ]},
-  {q:'你和父母的关系？',o:[
-    {t:'亲密，什么都聊',s:{r:3}},
-    {t:'表面和平，内心独立',s:{r:1,d:2}},
-    {t:'偶尔联系，各过各的',s:{d:3}},
-    {t:'相爱相杀，互相折磨',s:{a:2,t:1}}
-  ]},
-  {q:'你手机从不静音的原因是？',o:[
-    {t:'怕错过重要电话',s:{w:2,r:1}},
-    {t:'工作需要随时响应',s:{j:3}},
-    {t:'习惯，不喜欢安静',s:{w:1,h:2}},
-    {t:'等某个人的消息',s:{s:2,a:1}}
-  ]},
-  {q:'你朋友圈通常发什么？',o:[
-    {t:'生活日常，记录生活',s:{s:2,l:1}},
-    {t:'只看不发，默默围观',s:{d:2,s:1}},
-    {t:'精致九宫格，修到满意',s:{l:3}},
-    {t:'偶尔转发，不发自己',s:{d:3}}
-  ]},
-  {q:'别人夸你，你会？',o:[
-    {t:'嘴上说哪里哪里，心里很受用',s:{a:2,r:1}},
-    {t:'回怼：你在讽刺我吧',s:{a:3}},
-    {t:'害羞，转移话题',s:{d:2,s:1}},
-    {t:'大方接受并感谢',s:{r:3}}
-  ]},
-  {q:'你对「断舍离」的态度？',o:[
-    {t:'定期扔扔扔，清爽',s:{c:2,d:1}},
-    {t:'什么都舍不得扔',s:{c:0,m:2,a:1}},
-    {t:'该扔扔，该买买',s:{c:1,g:1,d:1}},
-    {t:'概念很认同，行动没有',s:{c:2,d:1}}
-  ]},
-  {q:'你玩游戏吗？',o:[
-    {t:'沉迷氪金玩家',s:{w:2,m:1}},
-    {t:'偶尔玩，不上瘾',s:{w:1,g:1,d:1}},
-    {t:'不玩游戏',s:{g:2,h:1}},
-    {t:'玩，但只玩单机',s:{d:2,g:1}}
-  ]},
-  {q:'遇到问题你通常？',o:[
-    {t:'先自己想，想不通再问',s:{d:2,g:1}},
-    {t:'立刻查百度/小红书',s:{i:2,s:1}},
-    {t:'直接问身边人',s:{s:2,r:1}},
-    {t:'逃避，等它自己消失',s:{t:2,d:1}}
-  ]},
-  {q:'你做决定快吗？',o:[
-    {t:'很快，相信直觉',s:{a:1,g:2}},
-    {t:'很慢，纠结半天',s:{a:0,j:2,g:1}},
-    {t:'视情况而定',s:{d:2,g:1}},
-    {t:'做完了还在纠结',s:{a:0,d:3}}
-  ]},
-  {q:'你更愿意为什么花大钱？',o:[
-    {t:'房子车子资产',s:{g:2,j:1}},
-    {t:'旅行和体验',s:{s:2,d:1}},
-    {t:'吃喝玩乐享受',s:{c:2,s:1}},
-    {t:'学习和成长',s:{g:2,i:1}}
-  ]},
-  {q:'你穿衣风格是？',o:[
-    {t:'跟风买爆款',s:{s:1,l:1,c:1}},
-    {t:'经典款式，不易过时',s:{g:1,c:1,d:1}},
-    {t:'舒适为主，方便就好',s:{d:3}},
-    {t:'看场合，衣柜丰富',s:{s:2,g:1}}
-  ]}
-];
-
-// ═══ 每次随机抽取 25 题 ═══
-var _qsPool = null;
-function getQuestions(){
-  if(_qsPool) return _qsPool;
-  var pool = QS.slice();
-  for(var i=pool.length-1;i>0;i--){
-    var j=Math.floor(Math.random()*(i+1));
-    var tmp=pool[i];pool[i]=pool[j];pool[j]=tmp;
-  }
-  _qsPool = pool.slice(0, 25);
-  return _qsPool;
-}
-
-// ═══════════════════════════════════════════════
-// 人格类型数据（35型）
-// ═══════════════════════════════════════════════
-const TYPES={
-  社牛现金王:{t:'社牛现金王',cn:'现金王',name:'CashKing',d:'你是朋友圈里的社交天花板兼钱包担当。群里一喊你就到，红包永远最大份，聚餐永远你买单。别人觉得你大方，自己知道其实就是图个开心。你的钱包可能永远是扁的，但你的快乐永远是满的。',s:'今朝有酒今朝醉，明日愁来明日当',tx:'社交达人×金钱如土=朋友圈的散财童子',cn2:'社牛现金王',s2:'花钱买关系型',d2:'在社交场合如鱼得水，愿意为氛围和关系一掷千金，对金钱的感知较弱，更在意当下的体验和人际回报。',r2:'朋友多但交心的少，容易被当冤大头，财务风险高',c2:'大客户销售、商务拓展、活动策划',tx2:'钱是赚来花的，不是攒的——你赚的每一分快乐都溢价',tags:['社交天花板','人情世故','及时行乐'],zy:'守财建议：下次发红包前先看一眼余额，社交货币也需要底线。',q:'「今晚我请！」——然后默默吃土一周',dcols:['s:88','m:35','r:82','i:70','c:40','w:65','g:22','h:45','a:60','j:50','l:75','d:40','t:30','g2:20','i2:78','w2:68','c2:35','a2:58']},
-  现金王者:{t:'现金王者',cn:'现金王者',name:'MoneyMaster',d:'你深谙一个道理：钱是赚来的，不是省来的。与其斤斤计较，不如大开大合。你愿意为品质生活买单，也愿意为机会下重注。别人精打细算的时候，你在思考怎么赚更多。',s:'小钱靠省，大钱靠赚',tx:'搞钱能力满格×品质生活追求=财富自由的潜力股',cn2:'现金王者',s2:'投资增值型',d2:'对财富有强烈渴望，愿意承担合理风险，注重提升赚钱能力和资产增值，消费理性但不失品质。',r2:'容易过度自信忽视风险，社交圈功利化',c2:'投资理财、创业经营、项目管理',tx2:'省钱的终点是省钱本身，赚钱的终点是自由',q:'「这个收益率不高啊，有没有更高的？」',dcols:['g:92','m:30','r:45','i:65','c:55','w:60','s:42','h:40','a:35','j:62','l:30','d:50','t:35','g2:95','i2:48','w2:55','c2:50','a2:32']},
-  红包教父:{t:'红包教父',cn:'红包教父',name:'RedEnvMaster',d:'你发红包的速度比光速还快群里有人发"饿了"，你已经在发红包的路上了。红包对你来说不是钱，是入场券，是存在感，是证明自己还活着的仪式感。',s:'红包是门艺术，我是艺术家',tx:'无条件付出型社交×即时满足需求=永远的热心大哥/大姐',cn2:'红包教父',s2:'社交投资型',d2:'用红包建立和维护关系，对情感连接的渴望强烈，愿意以物质付出换取社交认同，内心渴望被需要和感谢。',r2:'付出感过重容易心态失衡，被人当提款机',c2:'公关商务、活动运营、人力资源',tx2:'红包发出去的是钱，收回来的是人情——但人情有时不值钱',q:'「红包不大，表达个心意！」',dcols:['s:85','r:80','m:28','i:58','c:35','w:55','g:38','h:42','a:72','j:45','l:68','d:48','t:40','g2:15','i2:72','w2:52','c2:30','a2:68']},
-  铁公鸡财神:{t:'铁公鸡财神',cn:'铁公鸡财神',name:'TightwadDeity',d:'你的每一分钱都花在刀刃上——而你眼里只有刀刃。红包？能不发就不发。聚餐AA精确到分，转账要等24小时确认收货。你知道自己是朋友圈里的"铁公鸡"，但你更知道自己的账户数字在悄悄变大。',s:'一毛不拔照样跑天下',tx:'极致理性消费×财富积累欲强=时间越久越富的存在',cn2:'铁公鸡财神',s2:'极度节俭型',d2:'对消费有极强的克制力，财务规划清晰，长期主义，愿意延迟满足，对他人消费行为有评判倾向。',r2:'人缘受损，被认为小气，错过一些体验',c2:'财务管理、成本控制、投资分析',tx2:'铁公鸡也有春天——当你的资产足够大时，没人再计较你的抠门',q:'「这次我请……下次你请啊」',dcols:['m:15','g:96','s:22','r:30','i:52','c:80','w:48','h:58','a:25','j:88','l:18','d:62','t:38','g2:98','i2:35','w2:45','c2:75','a2:22']},
-  外卖鉴定大师:{t:'外卖鉴定大师',cn:'外卖鉴定大师',name:'DeliveryMaster',d:'你吃外卖吃出了博士学位。哪家的卤肉饭最正宗，哪家外卖图不符实，哪家性价比之王，你了如指掌。你花在选外卖上的时间，可能比吃饭时间还多。',s:'外卖选不对，宁可饿着睡',tx:'外卖重度用户×消费精打细算=舌尖上的哲学家',cn2:'外卖鉴定大师',s2:'外卖依赖型',d2:'生活便利性强但自炊意愿低，对消费品质有追求但预算有限，愿意花时间做功课获取最优解。',r2:'饮食健康隐患，生活便利性依赖外卖平台',c2:'美食博主、生活类自媒体、消费测评',tx2:'会选外卖的人，做人也挑不出毛病',q:'「等一下，让我看看有没有更划算的」',dcols:['c:88','m:55','i:75','r:42','s:38','w:60','g:35','h:35','a:40','j:45','l:50','d:32','t:25','g2:28','i2:62','w2:55','c2:82','a2:38']},
-  外卖自由王:{t:'外卖自由王',cn:'外卖自由王',name:'DeliveryKing',d:'你对价格不敏感，对品质很敏感。点外卖从不看价格，只看评分。别人凑满减凑到崩溃，你一键下单不看小票。你追求的是：吃到嘴里那一刻的满足感。',s:'满减什么的不重要，好吃最重要',tx:'品质至上×价格脱敏=外卖界的VIP',cn2:'外卖自由王',s2:'品质优先型',d2:'消费决策快，对价格敏感度低，注重体验和品质，愿意为好东西付出溢价，生活效率高但消费较随意。',r2:'容易月光，财务规划意识弱',c2:'品牌管理、市场营销、体验设计',tx2:'对自己好一点，不需要理由——这就是理由',q:'「这个看着不错，点了！」',dcols:['c:92','m:70','i:68','s:45','r:38','w:58','g:25','h:40','a:50','j:35','l:48','d:40','t:30','g2:35','i2:55','w2:50','c2:88','a2:45']},
-  夜猫哲学家:{t:'夜猫哲学家',cn:'夜猫哲学家',name:'NightOwlPhilosopher',d:'你的灵魂属于深夜。23点才是你一天的开始，凌晨3点你还在和自己对话。你在夜里想通了人生，也在夜里熬秃了头。你不是在熬夜，你是在和宇宙对话。',s:'睡什么睡，起来嗨',tx:'睡眠后置×深夜高思考力=当代熬夜冠军',cn2:'夜猫哲学家',s2:'睡眠推迟型',d2:'夜间精力充沛，思维活跃，独处时效率高，有一定的存在主义倾向，对白天生活有疏离感。',r2:'健康风险高，社交时间受限，与常规作息人群错位',c2:'创意写作、深夜直播、独立音乐制作',tx2:'夜里想通的事，白天往往不敢做——所以你还在夜里想',q:'「夜深人静的时候，思路特别清晰」',dcols:['h:92','w:75','s:38','a:65','i:58','r:28','m:42','c:40','g:35','j:48','l:35','d:45','t:32','g2:40','i2:50','w2:70','c2:42','a2:62']},
-  早睡早起侠:{t:'早睡早起侠',cn:'早睡早起侠',name:'EarlyBirdHero',d:'你可能是朋友圈里唯一每天准时睡觉的人。22点跟世界道晚安，6点跟太阳说早安。你的人生像你的作息一样规律，也像你的作息一样……有点无聊。',s:'早起改变人生，早睡保护人生',tx:'极度自律型作息×稳定情绪基础=朋友圈的正能量源泉',cn2:'早睡早起侠',s2:'高度自律型',d2:'作息规律，自律性强，情绪稳定，生活可控感强，对熬夜行为有强烈批判倾向。',r2:'与夜生活社交脱节，被认为是无聊的老年人作息',c2:'老师、公务员、早间主播、健康管理',tx2:'自律给我自由——但偶尔也想体验一下夜蒲是什么感觉',q:'「你们12点睡？我10点就睡了」',dcols:['h:95','g:75','s:42','r:55','i:40','c:48','w:25','m:35','a:30','j:58','l:38','d:55','t:48','g2:68','i2:35','w2:22','c2:45','a2:28']},
-  手机奴隶:{t:'手机奴隶',cn:'手机奴隶',name:'PhoneSlave',d:'你的手机比你更了解你。你在哪里，你喜欢什么，你几点睡——它全知道。你刷手机的收入是零，但你刷的时间可以绕地球一圈。',s:'再刷五分钟就睡（重复无限次）',tx:'数字成瘾型×碎片时间吞噬者=手机的最佳朋友，生活的陌生人',cn2:'手机奴隶',s2:'手机重度依赖型',d2:'对手机和社交媒体高度依赖，碎片时间利用率低，注意力分散，在虚拟世界获得快感和逃避感。',r2:'现实社交能力退化，时间效率极低，影响身心健康',c2:'手机依赖不需要工作——需要治疗',tx2:'手机里的世界很精彩，但手放开的时候最真实',q:'「不好意思，刚才在看手机没听到」',dcols:['w:98','s:48','i:72','c:50','r:35','m:40','h:28','g:18','a:42','j:25','l:65','d:30','t:22','g2:10','i2:60','w2:95','c2:45','a2:38']},
-  自律达人:{t:'自律达人',cn:'自律达人',name:'DisciplineMaster',d:'你是朋友圈里的自律传说。跑步、读书、单词、冥想，日程表比你的人生规划还满。你自律到让人怀疑你是不是机器人。',s:'比你优秀的人比你还努力',tx:'极度自律型×目标驱动强=自我管理的终身实践者',cn2:'自律达人',s2:'自我驱动型',d2:'目标导向强，自我管理能力卓越，有清晰的长期规划，对拖延和放纵有强烈批判，成就感来源于完成计划。',r2:'过度自律导致压力，社交和个人生活被压缩，不允许自己犯错',c2:'创业者、项目管理、企业家、投资人',tx2:'自律不是目的，自由才是——但没有自律，你永远不知道自由是什么滋味',q:'「我每天5点起床，你呢？」',dcols:['g:88','h:80','j:85','r:40','i:55','s:38','c:45','m:30','a:35','w:28','l:25','d:52','t:45','g2:78','i2:42','w2:25','c2:48','a2:32']},
-  记仇小本本:{t:'记仇小本本',cn:'记仇小本本',name:'GrudgeKeeper',d:'你不记开心的事，因为开心的事不用记。你只记那些伤害过你的人，一笔一笔，清清楚楚。有人说这是格局小，你只是笑笑：格局大的人，通常是受伤最多的人。',s:'不是不报，时候未到',tx:'高敏感×强记忆系统=永远在内心小本本上记账的人',cn2:'记仇小本本',s2:'记仇型',d2:'对负面情绪记忆深刻，自尊心强，不轻易原谅他人，内心戏丰富，有强烈的公平感和恩怨分明的价值观。',r2:'人际关系紧张，内心消耗大，容易陷入负面情绪循环',c2:'律师、审计、风控、纪检监察',tx2:'记仇是本能，不记是修行——你还在修行的路上',q:'「你说的那句话我还记得，别以为我忘了」',dcols:['a:92','r:35','s:30','i:52','m:38','c:42','w:48','h:35','g:45','j:72','l:40','d:38','t:50','g2:42','i2:45','w2:45','c2:40','a2:88']},
-  佛系大师:{t:'佛系大师',cn:'佛系大师',name:'ZenMaster',d:'你是"随便、都行、没关系"的代言人。吃什么你定，去哪玩你定，吵不吵架你随意。你的人生哲学是：不争不抢，岁月静好。别人觉得你境界高，其实你只是懒得计较。',s:'一切随缘',tx:'低欲望×高包容度=活在当下的修行者',cn2:'佛系大师',s2:'低欲望型',d2:'情绪稳定，包容度极高，不争不抢，存在感较低，内心平和但可能缺乏目标和动力。',r2:'容易被人忽视或占便宜，缺乏竞争意识，机会来时可能错过',c2:'图书管理员、宗教人士、心理咨询师、手工艺人',tx2:'佛系是种选择，不是无奈——但生活有时候需要你努努力',q:'「都行，你决定」',dcols:['d:92','h:72','s:38','r:48','i:42','c:45','w:38','m:32','a:15','j:35','l:42','g:40','t:55','g2:38','i2:35','w2:35','c2:42','a2:12']},
-  内卷之王:{t:'内卷之王',cn:'内卷之王',name:'InvolutionKing',d:'你不允许自己停下来。别人下班你在加班，别人休息你在学习，你永远在追逐一个叫"更好"的影子。你是最努力的普通人，也是最焦虑的奔跑者。',s:'比你优秀的人比你还努力，你只能更努力',tx:'高度竞争意识×成就驱动强=永远在奔跑的马拉松选手',cn2:'内卷之王',s2:'竞争驱动型',d2:'成就动机极强，对自我要求严苛，竞争意识强，有较强的危机感，在资源和机会争取上具有攻击性。',r2:'身心健康风险高，幸福感低，忽视过程中的风景',c2:'金融、销售、律师、咨询、创业',tx2:'卷到最后，你会发现健康和时间比什么都贵——但你可能不会听',q:'「这个项目必须拿第一」',dcols:['g:85','j:90','a:70','w:75','s:45','r:32','i:60','c:50','m:42','h:25','l:35','d:40','t:30','g2:80','i2:52','w2:72','c2:55','a2:65']},
-  躺平宗师:{t:'躺平宗师',cn:'躺平宗师',name:'FlatMaster',d:'你悟了。工作不是人生的全部，赚钱也不是，社交也不是。你选择了一种最低能耗的生存方式：躺着。别人说你没追求，你笑他人看不穿。',s:'只要躺得够平，镰刀就割不到我',tx:'低欲望×高自我保护意识=当代职场哲学大师',cn2:'躺平宗师',s2:'躺平型',d2:'主动选择低欲望、低竞争的生活方式，有较强的自我保护意识，内心平静但可能缺乏生活热情。',r2:'经济压力大，抗风险能力弱，社会评价低，容易自我放弃',c2:'自由职业、兼职、远程工作、田园生活',tx2:'躺平是对内卷的无声抗议——但抗议完了，肚子还是饿',q:'「不想动，明天再说」',dcols:['d:88','h:65','s:25','r:38','i:35','c:55','w:40','m:30','a:20','j:28','g:35','l:32','t:45','g2:30','i2:30','w2:38','c2:50','a2:18']},
-  社交牛杂:{t:'社交牛杂',cn:'社交牛杂',name:'SocialMeatball',d:'你在社牛和社恐之间横跳。今天KTV麦霸，明天发布会哑巴。你自己也搞不清到底是外向还是内向，只能说是——有社交牛杂症。',s:'时而社牛，时而社恐，看心情',tx:'社交能力不稳定×情境依赖强=情景喜剧型人格',cn2:'社交牛杂',s2:'情境依赖型',d2:'社交能力随环境和情绪波动，对陌生人社恐对熟人社牛，内心敏感，在安全环境下表现外向。',r2:'给人忽冷忽热的感觉，社交关系维护不稳定',c2:'销售、公关、演员、主持人',tx2:'你不是社恐，你只是还没遇到让你放开的场子',q:'「看情况吧，有时候我挺能聊的」',dcols:['s:62','a:55','r:50','i:60','c:42','w:52','m:40','h:42','g:35','j:45','l:55','d:45','t:35','g2:40','i2:52','w2:48','c2:42','a2:52']},
-  独行侠:{t:'独行侠',cn:'独行侠',name:'LoneWolf',d:'你享受一个人吃饭、一个人看电影、一个人旅行。别人觉得你孤独，你觉得别人才孤独。你不需要被理解，也不需要被陪伴。你的自由，建立在强大的内心之上。',s:'一个人就是一支队伍',tx:'高度独立性×低社交需求=孤独但自由的灵魂',cn2:'独行侠',s2:'高度独立型',d2:'独立自主，社交需求低，情感自给自足，不依赖他人认可，内心强大且边界感清晰。',r2:'情感支持网络薄弱，遇到困难时缺少援手，社交技能可能退化',c2:'独立开发者、作家、艺术家、咨询顾问',tx2:'独行是一种能力，不是孤僻——但偶尔也需要有人在旁边',q:'「一个人挺好的，不用迁就别人」',dcols:['s:25','r:18','i:55','g:65','h:60','a:48','j:55','c:45','w:40','m:35','l:30','d:75','t:52','g2:58','i2:48','w2:38','c2:45','a2:45']},
-  群聊话痨:{t:'群聊话痨',cn:'群聊话痨',name:'GroupChatKing',d:'群里没有你接不上的话，没有你不知道的八卦，没有你不敢发的表情包。你是群里的气氛组组长，也是深夜话题的终结者。你的手机永远在震，你的消息永远99+，你的打字速度永远跟得上话题的转速。',s:'看到消息必须回，不回会死',tx:'社交依赖强×表达欲旺盛=群里永远在线的存在',cn2:'群聊话痨',s2:'群聊依赖型',d2:'社交依赖性高，表达欲强烈，需要持续的社交互动来获取存在感和愉悦感，线上社交能力强于线下。',r2:'影响专注力和工作效率，社交质量可能不高，过度依赖外部反馈',c2:'主播、运营、社区管理、主持人',tx2:'群里的热闹是真实的，但热闹散场后的冷清也是',q:'「999+消息是什么体验？我天天体验」',dcols:['s:95','l:88','w:72','i:70','r:55','c:38','m:42','h:30','a:58','g:28','j:38','d:25','t:28','g2:22','i2:65','w2:68','c2:38','a2:55']},
-  朋友圈潜水员:{t:'朋友圈潜水员',cn:'朋友圈潜水员',name:'MomentDiver',d:'你看了所有人发的朋友圈，但从来没人知道你也在看。你点赞都是偷偷点，从不评论，因为你怕暴露自己的存在。你是朋友圈的隐形冠军。',s:'只潜水，不上浮',tx:'高度观察型×低表达欲=朋友圈的幽灵观众',cn2:'朋友圈潜水员',s2:'潜水型',d2:'观察力强，情感细腻，表达意愿低，内心戏丰富，在人多的场合容易紧张，更喜欢独处或小群体。',r2:'社交圈难以深化，容易被忽视，存在感低，机会可能因此流失',c2:'数据分析、市场研究、文学创作、编辑',tx2:'潜水不是不关心，潜水是更深的关心——但别人不知道',q:'「我就看看，不说话」',dcols:['r:38','s:22','i:58','h:55','a:45','w:48','c:42','m:35','g:40','j:48','l:15','d:65','t:50','g2:45','i2:52','w2:45','c2:42','a2:42']},
-  亲戚终结者:{t:'亲戚终结者',cn:'亲戚终结者',name:'RelativeTerminator',d:'「有对象了吗」「买房了吗」「工资多少」——每一个亲戚的经典问题，在你这里都得到了完美的回击。你是亲戚聚会的噩梦，也是年轻一代的精神领袖。',s:'惹我可以，别惹我的嘴',tx:'社交防御力满级×幽默回击=亲戚桌上的孤独剑客',cn2:'亲戚终结者',s2:'社交防御型',d2:'面对长辈和群体压力有强烈的防御机制，用幽默和反问作为武器，有清晰的个人边界感，不轻易让步。',r2:'可能影响家庭关系，容易被贴上"不礼貌"的标签，内心压力大',c2:'律师、记者、危机公关',tx2:'终结亲戚话题是技术活，你是那个掌握了核心技术的人',q:'「您孩子结婚了吗？工作稳定吗？买房了吗？」',dcols:['r:65','a:80','s:55','j:62','l:58','i:48','c:38','w:45','m:35','h:40','g:42','d:35','t:72','g2:48','i2:50','w2:42','c2:40','a2:75']},
-  催婚反击王:{t:'催婚反击王',cn:'催婚反击王',name:'AntiPushback',d:'每到过年，你都准备好了台词。「不急」「没遇到」「先忙事业」——这三板斧你已经练了十年。你不是不想找，你只是不想将就，更不想被催。',s:'我的婚姻我做主，不接受任何形式的催',tx:'独立意识强×家庭压力高=催婚战场的常胜将军',cn2:'催婚反击王',s2:'婚姻自主型',d2:'对婚恋有自主意识，不轻易被家庭压力左右，对"社会时钟"有批判态度，有自己的生活节奏和标准。',r2:'与父母关系紧张，外部压力持续存在，可能错过一些机会',c2:'独立创业、艺术创作、自由职业',tx2:'婚姻是人生大事，不应该是一场催促下的赶集',q:'「缘分到了自然就有了」',dcols:['d:78','t:85','g:55','r:42','s:38','i:50','c:40','w:42','m:35','a:55','j:48','l:35','h:45','g2:52','i2:45','w2:40','c2:42','a2:52']},
-  数码达人:{t:'数码达人',cn:'数码达人',name:'TechGadgetGuru',d:'你对新品的追求永无止境。苹果发布会你必看，数码博主你全关注，买过的数码产品能开博物馆。你是最懂参数的那批人，也是最容易冲动消费的那批人。',s:'不是追新，就是在追新的路上',tx:'科技爱好者×消费冲动强=数码产品界的活体测评博主',cn2:'数码达人',s2:'科技消费型',d2:'对科技产品有浓厚兴趣和专业知识，追新意愿强，消费决策快，愿意为新技术付出溢价。',r2:'容易冲动消费，经济压力大，对非科技话题兴趣缺缺',c2:'数码博主、科技编辑、产品经理',tx2:'买的时候真香，买完吃灰——但下次还是会买',q:'「这个参数一出来我就知道必火」',dcols:['i:92','w:75','c:55','m:42','s:45','r:35','h:38','a:42','j:48','l:52','d:32','t:28','g2:40','i2:85','w2:70','c2:52','a2:40']},
-  技术宅:{t:'技术宅',cn:'技术宅',name:'TechOtaku',d:'你的世界是二进制的。你懂代码、懂系统、懂所有别人不懂的东西。你的聊天记录里emoji出现频率最低，但你解决问题的效率是最高的。',s:'Talk is cheap, show me the code',tx:'技术专精×表达力弱=数字世界的筑梦师',cn2:'技术宅',s2:'技术导向型',d2:'技术能力突出，逻辑思维强，对技术以外的话题兴趣有限，线上沟通优于线下，喜欢解决问题带来的成就感。',r2:'社交圈狭窄，与非技术人群沟通困难，线下存在感低',c2:'软件工程师、系统架构、网络安全、数据科学',tx2:'代码不会骗人，人会——所以你更相信代码',q:'「这个bug我知道怎么修」',dcols:['g:72','j:68','i:70','w:62','s:20','r:22','c:48','m:38','h:45','a:32','l:28','d:55','t:35','g2:70','i2:65','w2:58','c2:52','a2:30']},
-  游戏成瘾:{t:'游戏成瘾',cn:'游戏成瘾',name:'GameAddict',d:'你的段位是你的人生履历，你的装备是你的人格外挂。游戏里你是王者，现实里你可能还在青铜。但你不在乎，因为你的快乐在游戏里，不需要别人定义。',s:'游戏虐我千百遍，我待游戏如初恋',tx:'虚拟世界沉浸深×现实逃避倾向=数字时代的隐居者',cn2:'游戏成瘾',s2:'游戏依赖型',d2:'在虚拟世界中获得成就感和归属感，对游戏有较强依赖性，在现实中可能感到挫败或无聊。',r2:'严重影响现实生活，社交能力退化，健康和财务受损',c2:'电竞选手、游戏策划、游戏主播',tx2:'游戏里的段位再高，也换不来现实里的一顿饭钱——但你还是会继续玩',q:'「等我打完这把就去」',dcols:['w:88','i:75','s:30','r:25','m:35','c:42','h:32','a:45','g:28','j:42','l:55','d:38','t:25','g2:15','i2:70','w2:85','c2:40','a2:42']},
-  氪金大佬:{t:'氪金大佬',cn:'氪金大佬',name:'Whale',d:'你不追游戏，你养游戏。648的礼包你眼都不眨648，你抽的不是卡，是梦想，是多巴胺，是区别于普通玩家的优越感。你的银行账单是你最不想看到的文件。',s:'能用钱解决的事，都不叫事',tx:'冲动消费型×游戏成瘾=数字时代的慈善家',cn2:'氪金大佬',s2:'游戏消费型',d2:'消费冲动性强，对喜欢的事物愿意大额投入，在游戏中有强烈的优越感和地位追求，财务风险极高。',r2:'财务健康严重受损，家庭关系紧张，游戏以外没有生活',c2:'不需要——游戏就是工作（但最好还是找一份）',tx2:'648不是钱，是通往快乐的门——但门后面的快乐好像越来越贵了',q:'「这次必中！最后十连！」',dcols:['m:30','c:75','w:80','i:78','s:38','r:28','h:32','a:48','g:20','j:35','l:60','d:35','t:25','g2:12','i2:72','w2:75','c2:72','a2:45']},
-  购物狂魔:{t:'购物狂魔',cn:'购物狂魔',name:'Shopaholic',d:'你的快递比你先到家，你的花呗比你先爆。每次清空购物车的那一刻，你感到人生圆满。然后你又开始看新的东西。',s:'买完这件就收手（永远有下一件）',tx:'购物成瘾型×即时满足强=拆快递的永动机',cn2:'购物狂魔',s2:'购物依赖型',d2:'购物作为情绪调节手段，有冲动消费倾向，在购买时获得强烈的快感，事后常有后悔。',r2:'财务状况糟糕，东西越买越多，快乐越来越短',c2:'不适合工作——或者说，所有工作都只是为了继续买东西',tx2:'拆快递的那一刻你是全世界最快乐的人，但账单日除外',q:'「这个有券！买！」',dcols:['c:90','m:25','w:68','i:70','s:42','r:35','h:38','a:45','g:18','j:30','l:58','d:32','t:28','g2:15','i2:65','w2:65','c2:85','a2:42']},
-  薅羊毛大师:{t:'薅羊毛大师',cn:'薅羊毛大师',name:'DealHunter',d:'你有三头六臂，能找到全网所有的优惠券。你为了省10块钱可以花1个小时研究攻略，你为了一杯免费奶茶可以拉30个人头。你不是抠门，你只是热爱这场薅羊毛的游戏。',s:'省到就是赚到，没有羊毛的日子是不完整的',tx:'极致精打细算×社交裂变强=羊毛界的极限运动选手',cn2:'薅羊毛大师',s2:'羊毛型',d2:'价格敏感度高，愿意为省钱付出时间和精力，有较强的信息搜索和社交裂变能力，消费有规划。',r2:'时间成本高，有时为小钱花大精力，容易被营销套路',c2:'电商运营、优惠券平台、金融保险销售',tx2:'省下的钱是小钱，花的时间也是钱——但这个游戏太好玩了',q:'「先别买，等我找找有没有券」',dcols:['c:95','m:40','i:72','l:58','s:45','r:42','w:52','h:42','a:38','g:30','j:55','l:52','d:38','t:30','g2:58','i2:60','w2:48','c2:90','a2:35']},
-  断舍离高手:{t:'断舍离高手',cn:'断舍离高手',name:'MinimalistMaster',d:'你定期清理房间，定期清理衣柜，定期清理朋友圈。你的人生哲学是：少即是多。你买一样新的，就扔一样旧的。你是朋友圈里最轻盈的人，也是最难被理解的人。',s:'Less is more',tx:'极简主义型×高度规划性=物质欲望低但精神要求高的清流派',cn2:'断舍离高手',s2:'极简型',d2:'物质欲望低，注重品质而非数量，有清晰的取舍标准，对杂乱和过度消费有强烈抵触，有较强的自我控制力。',r2:'被家人认为"不会过日子"，有时过于追求完美而错过体验',c2:'设计师、建筑师、作家、理财顾问',tx2:'拥有的东西少了，烦恼也少了——但偶尔也会觉得少了点什么',q:'「这件衣服一年没穿了吧，该扔了」',dcols:['d:82','g:68','h:58','c:65','s:35','r:40','i:48','w:38','m:28','a:32','j:52','l:30','t:48','g2:65','i2:40','w2:35','c2:62','a2:30']},
-  八卦情报员:{t:'八卦情报员',cn:'八卦情报员',name:'GossipAgent',d:'你是朋友圈的情报中心。谁和谁在一起了，谁最近状态不对，谁偷偷换了工作——你永远第一个知道。你不是爱管闲事，你只是对人充满好奇。',s:'知道别人不知道的，是一种快乐',tx:'信息收集型×社交网络广=行走的社交情报局',cn2:'八卦情报员',s2:'八卦型',d2:'信息收集欲望强烈，社交触角广，善于观察和记忆，对人际关系有敏锐洞察，但有时过于探听隐私。',r2:'容易卷入是非，被认为爱管闲事，信息传播有风险',c2:'记者、HR、公关、猎头',tx2:'八卦是了解一个人最快速的方式——虽然这种方式不太体面',q:'「你知道吗，我跟你说……」',dcols:['r:85','s:75','i:68','l:70','a:62','c:42','w:52','m:38','h:38','g:32','j:48','d:40','t:58','g2:40','i2:62','w2:48','c2:45','a2:58']},
-  人精:{t:'人精',cn:'人精',name:'SocialAnimal',d:'你读得懂空气，分得清眉眼高低，知道什么话该说什么时候说。你在社交场合游刃有余，在人际博弈中所向披靡。你不是城府深，你只是太了解人性。',s:'见人说人话，见鬼说鬼话',tx:'高度社交智慧×强人际洞察力=人际场上的六边形战士',cn2:'人精',s2:'人际操控型',d2:'社交能力强，人际洞察力极强，善于利用信息和关系达到目的，有较强的目的性和策略性。',r2:'可能被视为"滑头"，信任度低，深度关系难以建立',c2:'销售、公关、律师、创业者、投资者',tx2:'看透人心是本事，利用人心是选择——希望你选择善良',q:'「我知道你想说什么，我帮你说了吧」',dcols:['s:92','r:88','a:72','j:80','i:62','l:70','c:50','m:45','w:55','h:38','g:50','d:42','t:65','g2:55','i2:68','w2:50','c2:52','a2:68']},
-  情感专家:{t:'情感专家',cn:'情感专家',name:'RelationshipExpert',d:'你的感情线比你的人生还复杂。你分析别人头头是道，轮到自己就犯糊涂。你是最好的闺蜜/兄弟，却是最差的恋人。',s:'我给别人分析感情一流，自己的感情一塌糊涂',tx:'情感分析能力强×自我认知有盲区=别人的情感导师，自己的人生迷途者',cn2:'情感专家',s2:'情感分析型',d2:'对情感有深刻理解，善于分析和倾听，但往往对自己的情感问题缺乏客观性，有较强的共情能力。',r2:'自己的感情生活可能一团糟，容易被他人的情感问题消耗',c2:'心理咨询师、情感博主、HR、调解员',tx2:'你能看清别人的心，却常常看不清自己的——但没关系，大家都是这样',q:'「这个人的表现说明他肯定有问题……」',dcols:['a:78','r:72','s:60','h:55','i:55','c:42','w:48','m:40','g:38','j:50','l:58','d:45','t:60','g2:45','i2:55','w2:45','c2:45','a2:75']},
-  戏精本精:{t:'戏精本精',cn:'戏精本精',name:'DramaQueen',d:'你的朋友圈就是你的个人舞台，每一条都是精心设计的表演。你比演员更投入，因为你是本色出演——每一出戏你都信以为真。',s:'人生如戏，全靠演技',tx:'高度戏剧化×强烈表达欲=社交媒体上的永恒C位',cn2:'戏精本精',s2:'表演型',d2:'表现欲极强，情绪表达丰富，生活戏剧化，有较强的自我包装能力，在社交媒体上存在感极强。',r2:'真实关系难以建立，过度在意他人评价，情绪波动大',c2:'演员、主播、网红、营销',tx2:'演技太好有时候也是一种痛苦——因为你自己也分不清哪个是真的自己',q:'「这条朋友圈我要好好想想怎么发」',dcols:['s:88','l:82','a:78','r:60','i:65','w:62','c:45','m:42','h:35','g:28','j:42','d:30','t:50','g2:25','i2:72','w2:58','c2:48','a2:75']},
-  知心大姐:{t:'知心大姐',cn:'知心大姐',name:'BigSisterHeart',d:'你总是那个被朋友找来做情感咨询的人。你倾听，你分析，你给出建议，你的建议总是对的——但你自己遇到问题时，你也很需要一个知心大姐。',s:'我的肩膀永远给你靠',tx:'高共情×低自我关注=永远的朋友圈情绪稳定器',cn2:'知心大姐',s2:'照顾他人型',d2:'共情能力极强，善于倾听和安慰，总是把他人需求放在前面，有较强的照顾者特质，但容易忽略自己。',r2:'情绪负担重，容易被他人的负面情绪消耗，自我需求被压抑',c2:'心理咨询师、护士、教师、社工',tx2:'你总是给别人撑伞，却忘了自己也会被淋湿——记得偶尔为自己撑一把',q:'「没关系，你说，我在听」',dcols:['r:88','a:72','s:68','h:58','l:62','c:40','i:50','w:48','m:38','g:35','j:52','d:55','t:65','g2:42','i2:58','w2:45','c2:42','a2:70']},
-  孤独患者:{t:'孤独患者',cn:'孤独患者',name:'LonelySoul',d:'你在人群中感到孤独，在独处时感到更孤独。你的社交账号很多，朋友很多，但能说心里话的人很少。你是最热闹的孤独者。',s:'众人皆醒我独醉，众人皆乐我独悲',tx:'高孤独感×低连接深度=数字时代的孤岛居民',cn2:'孤独患者',s2:'孤独型',d2:'内心孤独感持续存在，表面社交活跃但深度连接少，有较高的情感需求但表达受限，容易陷入自我怀疑。',r2:'持续情绪低落，影响身心健康，可能形成社交退缩',c2:'需要先寻求专业帮助，再找适合的工作',tx2:'孤独是一种选择，也是一种惩罚——但你可以选择不那么孤独',q:'「我没事，就是有点累」',dcols:['h:72','r:55','a:68','s:35','i:50','c:42','w:52','m:32','g:35','j:45','l:38','d:48','t:58','g2:38','i2:48','w2:50','c2:42','a2:65']},
-  社恐患者:{t:'社恐患者',cn:'社恐患者',name:'SocialPhobic',d:'你害怕聚会，害怕打电话，害怕点餐，害怕所有需要开口的场景。你的沉默不是高冷，是你真的不知道该说什么。',s:'不要跟我说话，不要让我说话',tx:'社交焦虑型×自我意识强=内心戏丰富的独处爱好者',cn2:'社恐患者',s2:'社恐型',d2:'在社交场合感到不适和焦虑，有较强的自我意识，担心被评判，内心戏丰富，独处时更自在。',r2:'社交机会减少，影响职业发展，可能被误解为傲慢',c2:'技术类、创作类、研究类岗位',tx2:'你不是不喜欢人，你只是不知道怎么跟人相处——这是可以学习的',q:'「我先走了，今天有点不舒服」',dcols:['s:15','r:20','a:55','h:62','i:55','g:48','c:42','w:38','m:32','j:42','l:20','d:70','t:48','g2:45','i2:48','w2:35','c2:40','a2:52']},
-  职场老黄牛:{t:'职场老黄牛',cn:'职场老黄牛',name:'WorkHorse',d:'你是公司里干活最多的，也是被夸最少的。你加班最多，升职最慢。你总觉得自己做得够好了，但老板不这么认为。',s:'吃亏是福，多做多错',tx:'高付出×低汇报能力=职场被遗忘的底座',cn2:'职场老黄牛',s2:'埋头苦干型',d2:'勤劳踏实，不善于表现和汇报，有较强的服从性，但缺乏主动争取意识和职场政治智慧。',r2:'付出与回报不成正比，容易产生委屈和抱怨，职业发展受限',c2:'技术专家、专业领域深耕',tx2:'会做也要会说，不会说就要会表现，否则你的付出就是别人的嫁衣',q:'「我做完再汇报吧」',dcols:['g:75','j:65','s:38','r:50','i:48','c:45','w:58','h:42','a:28','m:35','l:32','d:55','t:40','g2:65','i2:40','w2:55','c2:48','a2:25']},
-  职场人际王:{t:'职场人际王',cn:'职场人际王',name:'OfficePoliticsKing',d:'你是办公室里最会搞关系的那个人。领导喜欢你，同事不讨厌你，客户信任你。你不一定是业务能力最强的，但你是最会借力的。',s:'做事靠能力，更靠关系',tx:'人际智慧型×目标导向强=职场上的六边形战士',cn2:'职场人际王',s2:'人际经营型',d2:'职场人际经营能力强，善于协调各方利益，有清晰的目标导向，在组织中具有较强的影响力和动员能力。',r2:'可能被视为"滑头"，专业能力发展受限，过于依赖关系',c2:'管理者、公关、商务拓展、HRBP',tx2:'关系是生产力，但专业是底气——两者兼备才是真王',q:'「这个事我帮你问问，应该问题不大」',dcols:['s:85','r:80','a:72','j:78','i:60','c:50','w:55','m:42','h:42','g:55','l:65','d:48','t:62','g2:60','i2:62','w2:52','c2:55','a2:70']}
-};
-
-// ═══════════════════════════════════════════════
-// 维度权重 & 加成系统
-// ═══════════════════════════════════════════════
-const DIM_COEF={s:1.6,a:1.75,z:1.1,c:1.45,g:2.6,h:3.7,r:2.1,i:3.1,m:3.7,w:1.25,j:3.0,l:1.9,d:1.45,t:4.5};
-const ZODIAC_BONUS={
-  鼠:{s:1.1,a:1.0,z:1.0,c:0.9,m:1.0,w:1.1,g:1.0,i:1.0,h:0.9,r:1.0,j:1.0,l:1.1,d:1.0,t:1.0},
-  牛:{s:0.9,a:1.0,z:1.2,c:1.1,m:0.9,w:0.9,g:1.2,i:1.0,h:1.1,r:1.1,j:1.2,l:0.9,d:1.1,t:1.0},
-  虎:{s:1.2,a:1.2,z:1.0,c:1.0,m:1.0,w:1.0,g:0.9,i:1.1,h:1.0,r:1.0,j:0.9,l:1.0,d:0.9,t:1.1},
-  兔:{s:1.0,a:0.9,z:1.1,c:1.1,m:1.1,w:1.2,g:1.0,i:1.0,h:1.2,r:1.1,j:1.0,l:1.0,d:1.1,t:1.0},
-  龙:{s:1.3,a:1.1,z:1.0,c:1.0,m:1.0,w:1.0,g:0.9,i:1.2,h:0.9,r:0.9,j:0.9,l:1.1,d:0.9,t:1.2},
-  蛇:{s:1.0,a:1.2,z:1.1,c:1.0,m:1.0,w:1.0,g:1.1,i:1.0,h:1.0,r:1.0,j:1.1,l:1.0,d:1.1,t:1.1},
-  马:{s:1.1,a:1.0,z:0.9,c:1.0,m:1.1,w:1.0,g:0.9,i:1.0,h:1.0,r:1.0,j:0.9,l:1.2,d:0.9,t:1.0},
-  羊:{s:1.0,a:0.9,z:1.1,c:1.1,m:1.2,w:1.1,g:1.0,i:0.9,h:1.1,r:1.1,j:1.0,l:1.0,d:1.2,t:1.0},
-  猴:{s:1.2,a:1.1,z:0.9,c:1.0,m:0.9,w:1.0,g:0.9,i:1.2,h:0.9,r:0.9,j:0.9,l:1.1,d:0.8,t:1.0},
-  鸡:{s:1.0,a:1.0,z:1.1,c:1.1,m:1.0,w:0.9,g:1.1,i:1.0,h:1.0,r:1.1,j:1.1,l:1.0,d:1.0,t:1.0},
-  狗:{s:1.1,a:1.2,z:1.0,c:0.9,m:1.0,w:1.0,g:1.1,i:1.0,h:1.0,r:1.2,j:1.1,l:1.0,d:1.0,t:1.0},
-  猪:{s:1.0,a:0.9,z:1.1,c:1.0,m:1.1,w:1.1,g:1.0,i:0.9,h:1.1,r:1.0,j:1.0,l:1.0,d:1.1,t:1.0}
-};
-const STAR_BONUS={
-  '魔羯':{g:1.1,h:1.1,d:1.1,m:0.9,j:1.1,a:0.9,s:0.9,r:0.9,i:0.9,c:0.9,w:0.9,l:0.9,t:0.9},
-  '水瓶':{i:1.1,g:1.1,w:1.1,s:1.0,a:1.0,j:0.9,r:0.9,m:0.9,c:0.9,h:0.9,l:0.9,d:0.9,t:0.9},
-  '双鱼':{h:1.1,r:1.1,a:1.0,s:1.0,j:0.9,m:1.0,i:0.9,c:0.9,g:0.9,w:0.9,l:0.9,d:0.9,t:0.9},
-  '白羊':{a:1.2,j:1.1,g:1.0,s:1.1,r:0.9,i:0.9,m:0.9,c:0.9,w:0.9,h:0.9,l:0.9,d:0.9,t:0.9},
-  '金牛':{g:1.2,c:1.1,h:1.1,d:1.0,m:0.9,j:1.0,s:0.9,r:0.9,i:0.9,w:0.9,l:0.9,a:0.9,t:0.9},
-  '双子':{w:1.2,i:1.1,s:1.1,a:1.0,j:0.9,r:0.9,m:0.9,c:0.9,g:0.9,h:0.9,l:0.9,d:0.9,t:0.9},
-  '巨蟹':{h:1.1,r:1.2,a:1.0,s:0.9,m:1.1,j:0.9,i:0.9,c:0.9,g:0.9,w:0.9,l:0.9,d:0.9,t:0.9},
-  '狮子':{s:1.2,a:1.1,g:1.0,j:1.0,r:0.9,i:0.9,m:0.9,c:0.9,w:0.9,h:0.9,l:0.9,d:0.9,t:0.9},
-  '处女':{g:1.1,j:1.1,i:1.0,a:1.0,s:0.9,r:0.9,m:0.9,c:1.0,w:0.9,h:0.9,l:0.9,d:0.9,t:0.9},
-  '天秤':{r:1.1,s:1.1,l:1.1,a:1.0,i:1.0,j:0.9,m:0.9,c:0.9,g:0.9,w:0.9,h:0.9,d:0.9,t:0.9},
-  '天蝎':{a:1.1,j:1.1,r:1.1,m:1.0,s:1.0,i:0.9,c:0.9,g:0.9,w:0.9,h:0.9,l:0.9,d:0.9,t:0.9},
-  '射手':{j:1.1,w:1.1,g:1.0,s:1.0,i:1.0,a:0.9,r:0.9,m:0.9,c:0.9,h:0.9,l:0.9,d:0.9,t:0.9}
-};
-const DCOLORS=['#e85a4f','#d4a574','#8e7cc3','#52b788','#667eea'];
-
-// ═══════════════════════════════════════════════
-// 题目展示 & 答题
-// ═══════════════════════════════════════════════
+// ═══ 题目展示 & 答题 ═══
 var ci = 0, answers = [];
 
 function startQuiz(){
-  _qsPool = null; // 重置题库
+  _qsPool = null;
   ci = 0;
   answers = [];
   renderQ();
@@ -1957,22 +819,22 @@ function renderQ(){
   if(ci >= qs.length){ doResult(); return }
   var q = qs[ci];
   var pct = (ci / qs.length * 100).toFixed(1);
-  
+
   document.getElementById('qN').textContent = ci + 1;
   document.getElementById('qT').textContent = qs.length;
   document.getElementById('pFill').style.width = pct + '%';
-  
+
   var html = '<div class="q-card">';
   html += '<div class="q-meta">第 ' + (ci + 1) + ' / ' + qs.length + ' 题</div>';
   html += '<div class="q-dim">🎯 凭直觉选择</div>';
   html += '<div class="q-question">' + q.q + '</div>';
   html += '<div class="q-options">';
-  
+
   q.o.forEach(function(opt, idx){
     var text = opt.t || String(opt);
     html += '<div class="q-option" onclick="selectOpt(this,' + idx + ')">' + text + '</div>';
   });
-  
+
   html += '</div></div>';
   document.getElementById('quizArea').innerHTML = html;
 }
@@ -1985,21 +847,18 @@ window.selectOpt = function(el, idx){
   setTimeout(renderQ, 120);
 };
 
-// ═══════════════════════════════════════════════
-// 计算核心
-// ═══════════════════════════════════════════════
+// ═══ 计算核心 ═══
 function calc(){
   var ds = {s:0,m:0,r:0,i:0,c:0,w:0,g:0,h:0,a:0,j:0,l:0,d:0,t:0};
-  
+
   answers.forEach(function(ans){
     var q = getQuestions()[ans.qi];
     if(!q) return;
     var opt = q.o[ans.oi];
     if(!opt || !opt.s) return;
-    // opt.s = {dim:val, dim:val}
     Object.keys(opt.s).forEach(function(k){ ds[k] = (ds[k]||0) + opt.s[k] });
   });
-  
+
   var keys = Object.keys(ds);
   keys.forEach(function(k){
     ds[k] *= (DIM_COEF[k] || 1);
@@ -2010,17 +869,16 @@ function calc(){
       if(fadj[k]) ds[k] *= fadj[k];
     }
   });
-  
+
   if(window.sAge && window.sAge < 22){
     var ymad = {'g':1.1,'w':1.15,'i':1.1,'j':.9};
     Object.keys(ymad).forEach(function(k){ ds[k] *= ymad[k] });
   }
-  
   if(window.sAge && window.sAge > 40){
     var omad = {'g':1.12,'h':1.1,'r':1.08};
     Object.keys(omad).forEach(function(k){ ds[k] *= omad[k] });
   }
-  
+
   return ds;
 }
 
@@ -2038,9 +896,7 @@ function matchType(ds, age){
   return best || TYPES[Object.keys(TYPES)[0]];
 }
 
-// ═══════════════════════════════════════════════
-// 结果页
-// ═══════════════════════════════════════════════
+// ═══ 结果页 ═══
 function doResult(){
   window._show('sLoad');
   setTimeout(function(){
@@ -2048,66 +904,49 @@ function doResult(){
     var age = calcAge(document.getElementById('fDate').value);
     window.sAge = age;
     var pt = matchType(dims, age);
-    
+
     var cn = (pt.cn || '').replace(/undefined/g,'');
     var en = (pt.name || '').replace(/undefined/g,'');
-    
+
     document.getElementById('rName').textContent = (cn && cn !== en) ? cn + ' · ' + en : (cn || en || pt.t || '');
     document.getElementById('rType').textContent = pt.t;
     document.getElementById('rSub').textContent = pt.d;
-    
+
+    // 金句（≤20字）
+    var gq = document.getElementById('rGoldenQuote');
+    var gt = document.getElementById('rGoldenText');
+    if(pt.s && pt.s.length > 0){
+      gt.textContent = pt.s;
+      gq.style.display = 'block';
+    } else {
+      gq.style.display = 'none';
+    }
+
     var tx = pt.tx || pt.n || pt.name || '';
     document.getElementById('rTx').innerHTML = (tx ? '<p style="font-size:15px;color:var(--accent-primary);font-weight:600;margin-bottom:10px">' + tx + '</p>' : '') + (pt.d2 || '');
-    
-    var qel = document.getElementById('rQuote');
-    qel.innerHTML = (pt.q ? '<p style="font-size:14px;color:var(--text-secondary);line-height:1.8;font-style:italic">💬 ' + pt.q + '</p>' : '');
-    qel.style.display = pt.q ? 'block' : 'none';
-    
-    var tags = '';
-    (pt.tags || []).forEach(function(tag){ tags += '<span class="rtag">' + tag + '</span>' });
-    document.getElementById('rTags').innerHTML = tags;
-    
-    document.getElementById('rAgeTag').style.display = 'block';
-    var starName = (window.sStar && window.sStar.name) ? window.sStar.name : '';
-    document.getElementById('rAgeTag').querySelector('.section-title').textContent = 
-      '👤 出生于 ' + document.getElementById('fDate').value + 
-      (window.sZodiac ? '，属' + window.sZodiac : '') + 
-      (starName ? '，' + starName + '座' : '') + 
-      (window.sGender ? '，' + window.sGender : '');
-    
-    document.getElementById('rDesc').innerHTML = (pt.d2 ? '<p style="font-size:14px;line-height:1.7;color:var(--text-secondary);margin-bottom:10px">' + pt.d2 + '</p>' : '') + (pt.r2 ? '<p style="font-size:13px;color:var(--accent-primary)">⚠️ 注意：' + pt.r2 + '</p>' : '');
-    
+
     document.getElementById('rAdvice').textContent = pt.tx2 || '';
-    
+
     var zy = pt.zy || '';
     document.getElementById('rZy').innerHTML = zy ? '<p style="font-size:14px;line-height:1.7;margin-bottom:8px">' + zy + '</p>' : '';
-    
-    // 各维度
-    var dims2 = [
-      {k:'s',n:'社交指数'},{k:'m',n:'财运指数'},{k:'r',n:'人缘指数'},
-      {k:'i',n:'数码指数'},{k:'c',n:'消费指数'},{k:'w',n:'网瘾指数'},
-      {k:'g',n:'搞钱指数'},{k:'h',n:'作息指数'},{k:'a',n:'记仇指数'},
-      {k:'j',n:'卷王指数'},{k:'l',n:'话痨指数'},{k:'d',n:'独立指数'},
-      {k:'t',n:'社恐指数'}
-    ];
-    
-    // 雷达迷你图（简化柱状）
-    var radarHtml = '<div class="radar-grid">';
-    dims2.forEach(function(dim, idx){
-      var v = Math.min(100, Math.max(0, dims[dim.k] || 0));
-      radarHtml += '<div class="radar-item">';
-      radarHtml += '<div class="radar-key">' + dim.n + '</div>';
-      radarHtml += '<div class="radar-track">';
-      radarHtml += '<div class="radar-fill" style="width:' + v + '%;background:' + DCOLORS[idx % 5] + '"></div>';
-      radarHtml += '</div>';
-      radarHtml += '<div class="radar-val">' + Math.round(v) + '</div>';
-      radarHtml += '</div>';
-    });
-    radarHtml += '</div>';
-    document.getElementById('rRadar').innerHTML = radarHtml;
-    
-    // 反向属性对比（左右对称柱）
-    // 对照表：[主维度, 名称, 反向维度, 反向名称, 主色, 反色]
+
+    document.getElementById('rAgeTag').style.display = 'block';
+    var starName = (window.sStar && window.sStar.name) ? window.sStar.name : '';
+    document.getElementById('rAgeTag').querySelector('.section-title').textContent =
+      '👤 出生于 ' + document.getElementById('fDate').value +
+      (window.sZodiac ? '，属' + window.sZodiac : '') +
+      (starName ? '，' + starName + '座' : '') +
+      (window.sGender ? '，' + window.sGender : '');
+
+    document.getElementById('rDesc').innerHTML = (pt.d2 ? '<p style="font-size:14px;line-height:1.7;color:var(--text-secondary);margin-bottom:10px">' + pt.d2 + '</p>' : '') + (pt.r2 ? '<p style="font-size:13px;color:var(--accent-primary)">⚠️ 注意：' + pt.r2 + '</p>' : '');
+
+    // 人格标签（含 zy_tags）
+    var tagHtml = '';
+    (pt.tags || []).forEach(function(tag){ tagHtml += '<span class="rtag">' + tag + '</span>' });
+    (pt.zy_tags || genZyTags(dims)).forEach(function(tag){ tagHtml += '<span class="zy-tag">' + tag + '</span>' });
+    document.getElementById('rTags').innerHTML = tagHtml;
+
+    // 反向属性对比
     var oppPairs = [
       {k:'s',n:'社交达人',nk:'s',nn:'独处爱好者',c:'#e85a4f',nc:'#52b788'},
       {k:'g',n:'消费自由',nk:'g',nn:'存钱节俭',c:'#d4a574',nc:'#52b788'},
@@ -2116,7 +955,7 @@ function doResult(){
       {k:'a',n:'记仇模式',nk:'a',nn:'大度模式',c:'#d4a574',nc:'#52b788'},
       {k:'l',n:'群聊话痨',nk:'d',nn:'独来独往',c:'#8e7cc3',nc:'#667eea'}
     ];
-    
+
     var barsHtml = '';
     oppPairs.forEach(function(pair){
       var v1 = Math.min(100, Math.max(0, dims[pair.k] || 0));
@@ -2134,42 +973,79 @@ function doResult(){
       barsHtml += '<div class="opp-bar-left" style="width:' + leftW + '%;background:' + pair.nc + '"></div>';
       barsHtml += '<div class="opp-bar-right" style="width:' + rightW + '%;background:' + pair.c + '"></div>';
       barsHtml += '<div class="opp-tick"></div>';
-      barsHtml += '</div>';
-      barsHtml += '</div>';
+      barsHtml += '</div></div>';
     });
     document.getElementById('rBars').innerHTML = barsHtml;
-    
+
     // CP组合
+    var cpList = getCpList(pt, TYPES);
     var cpHtml = '';
-    var cpKeys = Object.keys(TYPES).filter(function(k){ return k !== pt.cn && k !== pt.name });
-    cpKeys.slice(0, 3).forEach(function(k){
-      var cp = TYPES[k];
+    cpList.forEach(function(cp){
       cpHtml += '<div class="cp-card">';
-      cpHtml += '<div class="cp-avatar">' + (cp.tags && cp.tags[0] ? cp.tags[0].charAt(0) : '?') + '</div>';
+      cpHtml += '<div class="cp-avatar">' + cp.icon + '</div>';
       cpHtml += '<div class="cp-info">';
-      cpHtml += '<div class="cp-name">' + (cp.cn || cp.name || '') + '</div>';
+      cpHtml += '<div class="cp-name">' + cp.name + '</div>';
       cpHtml += '<div class="cp-type">' + cp.t + '</div>';
+      cpHtml += '<div class="cp-compat">契合度：<span>' + cp.compat + '%</span></div>';
+      cpHtml += '<div class="cp-desc">' + cp.desc + '</div>';
       cpHtml += '<div class="cp-tags">' + (cp.tags || []).slice(0, 2).map(function(t){ return '<span class="cp-tag">' + t + '</span>' }).join('') + '</div>';
       cpHtml += '</div></div>';
     });
     document.getElementById('rCpList').innerHTML = cpHtml;
-    
+
+    // 人格对比
+    var cmpList = getCompareList(pt, TYPES);
+    var cmpHtml = '';
+    cmpList.forEach(function(cm){
+      cmpHtml += '<div class="compare-card">';
+      cmpHtml += '<div class="compare-header">';
+      cmpHtml += '<span class="compare-icon">' + cm.icon + '</span>';
+      cmpHtml += '<span class="compare-name">' + cm.name + '</span>';
+      cmpHtml += '<span class="compare-type">' + cm.t + '</span>';
+      cmpHtml += '</div>';
+      cmpHtml += '<div class="compare-desc">' + cm.desc + '</div>';
+      cmpHtml += '<div class="compare-tags">' + (cm.tags || []).slice(0, 3).map(function(t){ return '<span class="compare-tag">' + t + '</span>' }).join('') + '</div>';
+      cmpHtml += '</div>';
+    });
+    document.getElementById('rCompareList').innerHTML = cmpHtml;
+
+    // 人格雷达（13维度，移至底部）
+    var dims2 = [
+      {k:'s',n:'社交指数'},{k:'m',n:'财运指数'},{k:'r',n:'人缘指数'},
+      {k:'i',n:'数码指数'},{k:'c',n:'消费指数'},{k:'w',n:'网瘾指数'},
+      {k:'g',n:'搞钱指数'},{k:'h',n:'作息指数'},{k:'a',n:'记仇指数'},
+      {k:'j',n:'卷王指数'},{k:'l',n:'话痨指数'},{k:'d',n:'独立指数'},
+      {k:'t',n:'社恐指数'}
+    ];
+
+    var radarHtml = '<div class="radar-grid">';
+    dims2.forEach(function(dim, idx){
+      var v = Math.min(100, Math.max(0, dims[dim.k] || 0));
+      radarHtml += '<div class="radar-item">';
+      radarHtml += '<div class="radar-key">' + dim.n + '</div>';
+      radarHtml += '<div class="radar-track">';
+      radarHtml += '<div class="radar-fill" style="width:' + v + '%;background:' + DCOLORS[idx % 5] + '"></div>';
+      radarHtml += '</div>';
+      radarHtml += '<div class="radar-val">' + Math.round(v) + '</div>';
+      radarHtml += '</div>';
+    });
+    radarHtml += '</div>';
+    document.getElementById('rRadar').innerHTML = radarHtml;
+
     // 详细解读
     document.getElementById('rPersonalDetail').innerHTML = '<p style="font-size:14px;color:var(--text-secondary);line-height:1.7">' + (pt.d2 || pt.d || '') + '</p>';
     document.getElementById('rRelationDetail').innerHTML = '<p style="font-size:14px;color:var(--text-secondary);line-height:1.7">' + (pt.r2 || '你的人际关系处理方式独特，需要了解你的人才能真正读懂你。') + '</p>';
     document.getElementById('rCareerDetail').innerHTML = '<p style="font-size:14px;color:var(--text-secondary);line-height:1.7">适合你的职业方向需要发挥你的核心优势。' + (pt.c2 ? '推荐：' + pt.c2 + '。' : '') + '</p>';
     document.getElementById('rLoveDetail').innerHTML = '<p style="font-size:14px;color:var(--text-secondary);line-height:1.7">你的情感模式是' + (pt.s2 || '独特') + '的，需要一个能理解你深层需求的人。' + (pt.tx2 ? '核心忠告：' + pt.tx2.replace(/[「」]/g,'') : '') + '</p>';
     document.getElementById('rGrowDetail').innerHTML = '<p style="font-size:14px;color:var(--text-secondary);line-height:1.7">' + (pt.zy || '每个人都有自己的节奏，不必和别人比较。专注自己的成长，你就是你。') + '</p>';
-    document.getElementById('rCompareList').innerHTML = cpHtml;
-    
+
     document.getElementById('watermark').classList.add('show');
     document.getElementById('wmType').textContent = pt.name;
-    
+
     window._show('sRes');
     document.getElementById('prog').classList.remove('show');
     document.body.classList.add('nosel');
-    
-    // 分享URL
+
     var params = new URLSearchParams(location.search);
     if(!params.get('t')){
       var n = cn || en || pt.t || '';
@@ -2179,9 +1055,7 @@ function doResult(){
   }, 1200);
 }
 
-// ═══════════════════════════════════════════════
-// 重新测试
-// ═══════════════════════════════════════════════
+// ═══ 重新测试 ═══
 window._showRestartConfirm = function(callback){
   var modal = document.getElementById('restartModal');
   if(!modal){ callback && callback(false); return }
@@ -2202,25 +1076,14 @@ function doRestart(){
     window.sZodiac = '';
     window.sStar = '';
     window.sGender = '';
-    
     document.getElementById('quizArea').innerHTML = '';
-    
     var btnPreview = document.getElementById('btnPreview');
-    if(btnPreview){
-      btnPreview.classList.remove('hidden');
-      btnPreview.innerHTML = '🔮 正在进行的星辰属相测算 →';
-      btnPreview.disabled = false;
-    }
-    
+    if(btnPreview){ btnPreview.classList.remove('hidden'); btnPreview.innerHTML = '🔮 正在进行的星辰属相测算 →'; btnPreview.disabled = false; }
     var btnConfirm = document.getElementById('btnConfirm');
     if(btnConfirm) btnConfirm.classList.add('hidden');
-    
     var previewBox = document.getElementById('previewBox');
     if(previewBox) previewBox.classList.remove('show');
-    
     document.querySelectorAll('.gender-option').forEach(function(o){ o.classList.remove('sel') });
-    
-    // 重置日期
     var yr = document.getElementById('fYear');
     var mo = document.getElementById('fMonth');
     var dy = document.getElementById('fDay');
@@ -2229,21 +1092,17 @@ function doRestart(){
     if(dy) dy.value = 1;
     updateFDate();
     onNativeDateChange();
-    
     window._show('sHero');
     document.body.classList.remove('nosel');
   });
 }
 
-// ═══════════════════════════════════════════════
-// 页面初始化
-// ═══════════════════════════════════════════════
+// ═══ 页面初始化 ═══
 (function(){
-  // 检查分享链接
   try{
     var params = new URLSearchParams(location.search);
     var t = params.get('t'), n = params.get('n'), src = params.get('src');
-    
+
     if(t && n){
       var keys = Object.keys(TYPES);
       var pt = null;
@@ -2251,27 +1110,25 @@ function doRestart(){
         if(TYPES[keys[ki]].t === t){ pt = TYPES[keys[ki]]; break }
       }
       if(!pt) pt = TYPES[keys[0]];
-      
+
       document.title = n + '的中式人格 · 中式命格测试';
       document.getElementById('rBadge').textContent = n + '的中式人格';
       document.getElementById('rAgeTag').style.display = 'block';
       document.getElementById('rAgeTag').querySelector('.section-title').textContent = '👀 这是好友分享的结果';
       document.getElementById('rType').textContent = pt.t;
-      
-      var tx = pt.tx || pt.n || pt.name || '';
-      document.getElementById('rTx').innerHTML = (tx ? '<p style="font-size:15px;color:var(--accent-primary);font-weight:600;margin-bottom:10px">' + tx + '</p>' : '') + (pt.d2 || '');
-      
+
+      var gq2 = document.getElementById('rGoldenQuote');
+      var gt2 = document.getElementById('rGoldenText');
+      if(pt.s && pt.s.length > 0){ gt2.textContent = pt.s; gq2.style.display = 'block'; } else { gq2.style.display = 'none'; }
+
       var cn2 = (pt.cn || '').replace(/undefined/g,'');
       var en2 = (pt.name || '').replace(/undefined/g,'');
       document.getElementById('rName').textContent = (cn2 && cn2 !== en2) ? cn2 + ' · ' + en2 : (cn2 || en2 || '');
       document.getElementById('rSub').textContent = pt.d;
-      
-      var qel2 = document.getElementById('rQuote');
-      qel2.innerHTML = (pt.q ? '💬 ' + pt.q : '') + (pt.tx2 ? '<br>⚡ ' + pt.tx2 : '');
-      qel2.style.display = pt.q || pt.tx2 ? 'block' : 'none';
-      
-      document.getElementById('rDesc').innerHTML = (pt.d2 ? '<p style="font-size:14px;line-height:1.7;color:var(--text-secondary);margin-bottom:10px">' + pt.d2 + '</p>' : '') + (pt.r2 ? '<p style="font-size:13px;color:var(--accent-primary)">⚠️ 注意：' + pt.r2 + '</p>' : '');
-      
+
+      var tx = pt.tx || pt.n || pt.name || '';
+      document.getElementById('rTx').innerHTML = (tx ? '<p style="font-size:15px;color:var(--accent-primary);font-weight:600;margin-bottom:10px">' + tx + '</p>' : '') + (pt.d2 || '');
+
       document.getElementById('rPersonal').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:16px">🔒 完整性格画像仅本人测试后可见</div>';
       document.getElementById('rRelation').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:16px">🔒 完整人际分析仅本人测试后可见</div>';
       document.getElementById('rCareer').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:16px">🔒 完整职场分析仅本人测试后可见</div>';
@@ -2279,15 +1136,16 @@ function doRestart(){
       document.getElementById('rGrow').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:16px">🔒 完整成长建议仅本人测试后可见</div>';
       document.getElementById('rAdvice').textContent = '（完整忠告仅本人测试后可见）';
       document.getElementById('rZy').innerHTML = (pt.zy ? '<span style="font-size:12px;color:var(--accent-primary);font-weight:600;margin-right:6px">🔮</span>' + pt.zy + '<br><span style="color:var(--text-muted);font-size:11px;margin-top:4px;display:block">完整命理解读需本人测试后查看</span>' : '（完整命理解读需本人测试后查看）');
-      document.getElementById('rRadar').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px">🔒 人格雷达仅本人测试后可见</div>';
       document.getElementById('rBars').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px">🔒 性格天平仅本人测试后可见</div>';
       document.getElementById('rCp').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px">🔒 完整人格对比仅本人测试后可见</div>';
       document.getElementById('rCompare').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px">🔒 完整人格对比仅本人测试后可见</div>';
-      
+      document.getElementById('rRadar').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px">🔒 人格雷达仅本人测试后可见</div>';
+
       var th = '';
       (pt.tags || []).forEach(function(tag){ th += '<span class="rtag">' + tag + '</span>' });
+      (pt.zy_tags || []).forEach(function(tag){ th += '<span class="zy-tag">' + tag + '</span>' });
       document.getElementById('rTags').innerHTML = th;
-      
+
       document.getElementById('watermark').classList.add('show');
       document.getElementById('wmType').textContent = pt.name;
       document.querySelector('.res-act').innerHTML = '<button class="btn" onclick="location.href=location.pathname" style="font-size:14px;padding:14px 36px">🎯 我也要测！</button>';
@@ -2296,26 +1154,20 @@ function doRestart(){
       return;
     }
   } catch(e) {}
-  
-  // 正常流程：初始化日期选择器
+
   var initOk = initDateSelectors();
-  if(!initOk){
-    // 备用方案：使用 DOMContentLoaded
-    if(document.readyState === 'loading'){
-      document.addEventListener('DOMContentLoaded', initDateSelectors);
-    }
+  if(!initOk && document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initDateSelectors);
   }
 })();
 
-// 日期选择器 change 事件监听
 document.addEventListener('DOMContentLoaded', function(){
   var yrSel = document.getElementById('fYear');
   var moSel = document.getElementById('fMonth');
   var dySel = document.getElementById('fDay');
-  
-  if(yrSel) yrSel.addEventListener('change', onDateChange);
-  if(moSel) moSel.addEventListener('change', onDateChange);
-  if(dySel) dySel.addEventListener('change', onDateChange);
+  if(yrSel) yrSel.addEventListener('change', function(){ updateFDate(); onNativeDateChange() });
+  if(moSel) moSel.addEventListener('change', function(){ updateFDate(); onNativeDateChange() });
+  if(dySel) dySel.addEventListener('change', function(){ updateFDate(); onNativeDateChange() });
 });
 </script>
 
