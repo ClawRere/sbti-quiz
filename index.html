@@ -168,13 +168,13 @@ body.nosel { -webkit-touch-callout: none }
 .preview-content { display: flex; gap: 12px; flex-wrap: wrap; }
 .preview-tag {
   display: flex; align-items: center; gap: 8px; background: var(--bg-card); border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg); padding: 12px 18px; font-size: 15px; font-weight: 600;
-  box-shadow: var(--shadow-sm); transition: all 0.3s;
+  border-radius: var(--radius-lg); padding: 16px 22px; font-size: 15px; font-weight: 600;
+  box-shadow: var(--shadow-sm); transition: all 0.3s; min-width: 140px; justify-content: center;
 }
 .preview-tag:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-.preview-tag .emoji { font-size: 24px; animation: pulse 2s ease-in-out infinite; }
-.preview-tag .zodiac { color: var(--accent-primary); }
-.preview-tag .star { color: var(--accent-tertiary); }
+.preview-tag .emoji { font-size: 28px; animation: pulse 2s ease-in-out infinite; }
+.preview-tag .zodiac { color: var(--accent-primary); font-size: 16px; }
+.preview-tag .star { color: var(--accent-tertiary); font-size: 16px; }
 .gender-options { display: flex; gap: 10px; flex-wrap: wrap; }
 .gender-option {
   flex: 1; min-width: calc(33.33% - 7px); background: var(--bg-secondary);
@@ -676,7 +676,7 @@ function initDateSelectors(){
 
   yrSel.value = 2000; moSel.value = 1; dySel.value = 1;
   updateFDate();
-  onNativeDateChange();
+  // 不再自动计算生肖/星座，只在点击"测算"时计算
   return true;
 }
 
@@ -692,7 +692,8 @@ function updateFDate(){
   }
 }
 
-function onNativeDateChange(){
+// 点击"测算"按钮时计算生肖和星座
+function calculateZodiacAndStar(){
   var dInput = document.getElementById('fDate');
   if(!dInput) return;
   var val = dInput.value;
@@ -707,14 +708,20 @@ function onNativeDateChange(){
     var html = '';
     html += '<div class="preview-tag"><span class="emoji">' + emoji + '</span><span class="zodiac">' + zodiac + '年</span></div>';
     if(starData && starData.name){
+      window.sStar = starData;
       var symbol = STAR_SYMBOLS[starData.name] || '☀️';
-      html += '<div class="preview-tag"><span class="emoji">' + symbol + '</span><span class="star">' + starData.name + '宫</span></div>';
+      html += '<div class="preview-tag"><span class="emoji">' + symbol + '</span><span class="star">' + starData.name + '座</span></div>';
     }
     var previewTags = document.getElementById('previewTags');
     var previewBox = document.getElementById('previewBox');
     if(previewTags) previewTags.innerHTML = html;
     if(previewBox) previewBox.classList.add('show');
   }
+}
+
+// 保留原函数名用于兼容性
+function onNativeDateChange(){
+  // 不再自动计算，改为点击"测算"按钮时计算
 }
 
 // ═══ 性别选择 ═══
@@ -738,6 +745,10 @@ function showPreview(){
   if(!btn) return;
   btn.innerHTML = '<div class="btn-loading"><div class="spinner"></div>正在测算中...</div>';
   btn.disabled = true;
+
+  // 点击"测算"时计算生肖和星座
+  calculateZodiacAndStar();
+
   setTimeout(function(){
     btn.classList.add('hidden');
     var cb = document.getElementById('btnConfirm');
@@ -1091,7 +1102,6 @@ function doRestart(){
     if(mo) mo.value = 1;
     if(dy) dy.value = 1;
     updateFDate();
-    onNativeDateChange();
     window._show('sHero');
     document.body.classList.remove('nosel');
   });
@@ -1165,9 +1175,9 @@ document.addEventListener('DOMContentLoaded', function(){
   var yrSel = document.getElementById('fYear');
   var moSel = document.getElementById('fMonth');
   var dySel = document.getElementById('fDay');
-  if(yrSel) yrSel.addEventListener('change', function(){ updateFDate(); onNativeDateChange() });
-  if(moSel) moSel.addEventListener('change', function(){ updateFDate(); onNativeDateChange() });
-  if(dySel) dySel.addEventListener('change', function(){ updateFDate(); onNativeDateChange() });
+  if(yrSel) yrSel.addEventListener('change', function(){ updateFDate() });
+  if(moSel) moSel.addEventListener('change', function(){ updateFDate() });
+  if(dySel) dySel.addEventListener('change', function(){ updateFDate() });
 });
 </script>
 
