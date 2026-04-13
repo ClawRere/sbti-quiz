@@ -944,7 +944,7 @@ function calc(){
   Object.keys(ds).forEach(function(k){
     ds[k] = Math.round((ds[k] / NORM_MAX) * 100);
     if(ds[k] > 100) ds[k] = 100;
-    if(ds[k] < 0) ds[k] = 0;
+    if(ds[k] <= 0) ds[k] = 1; // 百分制最小1，消除0值
   });
 
   // 生肖加成（v2.0：生肖影响降低，直接取用户选择，无加成表时跳过）
@@ -1181,7 +1181,7 @@ function doResult(){
 
     var radarHtml = '<div class="radar-grid">';
     dims2.forEach(function(dim, idx){
-      var v = Math.min(100, Math.max(0, dims[dim.k] || 0));
+      var v = Math.min(100, Math.max(1, dims[dim.k] || 1));
       radarHtml += '<div class="radar-item">';
       radarHtml += '<div class="radar-key">' + dim.n + '</div>';
       radarHtml += '<div class="radar-track">';
