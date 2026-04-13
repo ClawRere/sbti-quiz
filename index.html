@@ -2,251 +2,147 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- build:2026-04-13-v1.2.7 -->
-<title>中式命格测试 - 你的「中国式灵魂」是什么型号？</title>
+<title>中式人格测试</title>
 <style>
 /* ══ 主题变量 ══ */
-:root{
-  --bg:#fff;--bg2:#f8f9fa;--bg3:#fff;--text:#1a1a2e;--text2:#4a4a6a;--text3:#888;
-  --card:#fff;--card2:rgba(0,0,0,.04);--card3:rgba(0,0,0,.06);
-  --border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.1);
-  --accent:#ff6b6b;--accent2:#ffa502;--accent3:#ff4757;
-  --prog-bg:#08080fdd;
-}
-[data-theme="dark"]{
-  --bg:#08080f;--bg2:#0d0d1a;--bg3:#0a0a14;--text:#fff;--text2:rgba(255,255,255,.75);--text3:rgba(255,255,255,.45);
-  --card:rgba(255,255,255,.04);--card2:rgba(255,255,255,.04);--card3:rgba(255,255,255,.07);
-  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.1);
-}
-/* ── 反爬虫：禁止选字/拖拽 ── */
-.nosel{-webkit-user-select:none;-moz-user-select:none;user-select:none}
-body{font-family:'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .5s,color .5s}
-body.nosel,body.nosel *{-webkit-user-select:none!important;-moz-user-select:none!important;user-select:none!important}
-body.nosel button,body.nosel .act-btn,body.nosel .rt-btn,body.nosel .btn{pointer-events:auto!important;cursor:pointer!important;-webkit-user-select:none!important;user-select:none!important}
-/* 关键：select/input 必须彻底豁免，否则 iOS/微信内置浏览器会禁止弹选择器 */
-body.nosel select,body.nosel select *,body.nosel input,body.nosel textarea{
-  pointer-events:auto!important;
-  touch-action:auto!important;
-  cursor:pointer!important;
-  -webkit-user-select:text!important;
-  -moz-user-select:text!important;
-  user-select:text!important;
-  -webkit-appearance:auto!important;
-  appearance:auto!important;
-}
-/* ── 水印 ── */
-.watermark{position:fixed;bottom:12px;right:14px;font-size:11px;color:rgba(128,128,200,.18);pointer-events:none;z-index:200;display:none;line-height:1.6}
-.watermark.show{display:block}"/>
-
-/* ── 深色星空背景（仅夜间模式显示） ── */
-.stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0;transition:opacity .5s}
+:root{--bg:#f5f5f0;--bg2:#faf9f6;--card:#fff;--card2:#f0ede8;--text:#1a1a1a;--text2:#444;--text3:#888;--accent:#c0392b;--accent2:#e67e22;--border:#ddd;--border2:#ccc;--shadow:rgba(0,0,0,.08);--prog-bg:#fff}
+[data-theme=dark]{--bg:#0d0d10;--bg2:#13131a;--card:#1a1a24;--card2:#22222e;--text:#e8e8e8;--text2:#aaa;--text3:#666;--border:#333;--border2:#444;--shadow:rgba(0,0,0,.4);--prog-bg:#1a1a24}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:-apple-system,Helvetica Neue,PingFang SC,Microsoft YaHei,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;overflow-x:hidden}
+.nosel{user-select:none;-webkit-user-select:none}
+.stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0;transition:opacity 1s}
 .stars.show{opacity:1}
-.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d,3s) infinite ease-in-out}
-@keyframes twinkle{0%,100%{opacity:.15}50%{opacity:1}}
-
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--d,2s) ease-in-out infinite alternate}
+@keyframes twinkle{0%{opacity:.1}100%{opacity:.9}}
+/* ── 反爬虫：禁止选字/拖拽 ── */
+body.nosel,body.nosel *{user-select:none!important;-webkit-user-select:none!important}
+body.nosel{-webkit-touch-callout:none}
+/* ── 水印 ── */
+.watermark{position:fixed;bottom:12px;right:12px;font-size:11px;color:var(--text3);opacity:.4;line-height:1.6;z-index:5;text-align:right;pointer-events:none;display:none}
+.watermark.show{display:block}
+.watermark span{font-weight:600;font-size:12px}
+/* ── 深色星空背景（仅夜间模式显示） ── */
+[data-theme=dark] body{background:var(--bg2)!important;background-image:radial-gradient(ellipse at 20% 30%,#1a1a3a 0%,transparent 60%),radial-gradient(ellipse at 80% 70%,#0d0d2a 0%,transparent 60%)!important}
 /* ── 布局 ── */
-.container{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:20px}
-.screen{display:none}
-.screen.active{display:block;animation:fadein .3s ease}
-@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
+.container{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:0 16px 40px}
+.screen{display:none;padding-top:20px;animation:fadeIn .3s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 /* ── Hero ── */
-.hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20px 20px 24px}
-.hero-badge{display:inline-block;background:linear-gradient(135deg,var(--accent)22,var(--accent2)22);border:1px solid var(--accent2)55;color:var(--accent2);font-size:11px;font-weight:700;padding:6px 18px;border-radius:20px;margin-bottom:20px;letter-spacing:3px}
-.hero-title{font-size:clamp(28px,8vw,52px);font-weight:900;line-height:1.25;margin-bottom:14px;background:linear-gradient(135deg,#c0392b,#8e44ad 50%,#e91e8c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-[data-theme="dark"] .hero-title{background:linear-gradient(135deg,var(--text),#f0e6ff 50%,#ffe0f0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-sub{font-size:15px;color:var(--text3);line-height:1.7;margin-bottom:32px}
-.hero-icons{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:28px}
-.hero-icon{background:var(--card2);border:1px solid var(--border2);padding:7px 14px;border-radius:14px;font-size:13px;color:var(--text2)}
-.btn{background:linear-gradient(135deg,var(--accent),var(--accent3));color:#fff;border:none;padding:15px 44px;font-size:17px;font-weight:700;border-radius:50px;cursor:pointer;transition:all .3s;box-shadow:0 4px 24px #ff475755}
-.btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px #ff475788}
-.hero-count{margin-top:24px;font-size:13px;color:var(--text3)}
-.hero-version{margin-top:6px;font-size:11px;color:var(--text3);opacity:.5;letter-spacing:1px}
-
+.hero{padding:28px 20px 40px;text-align:center}
+.hero-badge{display:inline-block;background:var(--accent);color:#fff;font-size:12px;padding:4px 14px;border-radius:20px;margin-bottom:18px;letter-spacing:.5px}
+.hero-title{font-size:32px;font-weight:800;line-height:1.3;margin-bottom:14px;letter-spacing:-.5px}
+.hero-sub{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:22px}
+.hero-icons{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:28px}
+.hero-icon{background:var(--card2);padding:6px 12px;border-radius:8px;font-size:12px;color:var(--text2)}
+.hero-count{font-size:12px;color:var(--text3);margin-top:18px}
+.hero-version{margin-top:4px}
 /* ── Progress ── */
-.prog{position:fixed;top:0;left:0;width:100%;z-index:100;background:var(--prog-bg);backdrop-filter:blur(12px);padding:14px 20px 10px;display:none}
+.prog{position:sticky;top:0;z-index:10;background:var(--prog-bg);padding:10px 16px;border-bottom:1px solid var(--border);display:none}
 .prog.show{display:block}
-.prog-row{display:flex;justify-content:space-between;max-width:600px;margin:0 auto;font-size:13px;color:var(--text3)}
-.prog-row span{color:var(--accent2);font-weight:700}
-.prog-bar{height:3px;background:var(--border);border-radius:4px;margin-top:8px;overflow:hidden;max-width:600px;margin-left:auto;margin-right:auto}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:4px;transition:width .35s ease}
-
+.prog-row{font-size:12px;color:var(--text2);margin-bottom:6px;text-align:center}
+.prog-bar{height:4px;background:var(--card2);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width .4s ease}
 /* ── Info Form ── */
-.info-pg{padding-top:60px;padding-bottom:24px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 14px;margin-bottom:12px}
-.q-num{font-size:11px;color:var(--accent2);font-weight:700;letter-spacing:2px;margin-bottom:10px}
-.q-text{font-size:16px;font-weight:700;line-height:1.4;margin-bottom:4px}
-.q-sub{font-size:11px;color:var(--text3);font-style:italic;margin-bottom:8px}
-.form-row{margin-bottom:14px}
-.form-row label{display:block;font-size:14px;font-weight:600;margin-bottom:6px;color:var(--text)}
-/* 预览区 */
-.preview-box{background:var(--bg2);border-radius:12px;padding:14px 16px;margin-top:4px}
-.preview-label{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px}
-.preview-tags{display:flex;gap:10px;flex-wrap:wrap}
-.preview-tags .rtag{display:inline-block;background:var(--accent);color:#fff;font-size:14px;font-weight:600;border-radius:20px;padding:6px 14px}
-.preview-notice{font-size:12px;color:var(--text3);margin-top:10px}
-.num-input{width:100%;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:10px 12px;font-size:15px;color:var(--text);outline:none;transition:border .2s;-webkit-appearance:auto;appearance:auto;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.info-pg{padding-top:10px}
+.card{background:var(--card);border-radius:16px;padding:24px 20px;margin-bottom:16px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.q-num{font-size:11px;color:var(--accent);font-weight:700;letter-spacing:1px;margin-bottom:6px}
+.q-text{font-size:18px;font-weight:700;margin-bottom:4px}
+.q-sub{font-size:13px;color:var(--text2);margin-bottom:20px}
+.form-row{margin-bottom:20px}
+.form-row label{display:block;font-size:14px;font-weight:600;margin-bottom:10px}
+.num-input{width:100%;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;font-size:16px;color:var(--text);outline:none;text-align:center;transition:border-color .2s}
 .num-input:focus{border-color:var(--accent2)}
+/* 日期三联select */
 .date-split{display:flex;gap:8px}
-.date-sel{flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:10px 6px;font-size:15px;color:var(--text);outline:none;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation}
+.date-sel{flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:12px 6px;font-size:15px;color:var(--text);outline:none;cursor:pointer;-webkit-appearance:auto;appearance:auto;touch-action:manipulation}
 .date-sel:focus{border-color:var(--accent2)}
-/* 原生日期选择器 */
-.native-date{color:var(--text);cursor:pointer}
-/* 暗黑/亮色主题下日期选择器 */
-@media(prefers-color-scheme:dark){
-  .native-date{color-scheme:dark}
-}
-@media(prefers-color-scheme:light){
-  .native-date{color-scheme:light}
-}
-.rg{display:flex;gap:8px;flex-wrap:wrap}
-.rg-opt{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:8px 14px;font-size:14px;color:var(--text2);cursor:pointer;transition:all .2s}
-.rg-opt:hover{border-color:var(--accent2)66}
-.rg-opt.sel{background:var(--accent2)18;border-color:var(--accent2);color:var(--accent2);font-weight:700}
-.zg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-.zg-opt{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:6px 2px;text-align:center;cursor:pointer;transition:all .2s;font-size:13px;color:var(--text2)}
-.zg-opt:hover{border-color:var(--accent2)66}
-.zg-opt.sel{background:var(--accent2)18;border-color:var(--accent2);color:var(--accent2);font-weight:700}
-.zg-opt .emoji{display:block;font-size:20px;margin-bottom:3px}
-.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-.sg-opt{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:5px 2px;text-align:center;cursor:pointer;transition:all .2s;font-size:12px;color:var(--text2)}
-.sg-opt:hover{border-color:var(--accent2)66}
-.sg-opt.sel{background:var(--accent2)18;border-color:var(--accent2);color:var(--accent2);font-weight:700}
-.sg-opt .icon{display:block;font-size:16px;margin-bottom:2px}
+/* 生肖/星座预览区 */
+.preview-box{background:linear-gradient(135deg,#fdf6f0 0%,#f0f4ff 100%);border:1px solid #e8d5c4;border-radius:10px;padding:14px;margin-top:14px;display:none;animation:fadeIn .3s ease}
+.preview-box.show{display:block}
+.preview-label{font-size:11px;color:var(--text3);letter-spacing:1px;margin-bottom:8px}
+.preview-tags{display:flex;gap:10px;flex-wrap:wrap}
+.preview-tag{background:var(--card);border:1px solid var(--border2);border-radius:8px;padding:6px 14px;font-size:14px;font-weight:600}
+.preview-tag .emoji{font-size:16px;margin-right:4px}
 /* ── Toggle Switch ── */
-.cal-toggle{display:flex;align-items:center;gap:8px;margin-bottom:4px}
-.cal-toggle-label{font-size:12px;color:var(--text2)}
-.cal-toggle-switch{position:relative;width:44px;height:24px;flex-shrink:0}
-.cal-toggle-switch input{opacity:0;width:0;height:0}
-.cal-toggle-slider{position:absolute;cursor:pointer;inset:0;background:#ccc;border-radius:24px;transition:.3s}
-.cal-toggle-slider:before{position:absolute;content:'';height:18px;width:18px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s}
-.cal-toggle-switch input:checked+.cal-toggle-slider{background:var(--accent2)}
-.cal-toggle-switch input:checked+.cal-toggle-slider:before{transform:translateX(20px)}
-.lunar-hint{font-size:11px;color:var(--accent2);margin-top:4px;display:none}
-
+.cal-toggle{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:13px;color:var(--text2)}
+.cal-toggle label{flex:1;font-weight:600}
+.switch{position:relative;width:44px;height:24px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--card2);border:1px solid var(--border2);border-radius:12px;transition:.3s}
+.slider:before{position:absolute;content:'';height:18px;width:18px;left:2px;bottom:2px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.switch input:checked+.slider{background:var(--accent2);border-color:var(--accent2)}
+.switch input:checked+.slider:before{transform:translateX(20px)}
+/* ── Gender Options ── */
+.rg{display:flex;gap:8px;flex-wrap:wrap}
+.rg-opt{flex:1;min-width:calc(50% - 4px);background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:12px 8px;text-align:center;font-size:14px;cursor:pointer;transition:all .2s;user-select:none;-webkit-user-select:none}
+.rg-opt:active{transform:scale(.97)}
+.rg-opt.sel{background:var(--accent);color:#fff;border-color:var(--accent)}
 /* ── Quiz ── */
-.quiz-pg{padding-top:60px;padding-bottom:24px}
-.opt{background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:11px 14px;margin-bottom:7px;cursor:pointer;transition:all .2s;font-size:13px;line-height:1.4;color:var(--text2);text-align:left;width:100%;display:flex;gap:10px;align-items:center;min-height:44px}
-.opt:hover{background:var(--accent2)12;border-color:var(--accent2)44;transform:translateX(3px)}
-.opt.sel{background:var(--accent2)1e;border-color:var(--accent2);color:var(--accent2);font-weight:700}
-.opt-mark{width:22px;height:22px;border:2px solid var(--border2);border-radius:50%;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s;background:var(--card)}
-.opt.sel .opt-mark{background:var(--accent2);border-color:var(--accent2);color:#fff}
-.nav-wrap{margin-top:10px;display:flex;gap:10px;justify-content:space-between}
-.nav-wrap.hidden{display:none}
-
+.quiz-pg{padding-top:10px}
+.q-card{background:var(--card);border-radius:16px;padding:24px 20px;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid var(--border);animation:fadeIn .25s ease}
+.q-meta{font-size:11px;color:var(--accent);font-weight:700;letter-spacing:1px;margin-bottom:12px}
+.q-dim{font-size:12px;color:var(--text2);margin-bottom:8px}
+.q-q{font-size:17px;font-weight:700;line-height:1.5;margin-bottom:18px}
+.q-opts{display:flex;flex-direction:column;gap:10px}
+.q-opt{background:var(--card2);border:1.5px solid var(--border2);border-radius:12px;padding:14px 16px;font-size:14px;cursor:pointer;transition:all .15s;text-align:left;line-height:1.5}
+.q-opt:active{transform:scale(.98)}
+.q-opt.sel{border-color:var(--accent);background:rgba(192,57,43,.07)}
 /* ── Loading ── */
-.load{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center}
-.load.active{animation:loadcenter .4s ease}
-@keyframes loadcenter{from{opacity:0}to{opacity:1}}
-.load-spin{width:56px;height:56px;border:3px solid var(--accent2)18;border-top-color:var(--accent2);border-radius:50%;animation:spin .8s linear infinite}
+.loading{text-align:center;padding:40px 0}
+.loading-icon{font-size:48px;animation:spin 1.2s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
-.load-txt{font-size:16px;color:var(--text3);margin-top:14px;animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
-
+.loading-text{font-size:15px;color:var(--text2);margin-top:14px}
 /* ── Result ── */
-.res{padding-top:24px;padding-bottom:24px;text-align:center}
-.res-badge{display:inline-block;background:linear-gradient(135deg,var(--accent)18,var(--accent2)18);border:1px solid var(--accent2)44;color:var(--accent2);font-size:11px;font-weight:700;padding:5px 16px;border-radius:20px;margin-bottom:14px;letter-spacing:2px}
-.res-type{font-size:clamp(22px,8vw,36px);font-weight:900;margin-bottom:4px;background:linear-gradient(135deg,var(--accent),var(--accent2),#ffe0f0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:200%;animation:shimmer 3s infinite}
-@keyframes shimmer{0%{background-position:0%}50%{background-position:100%}100%{background-position:0%}}
-.res-name{font-size:17px;font-weight:700;color:var(--text);margin-bottom:3px}
-.res-sub{font-size:12px;color:var(--text3);font-style:italic;margin-bottom:10px}
-.rc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 12px;margin-bottom:10px;text-align:left}
-.rst{font-size:10px;font-weight:700;color:var(--accent2);letter-spacing:2px;margin-bottom:6px;display:flex;align-items:center;gap:7px}
-.rt{font-size:13px;line-height:1.5;color:var(--text2);margin-bottom:6px}
-.sbars{}
+.res{padding-top:10px;animation:fadeIn .4s ease}
+.res-badge{text-align:center;margin-bottom:18px}
+.res-badge span{background:var(--accent);color:#fff;font-size:12px;padding:4px 14px;border-radius:20px;letter-spacing:.5px}
+.res-name{text-align:center;font-size:26px;font-weight:900;margin:14px 0 4px;letter-spacing:-.3px}
+.res-type{text-align:center;font-size:15px;color:var(--accent);font-weight:700;margin-bottom:2px;letter-spacing:1px}
+.res-sub{text-align:center;font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.6}
+.res-card{background:var(--card);border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.rst{font-size:12px;color:var(--text2);font-weight:700;letter-spacing:1px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.rtags{display:flex;flex-wrap:wrap;gap:8px}
+.rtag{background:var(--card2);padding:4px 12px;border-radius:20px;font-size:12px;color:var(--text2)}
+.res-act{text-align:center;margin-top:16px}
+.act-btn{background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:12px 20px;font-size:14px;cursor:pointer;color:var(--text);width:100%;max-width:280px;transition:all .2s}
+.act-btn:active{transform:scale(.97)}
+.rt-btn{background:none;border:none;color:var(--text2);cursor:pointer;font-size:13px;padding:8px 16px;margin-top:8px;text-decoration:underline}
+.rt-btn:active{color:var(--accent)}
 /* ── 维度对比条（左右对称） ── */
-.srow{display:flex;align-items:center;gap:6px;margin-bottom:8px}
-.slbl{width:60px;font-size:11px;color:var(--text2);font-weight:600;flex-shrink:0}
-.slbl-l{text-align:right}
-.slbl-r{text-align:left}
-.sbarbg-wrap{flex:1;display:flex;align-items:center;gap:4px}
-/* 左侧bar容器：右对齐，条从右往左长 */
-.sbarbg-l{flex:1;height:8px;background:var(--border);border-radius:8px 0 0 8px;overflow:hidden;display:flex;justify-content:flex-end}
-.sbarfill-l{height:100%;border-radius:8px 0 0 8px;transition:width 1.2s ease}
-/* 中间数值 */
-.sval-center{min-width:52px;text-align:center;font-size:11px;color:var(--text3);flex-shrink:0;white-space:nowrap}
-/* 右侧bar容器：左对齐，条从左往右长 */
-.sbarbg-r{flex:1;height:8px;background:var(--border);border-radius:0 8px 8px 0;overflow:hidden;display:flex;justify-content:flex-start}
-.sbarfill-r{height:100%;border-radius:0 8px 8px 0;transition:width 1.2s ease}
-.rtags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
-.rtag{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.2);color:var(--accent);padding:4px 13px;border-radius:20px;font-size:12px}
-.cg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
-.ci{background:var(--card2);border-radius:10px;padding:10px 8px;text-align:center}
-.ci-emo{font-size:22px;margin-bottom:3px}
-.ci-t{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}
-.ci-s{font-size:18px;font-weight:900}
-.ci-s.hi{color:#2ecc71}.ci-s.mi{color:#f39c12}.ci-s.lo{color:#e74c3c}
-.res-act{display:flex;gap:10px;justify-content:center;margin-top:12px;margin-bottom:12px;flex-wrap:wrap}
-.act-btn{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:10px 18px;font-size:12px;color:var(--text2);cursor:pointer;transition:all .2s}
-.act-btn:hover{background:var(--accent2)12;border-color:var(--accent2)66;color:var(--accent2)}
-.rt-btn{background:transparent;border:1px solid var(--border2);color:var(--text3);padding:12px 30px;border-radius:50px;cursor:pointer;font-size:13px;transition:all .2s}
-.rt-btn:hover{border-color:var(--text2);color:var(--text)}
-
-@media(max-width:480px){.zg,.sg{grid-template-columns:repeat(3,1fr)} .cg{grid-template-columns:1fr 1fr}}
+.dim-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.dim-lbl{font-size:12px;color:var(--text2);width:36px;flex-shrink:0;text-align:right}
+.dim-bar{flex:1;height:8px;background:var(--card2);border-radius:4px;overflow:hidden}
+.dim-fill{height:100%;border-radius:4px;transition:width 1.2s cubic-bezier(.22,1,.36,1)}
+.dim-val{font-size:11px;color:var(--text3);width:28px;flex-shrink:0}
+/* ── 人格对比 ── */
+.cp-card{display:flex;gap:14px;align-items:center;background:var(--card2);border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid var(--border2)}
+.cp-avatar{width:48px;height:48px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:2px solid var(--border2)}
+.cp-info{flex:1;min-width:0}
+.cp-name{font-size:14px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cp-type{font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.5px}
+.cp-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.cp-tag{background:var(--card);padding:2px 8px;border-radius:10px;font-size:10px;color:var(--text2);border:1px solid var(--border2)}
+/* 重新测试确认框 */
+#restartModal{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.5);justify-content:center;align-items:center}
+#restartModal.show{display:flex}
+.rm-box{background:var(--card);border-radius:16px;padding:28px 24px;max-width:300px;width:90%;text-align:center}
+.rm-title{font-size:17px;font-weight:700;margin-bottom:8px}
+.rm-desc{font-size:13px;color:var(--text2);margin-bottom:20px;line-height:1.6}
+.rm-btns{display:flex;gap:10px}
+.rm-btn{flex:1;padding:12px;border-radius:10px;font-size:14px;cursor:pointer;border:none;font-weight:600;transition:opacity .2s}
+.rm-btn:active{opacity:.8}
+.rm-ok{background:var(--accent);color:#fff}
+.rm-cancel{background:var(--card2);color:var(--text)}
 </style>
 </head>
 <body>
+
+<!-- 星空容器 -->
 <div class="stars" id="stars"></div>
-
-<!-- 重新测试确认框 -->
-<div id="restartModal" style="display:none;position:fixed;inset:0;z-index:9999">
-  <div style="position:absolute;inset:0;background:rgba(0,0,0,0.5)" onclick="document.getElementById('modalCancel').click()"></div>
-  <div style="position:relative;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--card);border-radius:16px;padding:28px 24px;max-width:320px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
-    <div style="font-size:32px;margin-bottom:12px">🔄</div>
-    <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px">重新测试？</div>
-    <div style="font-size:13px;color:var(--text2);margin-bottom:24px;line-height:1.6">当前结果将消失，确定要重新开始吗？</div>
-    <div style="display:flex;gap:12px">
-      <button id="modalCancel" style="flex:1;padding:12px;border:1px solid var(--border2);border-radius:10px;background:transparent;color:var(--text3);font-size:14px;cursor:pointer">取消</button>
-      <button id="modalOk" style="flex:1;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer">确定</button>
-    </div>
-  </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded',function(){
-
-// ══ 重新测试自定义确认框 ══
-window._showRestartConfirm=function(callback){
-  var modal=document.getElementById('restartModal');
-  if(!modal){callback(false);return;}
-  modal.style.display='flex';
-  var ok=document.getElementById('modalOk');
-  var cancel=document.getElementById('modalCancel');
-  function cleanup(){modal.style.display='none';ok.onclick=null;cancel.onclick=null;}
-  ok.onclick=function(){cleanup();callback(true);};
-  cancel.onclick=function(){cleanup();callback(false);};
-};
-
-// ══ 主题自适应：19点前白色，19点后到次日7点黑色 ══
-(function(){
-  function setTheme(){
-    const h=new Date().getHours();
-    const dark=h>=19||h<7;
-    document.documentElement.setAttribute('data-theme',dark?'dark':'light');
-    const starsEl=document.getElementById('stars');
-    if(starsEl) starsEl.classList[dark?'add':'remove']('show');
-    const progEl=document.querySelector('.prog');
-    if(progEl) progEl.style.setProperty('--prog-bg',dark?'#08080fdd':'#fff');
-  }
-  setTheme();
-  setInterval(setTheme,60000);
-})();
-// ══ 星空生成 ══
-(function(){
-  const s=document.getElementById('stars');
-  if(!s)return;
-  for(let i=0;i<90;i++){
-    const d=document.createElement('div');d.className='star';
-    d.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()*2+1}px;height:${Math.random()*2+1}px;--d:${Math.random()*3+1.5}s;animation-delay:${Math.random()*3}s`;
-    s.appendChild(d);
-  }
-})();
-});
-</script>
 
 <!-- 水印 -->
 <div class="watermark" id="watermark">中式人格测试<br><span id="wmType"></span></div>
@@ -276,9 +172,9 @@ window._showRestartConfirm=function(callback){
       <span class="hero-icon">🌙 夜猫精元</span>
       <span class="hero-icon">😤 记仇修为</span>
     </div>
-    <button class="btn" type="button" onclick="(function(){var el=document.getElementById('sInfo');if(el){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});el.classList.add('active');}}())">开始测试 →</button>
+    <button class="btn" type="button" onclick="window._show('sInfo')">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.4.1</div>
+    <div class="hero-version">v1.5.0</div>
   </div>
 </div>
 
@@ -290,41 +186,31 @@ window._showRestartConfirm=function(callback){
       <div class="q-text">先聊聊你的基本属性</div>
       <div class="q-sub">基本信息越准，人格画像越真</div>
 
+      <!-- 出生日期：年月日三联 -->
       <div class="form-row">
         <label>🎂 出生日期</label>
         <div class="date-split">
-          <select id="fYear" class="date-sel" onchange="onDateChange()">
-            <option value="">年</option>
-          </select>
-          <select id="fMonth" class="date-sel" onchange="onDateChange()">
-            <option value="">月</option>
-          </select>
-          <select id="fDay" class="date-sel" onchange="onDateChange()">
-            <option value="">日</option>
-          </select>
+          <select id="fYear" class="date-sel"><option value="">年</option></select>
+          <select id="fMonth" class="date-sel"><option value="">月</option></select>
+          <select id="fDay" class="date-sel"><option value="">日</option></select>
         </div>
-        <!-- 隐藏字段：兼容原有lunar代码 -->
-        <input class="num-input" id="fDate" type="hidden" value="">
-        <input class="num-input" id="fBirth" type="hidden">
+        <input id="fDate" type="hidden">
+        <input id="fBirth" type="hidden">
+        <!-- 生肖星座预览 -->
+        <div class="preview-box" id="previewBox">
+          <div class="preview-label">✦ 系统推算结果（可改日期重算）</div>
+          <div class="preview-tags" id="previewTags"></div>
+        </div>
       </div>
 
+      <!-- 性别 -->
       <div class="form-row">
         <label>⚧ 性别</label>
-        <div class="rg" id="fGender" data-group="gender">
-          <div class="rg-opt" data-group="gender" onclick="window.pick(this,'gender')">🙋‍♂️ 男</div>
-          <div class="rg-opt" data-group="gender" onclick="window.pick(this,'gender')">🙋‍♀️ 女</div>
-          <div class="rg-opt" data-group="gender" onclick="window.pick(this,'gender')">🤖 武装直升机</div>
+        <div class="rg" id="fGender">
+          <div class="rg-opt" onclick="window.pick(this,'gender')">🙋‍♂️ 男</div>
+          <div class="rg-opt" onclick="window.pick(this,'gender')">🙋‍♀️ 女</div>
+          <div class="rg-opt" onclick="window.pick(this,'gender')">🤖 武装直升机</div>
         </div>
-      </div>
-
-      <!-- 自动推算预览区 -->
-      <div class="preview-box" id="previewBox" style="display:none">
-        <div class="preview-label">🐉 生肖 &amp; ☀️ 黄道宫（自动推算）</div>
-        <div class="preview-tags" id="previewTags">
-          <span class="rtag" id="prevZodiac">🐉 --年</span>
-          <span class="rtag" id="prevStar">☀️ --宫</span>
-        </div>
-        <div class="preview-notice">如有误差可在上方调整出生日期</div>
       </div>
 
       <button class="btn" style="width:100%;margin-top:12px" id="btnPreview" onclick="showPreview()">正在进行的星辰属相测算 →</button>
@@ -336,89 +222,38 @@ window._showRestartConfirm=function(callback){
 <!-- Screen: Quiz -->
 <div class="screen" id="sQuiz">
   <div class="quiz-pg">
-    <div id="qBox"></div>
-    <div class="nav-wrap hidden" id="nWrap">
-      <button class="rt-btn" style="flex:1" id="btnPrev" onclick="prevQ()">← 上一题</button>
-      <button class="btn" style="flex:1" id="btnNext" onclick="nextQ()">下一题 →</button>
-    </div>
+    <div id="quizArea"></div>
   </div>
 </div>
 
 <!-- Screen: Loading -->
 <div class="screen" id="sLoad">
-  <div class="load">
-    <div class="load-spin"></div>
-    <div class="load-txt">正在分析你的中国式灵魂……</div>
+  <div class="loading">
+    <div class="loading-icon">⚙️</div>
+    <div class="loading-text">正在解读你的命盘...</div>
   </div>
 </div>
 
 <!-- Screen: Result -->
 <div class="screen" id="sRes">
   <div class="res">
-    <div class="res-badge" id="rBadge">你的中式人格</div>
-    <div class="res-type" id="rType">-</div>
-    <div class="res-tx" id="rTx" style="font-size:13px;color:var(--text3);font-weight:400;margin-top:4px"></div>
-    <div class="res-name" id="rName">-</div>
-    <div class="res-quote" id="rQuote" style="display:none;margin:8px auto 12px;max-width:500px;background:linear-gradient(135deg,rgba(255,107,107,.1),rgba(255,165,2,.1));border-left:4px solid var(--accent2);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--text2);line-height:1.6;text-align:left;font-style:italic"></div>
-    <div class="res-age-tag" id="rAgeTag" style="display:none;margin-bottom:4px;font-size:12px;color:var(--accent2);font-weight:600;letter-spacing:1px"></div>
-    <div class="res-sub" id="rSub">-</div>
-
-    <div class="rc">
-      <div class="rst">📊 人格雷达</div>
-      <div class="sbars" id="rBars"></div>
-    </div>
-
-    <div class="rc">
-      <div class="rst">📝 深度解读</div>
-      <div class="rt" id="rDesc"></div>
-    </div>
-
-    <div class="rc">
-      <div class="rst">🧠 性格画像</div>
-      <div class="rt" id="rPersonal"></div>
-    </div>
-
-    <div class="rc">
-      <div class="rst">🤝 人际相处</div>
-      <div class="rt" id="rRelation"></div>
-    </div>
-
-    <div class="rc">
-      <div class="rst">💼 职场适配</div>
-      <div class="rt" id="rCareer"></div>
-    </div>
-
-    <div class="rc">
-      <div class="rst">💕 情感指南</div>
-      <div class="rt" id="rLove"></div>
-    </div>
-
-    <div class="rc">
-      <div class="rst">🌱 成长建议</div>
-      <div class="rt" id="rGrow"></div>
-    </div>
-
-    <div class="rc">
-      <div class="rst">🔮 命理解读</div>
-      <div class="rt" id="rZy" style="font-size:13px;line-height:1.7"></div>
-    </div>
-
-    <div class="rc">
-      <div class="rst">🎯 人生忠告</div>
-      <div class="rt" id="rAdvice"></div>
-    </div>
-
-    <div class="rc">
-      <div class="rst">💕 最佳CP</div>
-      <div class="cg" id="rCp"></div>
-      <div id="rCompare" style="margin-top:10px;font-size:12px;color:var(--text2);line-height:1.6;text-align:left"></div>
-    </div>
-
-    <div class="rc">
-      <div class="rst">🏷️ 人格标签</div>
-      <div class="rtags" id="rTags"></div>
-    </div>
-
+    <div class="res-badge"><span id="rBadge">你的中式人格</span></div>
+    <div class="res-name" id="rName">加载中...</div>
+    <div class="res-type" id="rType"></div>
+    <div class="res-sub" id="rSub"></div>
+    <div class="card" id="rTxCard"><div class="rst">📝 深度解读</div><div id="rTx"></div></div>
+    <div class="card" id="rQuoteCard" style="display:none"><div id="rQuote"></div></div>
+    <div class="card"><div class="rst">🏷️ 人格标签</div><div class="rtags" id="rTags"></div></div>
+    <div class="card"><div class="rst" id="rAgeTag" style="display:none"></div><div id="rDesc"></div></div>
+    <div class="card"><div class="rst">🔮 命理忠告</div><div id="rZy"></div><div id="rAdvice" style="margin-top:10px;font-size:13px;color:var(--text2)"></div></div>
+    <div class="card" id="rPersonal"><div class="rst">🧩 性格画像</div><div id="rPersonalDetail"></div></div>
+    <div class="card" id="rRelation"><div class="rst">💞 人际情感</div><div id="rRelationDetail"></div></div>
+    <div class="card" id="rCareer"><div class="rst">💼 职场建议</div><div id="rCareerDetail"></div></div>
+    <div class="card" id="rLove"><div class="rst">💘 情感指南</div><div id="rLoveDetail"></div></div>
+    <div class="card" id="rGrow"><div class="rst">🌱 成长建议</div><div id="rGrowDetail"></div></div>
+    <div class="card"><div class="rst">📊 人格雷达</div><div id="rBars"></div></div>
+    <div class="card" id="rCp"><div class="rst">💑 最佳 CP 组合</div><div id="rCpList"></div></div>
+    <div class="card" id="rCompare"><div class="rst">🔍 人格对比</div><div id="rCompareList"></div></div>
     <div class="res-act">
       <button class="act-btn" id="btnCopyLink" onclick="copyShareLink()">🔗 复制分享链接</button>
     </div>
@@ -427,1503 +262,624 @@ window._showRestartConfirm=function(callback){
   </div>
 </div>
 
+<!-- 重新测试确认框 -->
+<div id="restartModal">
+  <div class="rm-box">
+    <div class="rm-title">确定要重新测试吗？</div>
+    <div class="rm-desc">当前结果将被清除，请确认。</div>
+    <div class="rm-btns">
+      <button class="rm-btn rm-ok" id="modalOk">重新测试</button>
+      <button class="rm-btn rm-cancel" id="modalCancel">取消</button>
+    </div>
+  </div>
 </div>
 
+</div><!-- /.container -->
+
+<!-- ═══════════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════════ -->
+
+<!-- 第一段：主题 + 星空生成（页面加载后立即执行） -->
+<script>
+// ── 主题自适应 ──
+(function(){
+  function setTheme(){
+    var h=new Date().getHours();
+    var dark=h>=19||h<7;
+    document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+    var starsEl=document.getElementById('stars');
+    if(starsEl)starsEl.classList[dark?'add':'remove']('show');
+  }
+  setTheme();
+  setInterval(setTheme,60000);
+})();
+
+// ── 星空生成 ──
+(function(){
+  var s=document.getElementById('stars');
+  if(!s)return;
+  for(var i=0;i<90;i++){
+    var d=document.createElement('div');d.className='star';
+    d.style.cssText='position:absolute;left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;width:'+(Math.random()*2+1)+'px;height:'+(Math.random()*2+1)+'px;opacity:'+(Math.random()*.5+.1)+';background:#fff;border-radius:50%;animation:twinkle '+(Math.random()*3+1.5)+'s ease-in-out infinite alternate;animation-delay:'+(Math.random()*3)+'s';
+    s.appendChild(d);
+  }
+})();
+</script>
+
+<!-- 第二段：核心逻辑（包含题目数据和人格类型） -->
 <script>
 // ═══════════════════════════════════════════════
 // 反爬虫
+// ═══════════════════════════════════════════════
 (function(){
-  // 禁用右键
-  document.addEventListener('contextmenu',e=>e.preventDefault());
-  // 检测无头浏览器
-  const botHints=/HeadlessChrome|PhantomJS|Puppeteer|playwright|selenium/i.test(navigator.userAgent);
-  if(botHints){document.title='404';document.body.innerHTML='';return;}
-  // Ctrl+U / F12 禁止
-  document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.key==='u'){e.preventDefault();}if(e.key==='F12'){e.preventDefault();}});
-  // 禁止 iframe 嵌入
-  try{if(window!==window.top){document.write('');document.close();}}catch(e){}
+  document.addEventListener('contextmenu',function(e){e.preventDefault()});
+  if(/HeadlessChrome|PhantomJS|Puppeteer|playwright|selenium/i.test(navigator.userAgent)){
+    document.title='404';document.body.innerHTML='';return;
+  }
+  document.addEventListener('keydown',function(e){
+    if(e.ctrlKey&&e.key==='u')e.preventDefault();
+    if(e.key==='F12')e.preventDefault();
+  });
+  try{if(window!==window.top){document.write('');document.close()}}catch(e){}
 })();
 
 // ═══════════════════════════════════════════════
-// 分享：生成含结果的链接
-function getShareUrl(pt,utm){
-  const base=location.href.split('?')[0].split('#')[0];
-  const p={t:pt.t,n:pt.cn||pt.name,src:utm||'share'};
-  return base+'?'+Object.keys(p).map(k=>k+'='+encodeURIComponent(p[k])).join('&');
-}
+// 全局状态
+// ═══════════════════════════════════════════════
+window.sZodiac='';
+window.sStar='';
+window.sGender='';
+window._manualZodiac=false;
+window._manualStar=false;
 
-// 一键复制分享链接（带人格名称的文案）
-function copyShareLink(){
-  try{
-    const dims=calc();
-    const pt=matchType(dims,parseInt(window.sAge||25));
-    const url=getShareUrl(pt,'copy');
-    const cn=pt.cn||pt.name||'';
-    const t=pt.t||'';
-    const si=pt.selfIntro||pt.s||'命中注定与众不同';
-    const txt=`我是「${cn}（${t}）」，我的特点是【${si}】。查看链接：${url} #中式命格测试`;
-    // 优先用剪贴板 API
-    if(navigator.clipboard&&navigator.clipboard.writeText){
-      navigator.clipboard.writeText(txt).then(()=>showCopySuccess()).catch(e=>fallbackCopy(txt));
-    } else {
-      fallbackCopy(txt);
-    }
-  }catch(e){
-    const btn=document.getElementById('btnCopyLink');
-    if(btn){btn.textContent='⚠️ 复制失败，请手动长按复制';}
-  }
-}
-function showCopySuccess(){
-  const btn=document.getElementById('btnCopyLink');
-  if(!btn)return;
-  const old=btn.innerHTML;
-  btn.innerHTML='✅ 已复制！去粘贴给好友吧~';
-  setTimeout(()=>{if(btn)btn.innerHTML=old;},2500);
-}
-function fallbackCopy(txt){
-  try{
-    const ta=document.createElement('textarea');
-    ta.value=txt;
-    ta.style.cssText='position:fixed;top:0;left:0;opacity:0';
-    document.body.appendChild(ta);
-    ta.focus();ta.select();
-    const ok=document.execCommand('copy');
-    document.body.removeChild(ta);
-    if(ok)showCopySuccess();
-    else{
-      const btn=document.getElementById('btnCopyLink');
-      if(btn)btn.textContent='⚠️ 请手动复制页面链接';
-    }
-  }catch(e){
-    const btn=document.getElementById('btnCopyLink');
-    if(btn)btn.textContent='⚠️ 浏览器不支持，请手动复制';
-  }
-}
+window._show=function(id){
+  var el=document.getElementById(id);
+  if(!el){console.error('元素#'+id+'不存在');return}
+  var ss=document.querySelectorAll('.screen');
+  for(var i=0;i<ss.length;i++)ss[i].classList.remove('active');
+  el.classList.add('active');
+};
 
 // ═══════════════════════════════════════════════
-// 出生日期 ↔ 年龄 / 十二黄道宫 自动识别
+// 日期工具
+// ═══════════════════════════════════════════════
 function calcAge(birthStr){
   if(!birthStr)return null;
-  const bd=new Date(birthStr);
-  const now=new Date();
-  let age=now.getFullYear()-bd.getFullYear();
-  const md=(now.getMonth()-bd.getMonth())*30+(now.getDate()-bd.getDate());
+  var bd=new Date(birthStr);
+  var now=new Date();
+  var age=now.getFullYear()-bd.getFullYear();
+  var md=(now.getMonth()-bd.getMonth())*30+(now.getDate()-bd.getDate());
   if(md<0)age--;
   return age;
 }
 
-// 根据出生日期推算生肖（近似：中国农历新年大约在1月21-2月20日）
 function getZodiacFromBirth(birthStr){
   if(!birthStr)return null;
-  const bd=new Date(birthStr);
-  const year=bd.getFullYear();
-  const m=bd.getMonth()+1,d=bd.getDate();
-  // 农历新年通常在1.21-2.20，若在此之前则属相是上一年
-  const isBeforeLN=(m===1)||(m===2&&d<20);
-  const cy=isBeforeLN?year-1:year;
-  const animals=['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+  var bd=new Date(birthStr);
+  var year=bd.getFullYear();
+  var m=bd.getMonth()+1,d=bd.getDate();
+  var isBeforeLN=(m===1)||(m===2&&d<20);
+  var cy=isBeforeLN?year-1:year;
+  var animals=['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
   return animals[(cy-1900)%12];
 }
 
-// 初始化年月日选择器
+function getStarFromBirth(birthStr){
+  if(!birthStr)return null;
+  var bd=new Date(birthStr);
+  var m=bd.getMonth()+1,d=bd.getDate();
+  var stars=[
+    [20,'魔羯','♑'],[19,'水瓶','♒'],[20,'双鱼','♓'],
+    [21,'白羊','♈'],[20,'金牛','♉'],[21,'双子','♊'],
+    [21,'巨蟹','♋'],[23,'狮子','♌'],[23,'处女','♍'],
+    [23,'天秤','♎'],[23,'天蝎','♏'],[22,'射手','♐'],
+    [22,'魔羯','♑']
+  ];
+  return stars[m-1][d<stars[m-1][0]?1:2];
+}
+
+// ═══════════════════════════════════════════════
+// 日期选择器初始化（年月日三联select）
+// ═══════════════════════════════════════════════
 function initDateSelectors(){
   var yrSel=document.getElementById('fYear');
   var moSel=document.getElementById('fMonth');
   var dySel=document.getElementById('fDay');
-  if(!yrSel||!moSel||!dySel)return;
+  if(!yrSel||!moSel||!dySel){console.error('日期select元素未找到');return}
+
   var yr=new Date().getFullYear();
-  // 填充年选项（1940~今年）
   for(var y=yr;y>=yr-74;y--){
-    var o=document.createElement('option');
-    o.value=y;o.textContent=y+'年';
-    yrSel.appendChild(o);
+    var o=document.createElement('option');o.value=y;o.textContent=y+'年';yrSel.appendChild(o);
   }
-  // 填充月选项（1~12）
   for(var m=1;m<=12;m++){
-    var o=document.createElement('option');
-    o.value=m;o.textContent=m+'月';
-    moSel.appendChild(o);
+    var o=document.createElement('option');o.value=m;o.textContent=m+'月';moSel.appendChild(o);
   }
-  // 填充日选项（1~31）
   for(var d=1;d<=31;d++){
-    var o=document.createElement('option');
-    o.value=d;o.textContent=d+'日';
-    dySel.appendChild(o);
+    var o=document.createElement('option');o.value=d;o.textContent=d+'日';dySel.appendChild(o);
   }
+
   // 默认预设 2000-01-01
   yrSel.value=2000;
   moSel.value=1;
   dySel.value=1;
-  // 同步到 fDate 并触发生肖星座推算
+
+  // 同步到隐藏字段，触发生肖星座推算
   updateFDate();
+  onNativeDateChange();
 }
-// 年月日任一变化时调用，同步到 fDate
+
+// 年月日任一变化 → 同步 fDate + 更新预览
 function onDateChange(){
   updateFDate();
   onNativeDateChange();
 }
-// 将年月日同步到 fDate 隐藏字段
+
+// 将年月日同步到隐藏 fDate 字段
 function updateFDate(){
   var yr=document.getElementById('fYear').value;
   var mo=document.getElementById('fMonth').value;
   var dy=document.getElementById('fDay').value;
   var dInput=document.getElementById('fDate');
   if(yr&&mo&&dy){
-    var mm=String(mo).padStart(2,'0');
-    var dd=String(dy).padStart(2,'0');
-    dInput.value=yr+'-'+mm+'-'+dd;
+    dInput.value=yr+'-'+String(mo).padStart(2,'0')+'-'+String(dy).padStart(2,'0');
   } else {
     dInput.value='';
   }
 }
-// 原生日期选择器 change handler → 自动推算生肖和星座，更新预览区
+
+// 出生日期变化 → 自动推算生肖/星座，更新预览区
 function onNativeDateChange(){
-  const dInput=document.getElementById('fDate');
+  var dInput=document.getElementById('fDate');
   if(!dInput)return;
-  const val=dInput.value; // "YYYY-MM-DD"
-  if(val){
-    document.getElementById('fBirth').value=val;
-    // 自动计算生肖和星座，写入全局变量
-    const zodiac=getZodiacFromBirth(val);
-    const star=getStarFromBirth(val);
-    window.sZodiac=zodiac||'';
-    window.sStar=star||'';
-    // 计算年龄
-    const age=calcAge(val);
-    if(age>0&&age<120){
-      document.getElementById('fAge').value=age;
-      window.sAge=age;
-    }
-    // 更新预览区
-    const pBox=document.getElementById('previewBox');
-    if(zodiac||star){
-      document.getElementById('prevZodiac').textContent= zodiac ? '🐉 '+zodiac+'年' : '';
-      document.getElementById('prevStar').textContent= star ? '☀️ '+star+'宫' : '';
-      if(pBox)pBox.style.display='block';
-    } else {
-      if(pBox)pBox.style.display='none';
-    }
-  } else {
-    window.sZodiac='';
-    window.sStar='';
-    document.getElementById('fBirth').value='';
-    const pBox=document.getElementById('previewBox');
-    if(pBox)pBox.style.display='none';
+  var val=dInput.value;
+  if(!val)return;
+
+  document.getElementById('fBirth').value=val;
+
+  var zodiac=getZodiacFromBirth(val);
+  var star=getStarFromBirth(val);
+
+  if(zodiac){
+    window.sZodiac=zodiac;
+    var zMap={'鼠':'🐭','牛':'🐮','虎':'🐯','兔':'🐰','龙':'🐉','蛇':'🐍','马':'🐎','羊':'🐑','猴':'🐵','鸡':'🐔','狗':'🐕','猪':'🐷'};
+    document.getElementById('previewTags').innerHTML=
+      '<span class="preview-tag"><span class="emoji">'+zMap[zodiac]+'</span>'+zodiac+'年</span>'+
+      (star?' <span class="preview-tag"><span class="emoji">'+star[2]+'</span>'+star[1]+'宫</span>':'');
+    document.getElementById('previewBox').classList.add('show');
   }
 }
 
-// 点击"正在进行的星辰属相测算" → 显示加载动画，然后切到确认按钮
+// ═══════════════════════════════════════════════
+// 性别选择（window.pick 全局挂载）
+// ═══════════════════════════════════════════════
+window.pick=function(el,type,val){
+  var g=document.getElementById('fGender');
+  if(!g)return;
+  if(el.classList.contains('sel')){
+    el.classList.remove('sel');
+    window.sGender='';
+  } else {
+    var items=g.querySelectorAll('.rg-opt');
+    for(var i=0;i<items.length;i++)items[i].classList.remove('sel');
+    el.classList.add('sel');
+    window.sGender=el.textContent.trim();
+  }
+};
+
+// ═══════════════════════════════════════════════
+// 预览 & 开始答题
+// ═══════════════════════════════════════════════
 function showPreview(){
   var btn=document.getElementById('btnPreview');
   if(!btn)return;
-  // 显示loading动画
   btn.textContent='⚙ 正在测算中...';
   btn.disabled=true;
   btn.style.opacity='0.7';
   setTimeout(function(){
     btn.style.display='none';
-    var confirmBtn=document.getElementById('btnConfirm');
-    if(confirmBtn)confirmBtn.style.display='block';
+    var cb=document.getElementById('btnConfirm');
+    if(cb)cb.style.display='block';
   },800);
 }
 
-// ═══════════════════════════════════════════════
-// 阳历/阴历切换
-// ═══════════════════════════════════════════════
-const LUNAR_MONTHS=['正月','二月','三月','四月','五月','六月','七月','八月','九月','十月','冬月','腊月'];
-const LUNAR_MONTHS_SHORT=['正','二','三','四','五','六','七','八','九','十','冬','腊'];
-const LUNAR_DAYS=['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十',
-  '十一','十二','十三','十四','十五','十六','十七','十八','十九','二十',
-  '廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
-const LUNAR_NEW_YEAR_LUT={
-  1990:'2/27',1991:'2/15',1992:'2/4',1993:'1/23',1994:'2/10',1995:'1/31',
-  1996:'2/19',1997:'2/7',1998:'1/28',1999:'2/16',2000:'2/5',2001:'1/24',
-  2002:'2/12',2003:'2/1',2004:'1/22',2005:'2/9',2006:'1/29',2007:'2/18',
-  2008:'2/7',2009:'1/26',2010:'2/14',2011:'2/3',2012:'1/23',2013:'2/10',
-  2014:'1/31',2015:'2/19',2016:'2/8',2017:'1/28',2018:'2/16',2019:'2/5',
-  2020:'1/25',2021:'2/12',2022:'2/1',2023:'1/22',2024:'2/10',2025:'1/29',
-  2026:'2/17',2027:'2/6',2028:'1/26',2029:'2/13',2030:'2/3',
-  2031:'1/23',2032:'2/10',2033:'1/30',2034:'2/19',2035:'2/8',
-  2036:'1/28',2037:'2/15',2038:'2/4',2039:'1/24',2040:'2/12',
-  1970:'2/6',1971:'1/27',1972:'2/15',1973:'2/3',1974:'1/23',1975:'2/11',
-  1976:'1/31',1977:'2/18',1978:'2/7',1979:'1/28',1980:'2/16',1981:'2/5',
-  1982:'1/25',1983:'2/13',1984:'2/2',1985:'2/20',1986:'2/9',1987:'1/29',
-  1988:'2/17',1989:'2/6',
-};
-function lunarNewYearDay(year){
-  const lut=LUNAR_NEW_YEAR_LUT[year];
-  if(lut){const [m,d]=lut.split('/');return new Date(year,parseInt(m)-1,parseInt(d));}
-  return new Date(year,1,8);
+function beginQuiz(){
+  var dateVal=document.getElementById('fDate').value;
+  var gender=window.sGender;
+  if(!dateVal){alert('请选择出生日期');return}
+  if(!gender){alert('请选择性别');return}
+  window._show('sQuiz');
+  document.getElementById('prog').classList.add('show');
+  ci=0;answers=[];window._show('sQuiz');startQuiz();
 }
-// 阳历转近似农历 {year,monthIdx,day}
-function solarToLunar(solarStr){
-  if(!solarStr)return null;
-  const bd=new Date(solarStr);
-  const year=bd.getFullYear();
-  const ny=lunarNewYearDay(bd<lunarNewYearDay(year)?year-1:year);
-  const diff=Math.round((bd-new Date(ny))/86400000);
-  let lYear=bd<lunarNewYearDay(year)?year-1:year;
-  const ny2=lunarNewYearDay(lYear);
-  const diff2=Math.round((bd-new Date(ny2))/86400000);
-  let lMonth=Math.max(1,Math.min(12,Math.floor(diff2/29.53)+1));
-  let lDay=Math.max(1,Math.min(30,diff2-Math.floor((lMonth-1)*29.53)+1));
-  return {year:lYear,monthIdx:lMonth,day:lDay};
+
+// ═══════════════════════════════════════════════
+// 分享链接
+// ═══════════════════════════════════════════════
+function getShareUrl(pt,utm){
+  var base=location.href.split('?')[0].split('#')[0];
+  var p={t:pt.t,n:pt.cn||pt.name,src:utm||'share'};
+  return base+'?'+Object.keys(p).map(function(k){return k+'='+encodeURIComponent(p[k])}).join('&');
 }
-// 农历转近似阳历 YYYY-MM-DD
-function lunarToSolar(lunarYear,lunarMonth,lunarDay){
+
+function copyShareLink(){
   try{
-    const ny=lunarNewYearDay(lunarYear);
-    const offset=Math.round((lunarMonth-1)*29.53+lunarDay-1);
-    const sd=new Date(ny);sd.setDate(sd.getDate()+offset);
-    return sd.getFullYear()+'-'+String(sd.getMonth()+1).padStart(2,'0')+'-'+String(sd.getDate()).padStart(2,'0');
-  }catch(e){return null;}
-}
-function initLunarSelectors(){
-  const ly=document.getElementById('fLunarYear');
-  const lm=document.getElementById('fLunarMonth');
-  const ld=document.getElementById('fLunarDay');
-  if(!ly||!lm||!ld)return;
-  const yr=new Date().getFullYear();
-  for(let y=yr;y>=1950;y--){const opt=document.createElement('option');opt.value=y;opt.textContent=y+'年';ly.appendChild(opt);}
-  for(let m=1;m<=12;m++){const opt=document.createElement('option');opt.value=m;opt.textContent=LUNAR_MONTHS[m-1];lm.appendChild(opt);}
-  for(let d=1;d<=30;d++){const opt=document.createElement('option');opt.value=d;opt.textContent=LUNAR_DAYS[d-1];ld.appendChild(opt);}
-  ly.value='2000';lm.value='1';ld.value='1';
-}
-function onCalendarToggle(){
-  const isLunar=document.getElementById('isLunar').checked;
-  document.getElementById('solarDateRow').style.display=isLunar?'none':'block';
-  document.getElementById('lunarDateRow').style.display=isLunar?'block':'none';
-  const lunarHint=document.getElementById('lunarHint');
-  if(isLunar){
-    lunarHint.style.display='block';
-    const bd=document.getElementById('fBirth').value;
-    if(bd){
-      const li=solarToLunar(bd);
-      if(li){
-        document.getElementById('fLunarYear').value=li.year;
-        document.getElementById('fLunarMonth').value=li.monthIdx;
-        document.getElementById('fLunarDay').value=li.day;
-        lunarHint.textContent='当前阴历：'+(LUNAR_MONTHS[li.monthIdx-1]||'')+(LUNAR_DAYS[li.day-1]||'');
-      } else {lunarHint.textContent='请选择您的阴历出生日期';}
-    } else {lunarHint.textContent='请选择您的阴历出生日期';}
-  } else {lunarHint.style.display='none';}
-}
-function onLunarDateChange(){
-  const ly=parseInt(document.getElementById('fLunarYear')?.value)||0;
-  const lm=parseInt(document.getElementById('fLunarMonth')?.value)||0;
-  const ld=parseInt(document.getElementById('fLunarDay')?.value)||0;
-  if(!ly||!lm||!ld)return;
-  const solar=lunarToSolar(ly,lm,ld);
-  if(solar){
-    const bd=new Date(solar);
-    const y=bd.getFullYear(), m=bd.getMonth()+1, d=bd.getDate();
-    // 设置原生日期输入框（YYYY-MM-DD格式）
-    document.getElementById('fDate').value=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const lunarTxt=(LUNAR_MONTHS[lm-1]||'')+(LUNAR_DAYS[ld-1]||'');
-    document.getElementById('lunarHint').textContent='对应阳历'+y+'-'+m+'-'+d+'（阴历'+lunarTxt+'）';
+    var dims=calc();
+    var pt=matchType(dims,parseInt(window.sAge||25));
+    var url=getShareUrl(pt,'copy');
+    var cn=pt.cn||pt.name||'';
+    var si=pt.selfIntro||pt.s||'命中注定与众不同';
+    var txt='我是「'+(cn||pt.name)+'（'+pt.t+'）」，我的特点是【'+si+'】。查看链接：'+url+' #中式命格测试';
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){showCopySuccess()}).catch(function(){fallbackCopy(txt)});
+    } else {
+      fallbackCopy(txt);
+    }
+  } catch(e){
+    var btn=document.getElementById('btnCopyLink');
+    if(btn)btn.textContent='⚠️ 复制失败，请手动长按复制';
   }
 }
 
-// 根据出生日期推算十二黄道宫（公历太阳运行周期）
-function getStarFromBirth(birthStr){
-  if(!birthStr)return null;
-  const bd=new Date(birthStr);
-  const m=bd.getMonth()+1,d=bd.getDate();
-  const cutoffs=[20,19,20,20,21,21,22,22,21,22,21,20];
-  const signs=['魔羯','水瓶','双鱼','白羊','金牛','双子','巨蟹','狮子','处女','天秤','天蝎','射手'];
-  const idx=m<cutoffs[m-1]?m-1:m-1===-1?11:m-1;
-  return signs[idx];
+function showCopySuccess(){
+  var btn=document.getElementById('btnCopyLink');
+  if(!btn)return;
+  var old=btn.innerHTML;
+  btn.innerHTML='✅ 已复制！去粘贴给好友吧~';
+  setTimeout(function(){if(btn)btn.innerHTML=old},2500);
 }
 
-// 年龄输入框变化
-function onAgeOrDateChange(){
-  const a=document.getElementById('fAge').value;
-  if(a)window.sAge=a;
-}
-// 出生日期变化 → 自动填年龄 + 自动选生肖 + 自动选黄道宫（仅在用户未手动选择时）
-function onBirthDateChange(){
-  const bd=document.getElementById('fBirth').value;
-  if(!bd)return;
-  const age=calcAge(bd);
-  if(age>0&&age<120){
-    document.getElementById('fAge').value=age;
-    window.sAge=age;
-  }
-  document.getElementById('birthHint').style.display='block';
-  if(!window._manualZodiac){
-    const zodiac=getZodiacFromBirth(bd);
-    const zOpts=document.querySelectorAll('#fZodiac .zg-opt');
-    zOpts.forEach(o=>o.classList.remove('sel'));
-    if(zodiac){
-      zOpts.forEach(o=>{if(o.textContent.includes(zodiac)){o.classList.add('sel');}});
-      window.sZodiac=zodiac;
-      const hint=document.getElementById('autoHintZodiac');
-      if(hint)hint.style.display='inline';
-    }
-  }
-  if(!window._manualStar){
-    const star=getStarFromBirth(bd);
-    const sOpts=document.querySelectorAll('#fStar .sg-opt');
-    sOpts.forEach(o=>o.classList.remove('sel'));
-    if(star){
-      sOpts.forEach(o=>{if(o.textContent.includes(star)){o.classList.add('sel');}});
-      window.sStar=star;
-      const hint=document.getElementById('autoHintStar');
-      if(hint)hint.style.display='inline';
-    }
-  }
+function fallbackCopy(txt){
+  try{
+    var ta=document.createElement('textarea');
+    ta.value=txt;
+    ta.style.cssText='position:fixed;top:0;left:0;opacity:0';
+    document.body.appendChild(ta);
+    ta.focus();ta.select();
+    var ok=document.execCommand('copy');
+    document.body.removeChild(ta);
+    if(ok)showCopySuccess();
+  } catch(e){}
 }
 
 // ═══════════════════════════════════════════════
-// 题目 (35道)
+// 题目数据
 // ═══════════════════════════════════════════════
-const QS = [
-{q:"除夕夜，家庭群里发完祝福后……",sub:"（测你的春节社交模式）",o:[
-{o:"飞速发完红包雨然后秒消失",d:{s:2,c:2}},
-{o:"在群里跟亲戚Battle红包大小",d:{s:4,d:3}},
-{o:"默默潜水，只抢红包不说话",d:{z:4,i:2}},
-{o:"根本没看群，在刷短视频",d:{d:4}},
-{o:"群里发红包，手慢没抢到，气了一天",d:{a:3}},
-]},
-{q:"过年回家，七大姑八大姨围上来问你「工资多少/有对象了吗/什么时候生」，你的内心OS是：",sub:"（测你的亲戚Battle段位）",o:[
-{o:"「随缘」微微一笑，深藏功与名",d:{z:4,c:2}},
-{o:"反客为主：姨，您家孩子呢？房贷还完了吗？",d:{s:3,d:4}},
-{o:"当场编一个：分手了/在谈/明年结婚",d:{c:4}},
-{o:"掏出手机假装看消息",d:{d:3}},
-{o:"认真解释我在干什么工作",d:{a:3}},
-{o:"心里翻白眼，表面笑嘻嘻",d:{r:3}},
-]},
-{q:"你点外卖时的真实状态是：",sub:"（测你的消费哲学）",o:[
-{o:"先领红包再用满减，货比三家",d:{m:4}},
-{o:"想吃什么就点什么，钱不是问题",d:{j:4}},
-{o:"纠结半小时，选了第一个",d:{a:3,w:2}},
-{o:"根本不用外卖，直接下楼吃",d:{s:2}},
-{o:"每天发誓最后一次，明天继续",d:{h:4}},
-{o:"省钱要紧，饿了就泡面对付",d:{m:3,z:2}},
-]},
-{q:"晚上躺在床上刷手机，你通常：",sub:"（测作息与自控力）",o:[
-{o:"说好11点睡，结果刷到凌晨1点",d:{h:3,d:3}},
-{o:"刷15分钟就强迫自己放下",d:{w:4}},
-{o:"根本没在刷，在加班/学习",d:{a:4,t:3}},
-{o:"开着手机睡着了，手机砸脸",d:{h:3,t:4}},
-{o:"跟朋友视频通话聊到深夜",d:{s:4}},
-{o:"想早睡，但失眠，躺到凌晨3点",d:{a:3}},
-]},
-{q:"微信消息来了，你会：",sub:"（测沟通风格）",o:[
-{o:"秒回，显得我很在意",d:{s:3,a:2}},
-{o:"过一会儿再回，显得我很忙",d:{c:3}},
-{o:"看到了但假装没看见",d:{i:3}},
-{o:"每条都回！不能让人等！",d:{s:4,a:3}},
-{o:"看心情回复，心情不好谁都不理",d:{c:2}},
-]},
-{q:"你去KTV唱歌，你的风格：",sub:"（测社交存在感）",o:[
-{o:"麦霸，一首接一首，霸占话筒",d:{s:3,d:4}},
-{o:"默默角落鼓掌，不抢风头",d:{i:4}},
-{o:"唱一首拿手的，然后消失去上厕所",d:{c:3}},
-{o:"拉着全场一起大合唱《朋友》",d:{s:4}},
-{o:"全程举手机拍抖音素材",d:{g:4}},
-{o:"不去，KTV太吵了在家待着",d:{i:3,z:2}},
-]},
-{q:"听说同事背后说你坏话，你第一反应是：",sub:"（测情绪管理与记仇程度）",o:[
-{o:"当面质问，非要掰扯清楚",d:{d:5}},
-{o:"无所谓，爱说说去",d:{z:5}},
-{o:"表面平静，内心已写800字小作文",d:{r:4,a:2}},
-{o:"找闺蜜/兄弟吐槽2小时",d:{s:3}},
-{o:"记仇，暗暗在内心拉黑此人",d:{r:5}},
-{o:"用行动证明自己，打脸对方",d:{w:3}},
-]},
-{q:"周末你的理想状态是：",sub:"（测生活态度）",o:[
-{o:"睡到自然醒，随便吃点",d:{z:4,j:2}},
-{o:"上午健身学习，下午社交，卷满全天",d:{w:4,a:2}},
-{o:"宅家刷剧吃零食，哪儿也不去",d:{g:3}},
-{o:"到处浪，不浪费好天气",d:{s:4,j:2}},
-{o:"加班，周末是给工作狂的礼物",d:{a:4,t:3}},
-{o:"回老家/陪家人",d:{l:4}},
-]},
-{q:"收到一条群发祝福消息，你会：",sub:"（测人情练达）",o:[
-{o:"礼貌回复同样群发祝福",d:{s:2}},
-{o:"不回，心里想「这也太敷衍」",d:{c:2}},
-{o:"写一条走心的回复",d:{l:4}},
-{o:"截图发朋友圈吐槽",d:{d:3,g:2}},
-{o:"直接拉黑这个人",d:{r:3}},
-]},
-{q:"你在公司食堂打饭，有人插队，你：",sub:"（测规则意识与勇气）",o:[
-{o:"默默不说话，自己等",d:{z:3}},
-{o:"轻声说：不好意思，要排队",d:{w:3}},
-{o:"直接喊：后面排队！",d:{d:4}},
-{o:"假装没看见，关我何事",d:{c:2}},
-{o:"内心翻白眼，面无表情",d:{r:3}},
-{o:"拍照发群里让大家评理",d:{g:3,d:2}},
-]},
-{q:"你看电影时最不能忍的行为是：",sub:"（测公共素养）",o:[
-{o:"旁边一直说话",d:{z:2}},
-{o:"开闪光灯拍照",d:{w:4}},
-{o:"熊孩子在前面踢椅子",d:{t:3}},
-{o:"迟到还打手电找座位",d:{c:3}},
-{o:"手机屏幕亮着不静音",d:{d:2}},
-]},
-{q:"每次回老家，朋友圈发的是：",sub:"（测社交表演）",o:[
-{o:"风景美食九宫格，配文「回家啦~」",d:{g:3,s:2}},
-{o:"什么都不发，潜水选手",d:{z:4,i:2}},
-{o:"一张爸妈做饭的照片",d:{l:4}},
-{o:"逃离北上广的表情包",d:{c:2}},
-{o:"发长文记录回家感受",d:{r:3,l:2}},
-{o:"根本不发朋友圈，发了谁看啊",d:{z:2,i:2}},
-]},
-{q:"朋友找你借钱，你说：",sub:"（测金钱与人情观）",o:[
-{o:"「行，要多少？」直接转",d:{l:4,s:2}},
-{o:"「等我发工资再说」拖延大法",d:{c:4}},
-{o:"「不好意思最近手头紧」",d:{m:3,c:2}},
-{o:"直接已读不回",d:{r:3}},
-{o:"借了，然后天天催他还",d:{d:3,r:3}},
-{o:"不借，但要帮他介绍兼职",d:{w:3,l:2}},
-]},
-{q:"你的闹钟通常设几个？",sub:"（测起床哲学）",o:[
-{o:"一个，响了就起，靠自律",d:{w:4}},
-{o:"三个，间隔5分钟层层递进",d:{a:3,h:2}},
-{o:"五个以上，响到自己都烦了才起",d:{h:4,t:2}},
-{o:"根本不用闹钟，睡到自然醒",d:{z:4}},
-{o:"手机+手表+室友叫，三保险",d:{a:3,h:3}},
-{o:"其实早就醒了，躺着不想起",d:{h:3,z:3}},
-]},
-{q:"你觉得人生最重要的是？",sub:"（灵魂拷问，请认真作答）",o:[
-{o:"逍遥 —— 财务自由，想走就走",d:{c:4,j:3}},
-{o:"搞钱 —— 经济基础决定一切",d:{m:4,a:2}},
-{o:"健康 —— 身体是修行的本钱",d:{z:3,w:2}},
-{o:"家人 —— 父母在，不远游",d:{l:4}},
-{o:"气运 —— 命里有时终须有",d:{z:3}},
-{o:"面子 —— 不能让人看笑话",d:{d:3}},
-{o:"积德 —— 修来世福报",d:{w:3,l:2}},
-{o:"开悟 —— 活得明白最重要",d:{r:3,w:2}},
-]},
-{q:"相亲对象问你「你有什么缺点」，你说：",sub:"（测相亲生存智慧）",o:[
-{o:"「太认真/太善良」（反向凡尔赛）",d:{c:3}},
-{o:"「我比较追求完美」（正经回答）",d:{w:2}},
-{o:"「老实说，没什么大缺点」",d:{z:2}},
-{o:"「太帅/太优秀了算吗」",d:{d:3}},
-{o:"认真列举三条自己的不足",d:{l:3,w:2}},
-{o:"反问：你觉得我有什么缺点？",d:{c:3}},
-]},
-{q:"你的领导在群里发了一条明显有问题的通知，你会：",sub:"（测职场情商）",o:[
-{o:"私信委婉提醒领导",d:{w:3,l:2}},
-{o:"群里直接指出问题",d:{d:4}},
-{o:"等别人先说，我再跟",d:{c:3}},
-{o:"当作没看见，不关我事",d:{z:3}},
-{o:"在群里表态支持，暗地提醒",d:{w:3}},
-]},
-{q:"你买东西最看重什么？",sub:"（测消费价值观）",o:[
-{o:"价格 —— 性价比是真理",d:{m:4}},
-{o:"颜值 —— 好看比好用重要",d:{j:3}},
-{o:"品质 —— 一分钱一分货",d:{w:4}},
-{o:"品牌 —— 大牌子有面子",d:{d:3}},
-{o:"实用 —— 能用就行",d:{z:2}},
-{o:"心情 —— 今天高兴就买",d:{j:3}},
-]},
-{q:"深夜11点，你妈打电话来说「早点睡」，你会：",sub:"（测亲子关系）",o:[
-{o:"马上放下手机，立刻睡觉",d:{l:3,w:2}},
-{o:"嘴上说睡了，实际继续玩",d:{h:3}},
-{o:"「知道了妈」挂掉继续刷",d:{c:2}},
-{o:"根本没接，因为已经睡了",d:{z:3}},
-{o:"回拨过去聊半小时",d:{l:3,s:2}},
-]},
-{q:"你参加婚礼，通常随多少份子钱？",sub:"（测人情世故）",o:[
-{o:"看关系，一般500-1000",d:{l:3}},
-{o:"别人随多少我随多少，跟风",d:{c:3}},
-{o:"关系好就多随，不熟就少点",d:{l:2,w:2}},
-{o:"尽量不参加，发个微信祝福",d:{i:3}},
-{o:"太熟了不要钱，带礼物去",d:{l:4}},
-]},
-{q:"你的微信朋友圈对同事/老板是：",sub:"（测职场边界感）",o:[
-{o:"分组可见，发什么都很小心",d:{c:4}},
-{o:"全开放，反正没什么见不得人的",d:{s:2,z:2}},
-{o:"三天可见，不让人窥探生活",d:{r:3}},
-{o:"根本不发，朋友圈是过去的东西",d:{z:3}},
-{o:"仅聊天，不发也不看",d:{i:4}},
-]},
-{q:"你被老板当众批评了，你的反应是：",sub:"（测职场抗压）",o:[
-{o:"当场道歉，私下找领导沟通",d:{w:4,l:2}},
-{o:"表面接受，内心记下这笔账",d:{r:4}},
-{o:"当场反驳，我不是那样的人",d:{d:4}},
-{o:"无所谓，左耳进右耳出",d:{z:4}},
-{o:"深刻反省，是不是自己真有问题",d:{w:3}},
-]},
-{q:"你最近一次哭是因为什么？",sub:"（测泪点与情绪）",o:[
-{o:"看剧/电影哭的，太感人了",d:{r:3,j:2}},
-{o:"工作压力太大绷不住了",d:{a:3}},
-{o:"跟家人/恋人吵架",d:{l:2}},
-{o:"好久没哭过了，不记得",d:{z:3}},
-{o:"自己一个人扛太多，绷不住",d:{r:4,a:2}},
-{o:"感动的，不是难过的",d:{r:2,l:2}},
-]},
-{q:"周末朋友喊你出去，你通常：",sub:"（测社交能量）",o:[
-{o:"去！必须去！不能拒绝",d:{s:4}},
-{o:"看情况，不累就去，累了拒绝",d:{z:2}},
-{o:"犹豫半天，最后说不去了",d:{i:3}},
-{o:"找借口：加班/有事/不在家",d:{c:3}},
-{o:"已经约了别人了，不好意思",d:{c:3,s:2}},
-]},
-{q:"你的手机屏幕使用时间每天大约：",sub:"（测数字依赖）",o:[
-{o:"超过10小时，我是手机本机",d:{g:5}},
-{o:"6-10小时，正常水平",d:{g:3}},
-{o:"3-6小时，偶尔刷刷",d:{z:2}},
-{o:"3小时以内，我有自控力",d:{w:3}},
-{o:"不好意思看，怕被吓到",d:{g:3,h:2}},
-]},
-{q:"你最近一次跟朋友聊天超过2小时，是因为：",sub:"（测社交深度）",o:[
-{o:"吐槽工作/老板",d:{s:3,a:2}},
-{o:"聊人生理想未来规划",d:{w:2,r:2}},
-{o:"八卦某人的感情生活",d:{d:3,g:2}},
-{o:"就是闲聊，停不下来",d:{s:3}},
-{o:"没什么特别原因，聊天还需要理由？",d:{s:3}},
-]},
-{q:"你一个人吃火锅，会点什么？",sub:"（测孤独承受力）",o:[
-{o:"一个人也要点满一桌子！",d:{j:3}},
-{o:"就一个菜一碗饭，简单解决",d:{z:3,m:2}},
-{o:"不吃，回家叫外卖",d:{i:3}},
-{o:"默默打开手机看视频下饭",d:{g:3}},
-{o:"不好意思一个人吃，回家做",d:{i:3}},
-]},
-{q:"过年回家，最让你崩溃的事情是：",sub:"（测家庭压力承受）",o:[
-{o:"亲戚的灵魂拷问",d:{a:3}},
-{o:"被逼相亲/催婚",d:{a:3}},
-{o:"熊孩子闹腾没人管",d:{t:3}},
-{o:"七大姑八大姨比来比去",d:{d:3}},
-{o:"其实没什么，回老家挺开心的",d:{z:2,l:2}},
-]},
-{q:"你做决定时最依赖的是：",sub:"（测决策风格）",o:[
-{o:"直觉 —— 跟着感觉走",d:{c:3}},
-{o:"理性分析 —— 数据说话",d:{w:3}},
-{o:"问身边人的意见",d:{s:2}},
-{o:"抛硬币/抽签，老天安排",d:{z:3}},
-{o:"看心情，心情好做什么都对",d:{j:3}},
-{o:"根据以往经验判断",d:{w:2}},
-]},
-{q:"你最近一次跟父母吵架，是因为什么？",sub:"（测代际关系）",o:[
-{o:"婚恋问题——他们催我结婚",d:{a:3}},
-{o:"工作问题——不理解我的选择",d:{a:3}},
-{o:"生活方式——觉得我不够上进",d:{a:2}},
-{o:"好久没吵了，关系还行",d:{z:2,l:2}},
-{o:"没吵，但冷战过几天",d:{r:3}},
-{o:"价值观冲突，聊不到一块",d:{r:2}},
-]},
-{q:"你通常几点睡觉？",sub:"（测作息类型）",o:[
-{o:"亥时（22点）前，子时前必入睡",d:{w:3}},
-{o:"子时前后（23-24点），正常偏晚",d:{z:2}},
-{o:"丑时（凌晨1-2点），习惯性熬夜",d:{h:3,g:2}},
-{o:"寅时以后（凌晨3点+），修仙模式",d:{h:4,t:2}},
-{o:"不固定，看当天心情",d:{c:2}},
-]},
-{q:"你身边的朋友通常怎么评价你？",sub:"（测他人眼中的自己）",o:[
-{o:"靠谱，有事找我准没错",d:{w:3,l:2}},
-{o:"有趣，跟你在一起很快乐",d:{j:3,s:2}},
-{o:"高冷/神秘，不好接近",d:{r:2}},
-{o:"话太多/太吵了",d:{s:2}},
-{o:"佛系，什么都不在乎",d:{z:3}},
-{o:"拼命三娘/工作狂",d:{a:3}},
-]},
-{q:"你买过的最后悔的东西是：",sub:"（测冲动消费）",o:[
-{o:"健身房年卡，去了3次",d:{h:3,m:2}},
-{o:"直播间冲动下单的",d:{g:4,m:2}},
-{o:"旅游时买的义乌小商品",d:{j:2}},
-{o:"没后悔过，每分钱都值",d:{w:2}},
-{o:"知识付费课，没听完",d:{a:3}},
-{o:"没买什么，后悔没买",d:{m:2}},
-]},
-{q:"你的工作群里，你通常是：",sub:"（测职场存在感）",o:[
-{o:"第一个回复收到的人",d:{s:3}},
-{o:"默默看，从不主动发言",d:{i:3}},
-{o:"发言犀利，老板都怕我",d:{d:3}},
-{o:"只发工作相关，从不闲聊",d:{w:3}},
-{o:"表情包狂魔，什么都发表情",d:{c:2,g:2}},
-{o:"群里最活跃的那个",d:{s:4,d:2}},
-]},
-{q:"最后一道题：你现在最想要什么？",sub:"（灵魂拷问，请凭直觉选择）",o:[
-{o:"很多很多钱，财库爆满",d:{m:4,a:2}},
-{o:"一个懂我的人，灵魂契合",d:{l:3}},
-{o:"睡个好觉，失眠太折磨",d:{z:3,t:2}},
-{o:"自由——不被约束的人生",d:{c:4}},
-{o:"健康的身体，元气满满",d:{z:3,w:2}},
-{o:"升职加薪，走上巅峰",d:{a:4}},
-{o:"一方清净，少点纷扰",d:{z:2}},
-{o:"一场说走就走的旅行",d:{c:2,j:3}},
-]},
+const QS=[
+  {q:'周末你最喜欢？',d:'s',o:['睡觉，睡到自然醒','出门浪，探索新店','在家刷剧/打游戏','学习或搞钱']},
+  {q:'微信红包你通常？',d:'m',o:['不点，假装没看到','抢完还要嚎一嗓子','一分也是爱，必回','只收不发自得其乐']},
+  {q:'亲戚问你「有对象了吗」时？',d:'r',o:['微笑点头转移话题','当场编一个糊弄过去','反问「您家孩子呢」','无所谓，爱问就问']},
+  {q:'你手机里最多的App是？',d:'i',o:['外卖和团购','社交/聊天软件','购物/比价软件','工作/效率软件']},
+  {q:'点外卖你通常？',d:'c',o:['同一品类点同一家','哪家便宜点哪家','贵的不在乎，品质第一','纠结半小时最后不点了']},
+  {q:'你平均每天用几个小时手机？',d:'w',o:['2小时以内，自控力强','3-5小时，正常水平','6-8小时，手机奴隶','8小时以上，深度成瘾']},
+  {q:'你记账吗？',d:'g',o:['每月必记，财务清晰','偶尔想起来记一下','从不记账，钱花就花了','记了三天就放弃了']},
+  {q:'睡前最后一件事通常是？',d:'h',o:['刷手机停不下来','看书或听播客','躺着发呆放空','制定明天的计划']},
+  {q:'你对「已读不回」的态度？',d:'a',o:['记仇，三天不理人','假装没看到，心里记着','立刻回，不回难受','无所谓，不在乎']},
+  {q:'朋友找你借钱，你？',d:'j',o:['借，但心里默默记着','直接拒绝，不留余地','看关系和金额定','找借口拖，拖到对方忘']},
+  {q:'在群里发表情包通常？',d:'l',o:['表情包狂人，必回','偶尔发表情附和','纯文字党，不发表情','看心情']},
+  {q:'你更喜欢哪种相处模式？',d:'d',o:['偶尔见面，平时各自忙碌','每天都要保持联系','需要时在，不需要时自由','深度绑定，恨不得住一起']},
+  {q:'过年回家最怕什么？',d:'t',o:['被催婚催生','亲戚间的比较和攀比','无聊，没事做','什么都不怕']},
+  {q:'同事背后说你坏话被你知道，你会？',d:'r',o:['当面质问，不憋着','默默疏远，暗中较劲','无所谓，当没听到','发朋友圈含沙射影']},
+  {q:'你每月工资（或零花钱）大部分花在哪？',d:'m',o:['吃喝玩乐享受生活','存起来，看着数字开心','买买买，购物治百病','投资自己或还贷']},
+  {q:'你群消息通常怎么回？',d:'s',o:['秒回，不回手痒','看到就回，不刻意','不怎么看群','选择性回复重要群']},
+  {q:'你觉得自己是个？',d:'a',o:['情绪化，但真实','理性克制，冷静','时而天使时而魔鬼','佛系，什么都行']},
+  {q:'你去一个新城市，会？',d:'i',o:['做好攻略，计划周全','随机漫游，随遇而安','问本地人推荐','去网红地标打卡']},
+  {q:'你倾向哪种工作方式？',d:'g',o:['稳定编制，铁饭碗','自由职业，自己当老板','大公司，福利好','创业，博一把大的']},
+  {q:'你和父母的关系？',d:'r',o:['亲密，什么都聊','表面和平，内心独立','偶尔联系，各过各的','相爱相杀，互相折磨']},
+  {q:'你手机从不静音的原因？',d:'w',o:['怕错过重要电话','工作需要随时响应','习惯，不喜欢安静','等某个人的消息']},
+  {q:'你朋友圈通常发什么？',d:'i',o:['生活日常，记录生活','只看不发，默默围观','精致九宫格，修到满意','偶尔转发，不发自己']},
+  {q:'别人夸你，你会？',d:'a',o:['嘴上说哪里哪里，心里很受用','回怼：你在讽刺我吧','害羞，转移话题','大方接受并感谢']},
+  {q:'你对「断舍离」的态度？',d:'c',o:['定期扔扔扔，清爽','什么都舍不得扔','该扔扔，该买买','概念很认同，行动没有']},
+  {q:'你玩游戏吗？',d:'i',o:['沉迷氪金玩家','偶尔玩，不上瘾','不玩游戏','玩，但只玩单机']},
+  {q:'你觉得自己更像哪种动物？',d:'s',o:['狐狸：聪明灵活','狼：独立有团队精神','猫：傲娇又慵懒','牛：踏实肯干']},
+  {q:'遇到问题你通常？',d:'j',o:['先自己想，想不通再问','立刻查百度/小红书','直接问身边人','逃避，等它自己消失']},
+  {q:'你更看重？',d:'d',o:['面子和尊严','实际的利益','感情和关系','自我感受和自由']},
+  {q:'你做决定快吗？',d:'a',o:['很快，相信直觉','很慢，纠结半天','视情况而定','做完了还在纠结']},
+  {q:'你更愿意为什么花大钱？',d:'g',o:['房子车子资产','旅行和体验','吃喝玩乐享受','学习和成长']},
+  {q:'同事拿走了你的零食，你会？',d:'r',o:['下次也拿他的','直接问是不是你拿的','算了，不值几个钱','默默记下，找机会还回去']},
+  {q:'你手机屏保是？',d:'i',o:['偶像/爱豆照片','风景或抽象图','家人或宠物','从来不设']},
+  {q:'你和朋友吵架后通常？',d:'a',o:['冷静后主动和好','等对方先道歉','吵完还是朋友，无所谓','从此拉黑，老死不相往来']},
+  {q:'你穿衣风格？',d:'c',o:['跟风买爆款','经典款式，不易过时','舒适为主，方便就好','看场合，衣柜丰富']},
+  {q:'你对自己未来的期待？',d:'g',o:['财富自由，财务无忧','家庭幸福，稳稳当当','自由职业，随心所欲','不断成长，一直在路上']}
 ];
 
 // ═══════════════════════════════════════════════
-// 30种人格类型
-// 每个类型字段: n=英文名, cn=中文名, t=代码, tx=代码含义, q=金句, s=副标题, d=深度解读, 其余为分析模块
+// 人格类型数据（35型）
 // ═══════════════════════════════════════════════
-const TYPES = {
-
-  // ── 社牛系 ──
-  S1:{n:"社牛之王",cn:"社交王者"
-    cpc: {🧘:"你和他是「热闹与宁静」的两极。你充电靠人群，他充电靠独处——听起来矛盾，但正因为如此，你们能给彼此带来完全不同的世界。你带他走出舒适区，他教你安静的力量。",🐼:"你们是「社交 vs 务实」组合。你的社交能力帮他拓宽人脉，他的理财思维帮你避免冲动消费。互相学习，共同成长。"},
-    si:"社交发电机，走到哪里都是中心",zy:"紫微星照耀，迁移宫旺盛，注定行走四方、人脉通达。父母宫田宅宫皆满，适合在热闹中寻得归属。财帛宫见左辅，赚钱有道但散财也快。",tx2:"社交是天赋，独处是修行",,t:"SOC-K",tx:"Social King · 社交王者",q:"你这种人，天生就是人群中的发电机，孤独对你来说是奢侈品——当然，代价是充电费比别人贵三倍。",
-    d:"你是那种在KTV连唱3小时不休息、在饭局永远是话题制造机的人。亲戚问你有没有对象，你直接反问人家退休金多少。你的社交能量，仿佛核反应堆，取之不尽用之不竭。跟你吃饭，永远不会冷场，因为你会自带BGM、自带话题、自带气氛组。<br><br>据说你是天选e人，充电方式靠人群，电量低于50%就开始找人聊天。如果把你一个人关小黑屋，你会跟墙壁聊出感情。",
-    personal:"你的内心其实很需要被关注，只是你用外向的方式掩盖了这一点。独处时你可能会感到轻微的不安，但很快又能在人群中找回能量。你的乐观有感染力，但也要学会面对独处时的真实自我。",
-    relation:"你是天然的社交中心，朋友多、人脉广。但要注意：不要让社交成为逃避内心问题的工具。学会在热闹之后给自己留点独处时间，真正的朋友不需要那么多，但需要深。",
-    career:"适合需要大量人际互动的工作：销售、公关、活动策划、主持人。你的社交天赋能让你快速建立信任，但也容易因为过度社交而分散精力。建议选择一个方向深耕，而不是什么领域都沾。",
-    love:"恋爱中你是主动型，喜欢表达和制造浪漫。但要警惕：不要把「让对方开心」当成唯一的任务，真实的情感交流比热闹的约会更重要。",
-    grow:"你最大的成长空间是「学会独处」和「深度交流」。热闹是能力，安静是智慧。建议尝试冥想或写作，学会与自己对话。",
-    a:"社交是你的超能力，但偶尔也要学会独处——不然你永远不会知道，安静也是一种力量。",
-    tags:["社牛","气氛组","话痨本痨","人来疯"],dims:{s:5},bars:{s:98,a:55,z:25,c:60,g:40,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🧘",n:"佛系隐士",s:92},{e:"🐴",n:"纯正打工人",s:78}],clr:"#e74c3c"},
-  S2:{n:"社交狂人",cn:"社交达人"
-    cpc: {🧘:"你是社交狂人，他是躺平大师，频率天差地别。但他安静的力量能平衡你的躁动，你的热情能点燃他的平淡。互补，是最好的关系。",🎭:"你和他都喜欢热闹，但动机不同——你追求连接，他追求享乐。你们在一起永远不无聊，但要小心：太热闹的关系，往往缺乏深度。"},
-    si:"自来熟达人，电梯里也能聊出半小时",zy:"紫微星入命，口才宫旺盛，天生擅长破冰与建立联系。父母宫有天魁，父母关系和谐有靠。财帛宫见天机，善于发现商机但执行力稍弱。",tx2:"热情是本能，筛选是智慧",,t:"SOC-T",tx:"Social Terror · 社交狂人",q:"你的社交字典里没有「社恐」两个字，只有「你怎么还不跟我说话」，在电梯里跟邻居聊装修你也能聊出半小时。",
-    d:"你是那种能在地铁上跟陌生人聊10站路、在电梯里跟邻居聊装修细节的人。你的字典里没有「社恐」这个词，只有「你为什么不跟我说话」。你的口头禅是「哎你这衣服在哪买的」，你的必杀技是「来来来建个群」。跟你在一起，所有人都会被你的热情感染——或者被吓跑。",
-    personal:"你的社交本能有时会越过理性判断。你需要朋友、需要连接、需要被看见。这种需求源于你对「被孤立」的恐惧——虽然你从不承认。试着接受：不是每个人都值得你花精力，不是每段关系都值得维护。",
-    relation:"你的自来熟能力让你交到很多「认识的人」，但朋友的质量参差不齐。学会筛选：谁是真正懂你的人，谁只是点头之交。真正的友情需要时间沉淀，不是热情能换来的。",
-    career:"适合快速建立人脉的岗位：商务拓展、渠道运营、社区运营。但要小心：不要为了「关系」而忽略专业能力的深耕。人脉是资产，但你自己得先有价值。",
-    love:"追人你很在行，但维系长期关系你可能需要学习。你的热情来得快去得也快，试着给感情一些「慢下来」的时间，让它有机会沉淀。",
-    grow:"你需要一个「沉淀期」。建议减少无效社交，花时间培养一两个深度爱好或技能。没有内涵的社交是空洞的，没有深度的热情是苍白的。",
-    a:"你的热情是稀缺资源，建议用在值得的人身上，不要平均分配。",
-    tags:["社牛进阶","搭子达人","自来熟","破冰大师"],dims:{s:4,d:2},bars:{s:90,a:50,z:20,c:75,g:50,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🧘",n:"佛系隐士",s:40},{e:"🎭",n:"躺平大师",s:70}],clr:"#c0392b"},
-  S3:{n:"暖心小太阳",cn:"温暖使者"
-    cpc: {🦊:"你是温暖，他是热闹——你们的组合是「暖光+聚光灯」。你给他细腻的关怀，他给你社交的能量。彼此成就，互相照耀。",🐴:"你的温暖和他的务实形成互补。你照顾他的情感，他帮你接地气。稳定的关系，彼此需要的刚好是对方拥有的。"},
-    si:"朋友圈的充电宝，温暖自己也照亮别人",zy:"紫微星柔和，父母宫与子女宫皆旺，天生有照顾他人的使命感。福德宫饱满，享受付出带来的内心富足。财帛宫保守，舍得为重要的人花钱。",tx2:"善良是选择，边界是保护",,t:"SUN-O",tx:"Sunny Optimist · 阳光乐观派",q:"你是朋友圈里的充电宝，走到哪暖到哪，就是电量耗尽时，比谁都需要被人抱一下。",
-    d:"你是那种记得每个朋友生日的人，是那种看到流浪猫就挪不动腿的人，是那种别人对你好一点就想加倍回报的人。你的善良不是软弱，是一种主动的选择。你总是先考虑别人的感受，结果常常委屈了自己。",
-    personal:"你的共情能力极强，但有时强到忘记照顾自己。你习惯了「给予」，却不太擅长「索取」。这不是缺点，但容易让你成为「被消耗」的那一个。记住：你自己也需要被爱。",
-    relation:"你是朋友眼中的「知心姐姐/哥哥」，大家有烦恼都爱找你倾诉。但你的问题往往是：说得太多、给建议太快。学会倾听，给别人空间表达，而不是急着解决问题。",
-    career:"适合帮助型职业：心理咨询、护理、教师、社工。你的共情力让你在这些领域如鱼得水，但要注意职业倦怠——接收太多负能量需要出口。记得给自己安排定期的情绪排毒。",
-    love:"恋爱中你是付出型，容易把对方当成生活的中心。建议：健康的亲密关系需要两个人共同付出，不是一方无限度地给予。学会表达需求，不要总是「我都可以」。",
-    grow:"你的成长方向是「学会说不」和「建立边界」。善良是对的，但无底线的善良是纵容。试着从小事开始，拒绝一些不合理的请求。",
-    a:"先爱自己，才能更好地爱别人。善良是你的底色，但也要学会设边界。",
-    tags:["暖心","真诚","老好人","知心姐姐"],dims:{l:3,s:2},bars:{s:80,a:40,z:55,c:30,g:35,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🦊",n:"社牛之王",s:88},{e:"🐴",n:"纯正打工人",s:82}],clr:"#f39c12"},
-  S4:{n:"职场老油条",cn:"太极宗师"
-    cpc: {🐼:"你们都是「稳」字当头的人，不同的是：他追求财务积累，你追求职场安全。目标相近，方法互补，可以成为靠谱的合作伙伴。",🧘:"你和他都懂得「不争」的力量。但你的不争是策略，他的不争是本质。相处轻松，不需要解释为什么不想社交。"},
-    si:"职场太极高手，不站队也能全身而退",zy:"紫微星沉稳，官禄宫见天梁，不争不抢却稳中有升。父母宫与兄弟宫平衡，独当一面。财帛宫稳定，靠技能而非冒险谋财。",tx2:"中庸是智慧，不是平庸",,t:"WRK-O",tx:"Workplace Oracle · 职场老油条",q:"你的职场哲学是：不求有功，但求无过；不站队、不甩锅、不背刺——能摸鱼绝不含糊，能推活绝不手软。",
-    d:"你是那种在职场摸爬滚打多年，练就了一身太极神功的人。领导说什么，你都能接住；同事甩锅，你都能化解。你深谙「干活不用太努力，但也不能不努力」的职场精髓。你的口头禅是「慢慢来，不急」，你的KPI永远中等偏上。",
-    personal:"你是职场里的「智慧老人」，见过太多风浪，对很多事都看得很开。你的生存哲学是：不要锋芒太露，也不要太落后，中庸之道才是长久之计。这种智慧是用时间和经历换来的。",
-    relation:"人际交往中你是「老好人」，不树敌、不站队、不表态。这让你在职场很安全，但也可能让人觉得你没有立场。适当的时候表达态度，会让你更有存在感。",
-    career:"你适合稳定型岗位：行政、后勤、机关单位、国企。你的优势是「稳」，劣势也是「太稳」。如果还有上升野心，建议突破舒适区，尝试承担更多责任。",
-    love:"感情中你可能比较「务实」，不会太浪漫，但很靠谱。你的伴侣可能觉得你有点闷，但会信任你。试着偶尔给对方一些小惊喜，保持感情的新鲜度。",
-    grow:"你的成长空间是「走出舒适区」。你的中庸哲学保护了你，但也可能让你错过机会。试着每年做一件让自己「不舒服」的事，突破自己的边界。",
-    a:"摸鱼是你的生存智慧，但偶尔也要拿出真本事，不然真以为自己只会摸鱼了。",
-    tags:["摸鱼王","太极高手","老江湖","中庸大师"],dims:{c:3,w:2,z:2},bars:{s:55,a:50,z:50,c:65,g:45,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🐼",n:"搞钱狂魔",s:70},{e:"🧘",n:"佛系隐士",s:75}],clr:"#7f8c8d"},
-  S5:{n:"家庭顶梁柱",cn:"家的港湾"
-    cpc: {🍜:"你们都是「务实生活派」，但维度不同：他追求美食，你追求家庭。你们的结合是「现实安稳+生活滋味」，柴米油盐也能过成诗。",💰:"你的务实和他的理性是天生一对。你们不会冲动消费，不会追求虚荣，脚踏实地，一起积累。"},
-    si:"家的港湾，自己省吃俭用也要给家人最好",zy:"紫微星务实，田宅宫旺盛，置产置业的执念深重。父母宫与子女宫同旺，为下一代倾尽所有。财帛宫紧张，但精神富足感超越物质。",tx2:"家人是全部，但你自己也是",,t:"FAM-B",tx:"Family Backbone · 家庭支柱",q:"你省吃俭用给孩子最好的，自己买件衣服能犹豫三天——家人是你的全部，但你什么时候才能成为自己的「家人」？",
-    d:"你是那种自己省吃俭用，也要给家里最好的人。每个月发工资第一件事是给爸妈打钱，孩子的培训班费用比自己的午饭预算还高。你很少为自己花钱，但给家人花钱从不心疼。你的成就感来源于家庭的幸福。",
-    personal:"你的自我价值很大程度上与「被需要」绑定。你需要家人，需要觉得自己有用。这种依赖是你的动力，也可能成为枷锁。试着问自己：除了家人，我还喜欢什么？",
-    relation:"你是家庭的粘合剂，所有人都会依赖你、信任你。但要注意：不要让自己成为家庭的「牺牲品」，你也有被照顾的权利。偶尔示弱，不是软弱，是信任。",
-    career:"适合稳定、能提供保障的工作：体制内、财务、公务员。你的责任感强，适合需要耐心和细心的岗位。但可能会因为太顾家而在职业上相对保守。",
-    love:"你是那种「我的一切都是为了这个家」的人。伴侣可能会感受到你的付出，但也会担心你失去自我。建议：每周给自己留一点「只属于自己」的时间。",
-    grow:"你的成长方向是「照顾好自己」。你习惯把所有人放在前面，把自己放在最后。试着自私一点——这不是自私，这是可持续。",
-    a:"家是你的港湾，但别忘了自己也需要被照顾。偶尔自私一下，是对家人的负责。",
-    tags:["顾家","担当","务实","牺牲型"],dims:{l:4,w:2},bars:{s:50,a:60,z:40,c:45,g:30,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🍜",n:"干饭战神",s:75},{e:"💰",n:"人间清醒",s:72}],clr:"#e67e22"},
-  S6:{n:"相亲终结者",cn:"阅人无数"
-    cpc: {🧘:"你是分析型，他是直觉型。你看人用条件，他看人用心。你们的差异恰好互补——你的理性帮他做决策，他的淡然让你学会放下。",🎭:"你是理性派，他是情绪派。你们在一起会有火花，也会有摩擦。学会欣赏对方的不同，而不是试图改变对方。"},
-    si:"相亲数据库，比婚恋网站还精准",zy:"紫微星精于观察，夫妻宫与福德宫同参，对情感关系有极深的洞察力。父母宫田宅宫皆满，务实理性。财帛宫见天机，善于评估价值与风险。",tx2:"见多识广是优势，但别忘了走心",,t:"DAT-X",tx:"Dating Expert · 相亲终结者",q:"你相过的亲比你吃过的火锅还多，你阅人无数，却始终找不到那个让你放下「评分表」的人。",
-    d:"你相过的亲比你吃过的火锅还多。你能从对方点菜的方式判断对方的经济实力，从对方的微信头像推断对方的审美品味。你的相亲数据库堪比民政局，比任何婚恋网站都精准。",
-    personal:"你练就了一双「火眼金睛」，但也可能因此变得挑剔。看人准是优势，但过度分析会扼杀可能性。有时候，少想一点，让感觉带你走。",
-    relation:"你在感情上很理性，但理性太久会忘记感性的美好。试着放下「评分表」，去感受一个人的温度，而不是分析他的条件。",
-    career:"适合需要鉴别人选的工作：HR、猎头、风控、审计。你的洞察力在这些领域是优势。但要小心：不要把职业习惯带回家，把伴侣也当成「候选人」。",
-    love:"你对感情有清晰的框架，但爱情有时候不需要框架。遇到对的人，所有的「条件」都可以让路。放下评判标准，用心去感受。",
-    grow:"你的成长是学会「感性一点」。分析是保护，但不是每段感情都需要保护。试着在安全的前提下，让心带路。",
-    a:"见多识广是优势，但也别让经验蒙蔽了真心。遇到对的人，套路不重要。",
-    tags:["相亲达人","阅人无数","挑剔精","人间清醒"],dims:{c:3,l:2,w:2},bars:{s:60,a:65,z:30,c:70,g:55,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🧘",n:"佛系隐士",s:55},{e:"🎭",n:"Drama Queen",s:60}],clr:"#8e44ad"},
-
-  // ── 搞钱系 ──
-  M1:{n:"搞钱狂魔",cn:"财富猎手"
-    cpc: {🍜:"你省钱，他吃好——听起来矛盾，但你们对「钱」的态度其实相同：钱要花在刀刃上。你们能在消费上达成惊人的默契。",🧘:"你的搞钱欲和他的躺平哲学是对立的。但正因如此，你们能互相平衡——你拉他入世，他教你知足。"},
-    si:"搞钱上瘾，省钱和赚钱都是我的快乐源泉",zy:"紫微星财星旺盛，财帛宫满格，天生对金钱有敏锐嗅觉。迁移宫见禄存，走到哪里都能发现赚钱机会。福德宫稍弱，享受金钱比享受过程更多。",tx2:"钱是工具，不是全部",,t:"MNY-K",tx:"Money King · 财富猎手",q:"你的购物车永远有凑单商品，你的钱包永远比脸干净——但你相信，总有一天钱包会比脸还有尊严。",
-    d:"你的微信账单永远比工资条长。你会用红包的奥义省下每一分钱，会在直播间蹲守最优价格。你的人生信条：「钱不是省出来的，是赚出来的；也是省出来的。」你订阅了8个省钱博主，每个月复盘自己的收支表。<br><br>你的购物车里永远有「凑单」商品，你的钱包永远比脸干净。如果有商家说「限时特价」，你会比收到情书还激动；如果有人说「免费送」，你会立刻放下筷子。",
-    personal:"你对金钱的执念可能源于某种不安全感——可能是小时候物质匮乏的记忆，可能是对未来的焦虑。钱确实能带来安全感，但你也要知道：钱不是全部。",
-    relation:"你可能会被认为「太算计」，朋友约会你总是找便宜的地方。你的伴侣可能理解你的理财观，但也可能觉得你不够大方。试着在「省钱」和「生活品质」之间找平衡。",
-    career:"你天生有商业嗅觉，适合：创业、投资、电商、金融。你对数字敏感，对趋势有判断。但要小心：不要让赚钱成为唯一的目标，而忘了为什么赚钱。",
-    love:"感情中你可能也会「计算ROI」，约会花了多少钱、得到了什么回报。试着让感情「亏本」一点，有些投入不需要回报。",
-    grow:"你的成长是「学会花钱」。不是要你挥霍，而是知道什么钱该花、什么钱不该花。投资自己、体验生活、给爱的人礼物——这些「亏本买卖」值得做。",
-    a:"钱是工具不是目的。偶尔对自己好一点，买点不必要的东西——这叫情绪价值投资。",
-    tags:["搞钱上瘾","省钱大师","理财达人","性价比教主"],dims:{m:5,a:2},bars:{s:35,a:98,z:20,c:50,g:75,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🍜",n:"干饭战神",s:65},{e:"🧘",n:"佛系隐士",s:45}],clr:"#27ae60"},
-  M2:{n:"人间清醒",cn:"理性大师"
-    cpc: {🧘:"你是清醒，他是淡然——你们的共同点是：都不被世俗欲望裹挟。但他的不争是哲学，你的不争是判断。彼此欣赏，互不干涉。",🐼:"你们都是「理性消费派」，对金钱有相似的态度。你偏理性分析，他偏直觉省钱，你们的组合是省钱界的「双子星座」。"},
-    si:"人间清醒，不被任何营销套路收割",zy:"紫微星沉稳，财帛宫见天机，善于计算每一分钱的价值。福德宫饱满，内心安定不焦虑。父母宫稳定，原生家庭给予的安全感足。疾厄宫强健，身体底子好。",tx2:"清醒是铠甲，偶尔糊涂是生活",,t:"CLR-M",tx:"Clarity Master · 人间清醒",q:"你看透了一切套路，却偶尔也会因为「太清醒」而错过那些傻傻的快乐——比如明知是智商税，还是想体验一下。",
-    d:"你是那种能一眼看穿「这是智商税」还是「这钱花得值」的人。你不被种草，不被营销，不被「对自己好一点」绑架。你知道真正的奢侈品不是logo，而是时间。",
-    personal:"你的清醒让你活得很通透，但有时候也会显得「无趣」。你看穿了很多套路，但也可能错过了很多乐趣。偶尔让自己「傻」一点，也是一种智慧。",
-    relation:"你是朋友中的「人间清醒」，大家买东西前都会来问你意见。你的建议往往很实在，但有时候太直了会让朋友不舒服。学会「包装」你的实话。",
-    career:"适合需要判断力的工作：风控、审计、咨询、媒体。你的理性让你在这些领域很靠谱。但要小心：不是所有事都需要理性，感情就需要糊涂一点。",
-    love:"感情中你是「务实派」，不追求浪漫，但追求靠谱。你的伴侣可能会觉得你太「平淡」，但长久来看，稳定是你的优势。试着偶尔浪漫一下，给生活加点调味剂。",
-    grow:"你的成长是「学会享受」。你太清醒了，所以很难被取悦。试着在可控范围内，让自己「被骗」一下——比如看一部明知是烂片的电影，体验一下傻傻的快乐。",
-    a:"清醒是你的铠甲，但偶尔也可以让自己迷糊一下，体验一下消费的快乐。",
-    tags:["理性消费","反消费主义","通透","人间清醒"],dims:{w:3,m:2,z:2},bars:{s:40,a:70,z:60,c:35,g:40,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🧘",n:"佛系隐士",s:85},{e:"🐼",n:"搞钱狂魔",s:70}],clr:"#16a085"},
-  M3:{n:"抠门哲学家",cn:"极致节俭"
-    cpc: {🧘:"你们是「极致省钱+极致躺平」的组合。他的无欲遇上你的节俭，是最高境界的物质极简。一起生活，成本极低。",🐼:"你比他还精打细算，他比你更敢花钱——你们看似矛盾，其实是在「存钱效率」上的两个极端。互相看不惯，却又离不开。"},
-    si:"极致节俭，省下的每一分钱都是赚到的",zy:"紫微星守财，财帛宫见地空，存钱能力极强但赚钱冲劲稍弱。福德宫极旺，节俭本身带来的安全感比钱更重要。疾厄宫过省，长期亏待自己需警惕。",tx2:"抠门是哲学，不是抠门",,t:"MIS-P",tx:"Miserly Philosopher · 抠门哲学家",q:"你为了用掉那张5元优惠券愿意等半小时，这种「抠」已经超越了省钱本身，成为了一种人生哲学——每一分省下的钱，都是赚到的。",
-    d:"你是那种为了用一张优惠券愿意等半小时的人，是那种为了省5块钱运费愿意凑单凑到满减的人。你的人生哲学是：省钱就是赚钱，省下来的都是赚的。你的银行卡余额，是你最大的安全感。",
-    personal:"你的节俭已经刻进骨子里，成为了一种本能。这种品质在艰难时期是救命稻草，但在富足时期可能变成枷锁。问问自己：我省钱是为了什么？是为了存钱，还是只是享受「省下来」的感觉？",
-    relation:"你的抠门可能会影响社交——朋友觉得你小气，伴侣觉得你不够大方。但这不代表你要改变，只是需要理解：有些钱是「社交成本」，该花就花。",
-    career:"适合财务、会计、精打细算的岗位。你的抠门在这些领域是优势。但创业或销售岗位可能不太适合，因为需要你先「投入」。",
-    love:"感情中你可能会过度「计较」——谁花得多、谁付出得多。试着在亲密关系中少算一点账，多算一点感情。",
-    grow:"你的成长是「学会投资」。省钱是本能，但有些钱花出去才能赚回来。花点钱投资自己、拓展人脉、维护关系——这些不是浪费，是投资。",
-    a:"抠门是你的理财方式，但别让「不舍得」变成人生的限制。该花的钱要花。",
-    tags:["省钱狂魔","极简主义","账本精","抠门达人"],dims:{m:4,c:2},bars:{s:25,a:60,z:55,c:40,g:50,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🧘",n:"佛系隐士",s:80},{e:"🐼",n:"搞钱狂魔",s:60}],clr:"#2ecc71"},
-  M4:{n:"副业探索者",cn:"斜杠先锋"
-    cpc: {🐼:"你们是「搞钱二人组」，他专注主业积累，你探索多元收入。可以成为创业搭档，但要防止「什么都想干」的分散问题。",📱:"他是你的反面——消费冲动，你是消费理性。你们的差异恰好互补：他的消费主义给你警示，你的节俭给他平衡。"},
-    si:"斜杠青年，白天上班晚上搞钱周末探索新项目",zy:"紫微星多动，财帛宫多星，事业宫旺盛不安于单一轨道。迁移宫见天机，适合向外探索。兄弟宫旺，合作资源丰富。疾厄宫提醒：注意身体承受能力。",tx2:"鸡蛋不放一个篮子，但专注比分散更重要",,t:"SIDE-E",tx:"Side Hustle Explorer · 副业探索者",q:"你白天上班、晚上搞钱、周末开拓新项目——你比任何人都努力，唯一的问题是：你什么时候休息？",
-    d:"你是那种白天上班、晚上搞钱的人。你做过代购、开过网店、写过自媒体、炒过基金，每个月都有新的副业探索。你不相信「一份工资打天下」，你觉得鸡蛋不能放一个篮子里。",
-    personal:"你对「不稳定」有天然的恐惧，所以一直在寻找安全感。副业是你给自己留的后路，但有时候后路太多也会让人分心。专注是一种更高级的能力。",
-    relation:"你可能因为副业太忙而忽略身边的人。你的伴侣可能会抱怨：你怎么总是在忙？试着在「搞钱」和「陪伴」之间找到平衡。",
-    career:"你是「斜杠青年」的代表，适合：自媒体、电商、投资、多重职业。但建议选择一个方向深耕，而不是到处撒网。品牌比杂项更重要。",
-    love:"你可能会把「搞钱思维」带进感情——这段感情有没有价值？我投入的时间回报是什么？试着让感情纯粹一点，不是什么都需要计算回报。",
-    grow:"你的成长是「学会专注」。你涉猎很广，但深度不够。选择一个最有潜力的方向，全力以赴，比十个半成品更有价值。",
-    a:"副业是安全感，但别让副业拖垮主业。专注，是比多线程更高级的能力。",
-    tags:["斜杠青年","副业狂魔","上进心","多面手"],dims:{a:4,w:2},bars:{s:45,a:95,z:15,c:60,g:65,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🐼",n:"搞钱狂魔",s:85},{e:"📱",n:"数码僵尸",s:40}],clr:"#f1c40f"},
-  M5:{n:"职场野心家",cn:"卷王本王"
-    cpc: {🐼:"你们是「野心+行动」的组合，都有强烈的目标感。但你的野心在晋升，他的野心在财富。互补合作，共创大业。",🐴:"你的野心会让他感到压力。他追求稳定，你追求突破——相处需要磨合，但你们的务实和勤奋是共同的优点。"},
-    si:"卷王本王，不是在加班就是在去加班的路上",zy:"紫微星进取，官禄宫见太阳，天生有领导欲和成就感驱动。父母宫与兄弟宫平衡，靠自己打天下。财帛宫旺，野心与财欲同涨。疾厄宫告急：健康红灯要重视。",tx2:"野心是燃料，别忘了沿途的风景",,t:"AMB-W",tx:"Ambitious Worker · 卷王本王",q:"你的人生信条是：天行健，君子以自强不息。别人觉得你太卷，你觉得自己只是「正常努力」——毕竟，躺平是不可能的。",
-    d:"你是那种每次述职都能把领导说到眼睛发光的人，是那种永远在思考下一步怎么走的人。你不满足于现状，你相信晋升是给有准备的人的礼物——而你已经准备好了。你的卷不是盲目内卷，是有目标有野心的卷道。",
-    personal:"你的野心是双刃剑——它让你不断前进，但也可能让你忽略当下的幸福。你永远在追逐下一个目标，却忘了停下来感受自己已经拥有的。",
-    relation:"你可能是那种「工作狂」伴侣——永远在忙，没时间陪家人。你的伴侣可能会感到被忽视。记住：工作是为了生活，不是生活为了工作。",
-    career:"你是天生的领导者，适合需要目标和动力的岗位：销售、创业、管理。你的野心让你在这些领域如鱼得水。但要学会授权，不要什么事都自己扛。",
-    love:"感情中你可能也会「目标导向」——什么时候确定关系、什么时候结婚、什么时候生子。有计划是好的，但爱情不是KPI。",
-    grow:"你的成长是「学会慢下来」。你的速度已经很快了，但方向可能跑偏。偶尔停下来问自己：这是我真正想要的吗？还是只是想要「赢」？",
-    a:"野心是你的燃料，但别忘了路上的风景。工作狂也要学会休息，不然赢了世界也累了。",
-    tags:["职场卷王","目标导向","拼命三郎","野心家"],dims:{a:5,w:2},bars:{s:50,a:98,z:15,c:55,g:60,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🐼",n:"搞钱狂魔",s:78},{e:"🐴",n:"纯正打工人",s:45}],clr:"#e74c3c"},
-  M6:{n:"人间财神",cn:"天选之人"
-    cpc: {🍜:"你是财富，他是美食——你们的结合是「物质充足+精神满足」。他用你的钱享生活，你借他的乐观享当下。完美互补。",🧘:"你的财运和他的知足相遇，你赚大钱，他不贪心。你们在一起，既能积累财富，又能不被欲望裹挟——这是最好的金钱哲学组合。"},
-    si:"天选之人，买什么什么涨，投什么什么赚",zy:"紫微星坐命，财帛宫见紫微化权，八方来财。福德宫极旺，运气好到令人羡慕。父母宫满格，家底厚实。疾厄宫强健，承接财富的体魄足够。",tx2:"运气是加成，实力才是基础",,t:"FORT-R",tx:"Fortune Radiant · 财神眷顾",q:"你买什么什么涨，投什么什么赚——但别得意太早，运气这东西用多了是要还的，趁运气好多积累实力。",
-    d:"你是那种莫名其妙就能赚到钱的人，是那种买什么理财产品什么就涨的人，是那种随便开个店就能火的人。你的财库天生厚重，八方来财，财运好到让人怀疑你是不是偷偷拜了财神爷。",
-    personal:"你的运气是稀缺资源，但不是每个人都有的。你可能因此对「努力」这件事不太上心，觉得运气会来。运气是加成，但实力是基础。",
-    relation:"你可能是朋友圈里的「散财童子」，请客大方、借线爽快。你的大方让你人缘好，但也要小心：不是每个人都值得你的大方。",
-    career:"适合需要「运气」的领域：投资、创业、创意行业。你的直觉很准，适合需要「押注」的决策。但要记住：运气会用完，实力才是长久之计。",
-    love:"感情中你可能比较随缘，不会太主动追求。你相信「是你的跑不掉」，这种心态让你轻松，但也可能让你错过。",
-    grow:"你的成长是「培养实力」。运气是天赋，但实力可以培养。在运气好的时候多积累，这样运气不好的时候也能站稳。",
-    a:"财运是老天赏饭吃，但也要有接住的能力。德配其位，才是长久的富贵。",
-    tags:["天选之人","财运好","富贵命","躺赢选手"],dims:{m:3,j:2},bars:{s:55,a:75,z:45,c:40,g:55,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🍜",n:"干饭战神",s:80},{e:"🧘",n:"佛系隐士",s:60}],clr:"#f39c12"},
-
-  // ── 躺平系 ──
-  Z1:{n:"佛系隐士",cn:"道心安然"
-    cpc: {🦊:"你是静，他是动。你的佛系让他的社牛有喘息空间，他的热情给你带来人间烟火。互补，是最好的相处模式。",🐼:"你追求内心平静，他追求财富积累——看似背道而驰，但正因为不同，你们能给彼此带来完全不同的视角。"},
-    si:"佛系达人，一切随缘不强求，微信签名就是别找我",zy:"紫微星隐退，迁移宫清淡，不喜欢四处奔波。父母宫与兄弟宫弱化，倾向独立不依赖他人。财帛宫保守，赚够花就满足。福德宫极旺，内心平静是最大的财富。",tx2:"随缘是自由，不是逃避",,t:"ZEN-M",tx:"Zen Master · 佛系隐士",q:"你的微信签名是「一切随缘」，但你的内心OS是「别找我」。有人问你在吗，你祈祷对方只是群发祝福。",
-    d:"你是那种「都行、可以、没关系」的佛系大师，已臻「无欲则刚」的境界。红包抢不抢都行，群里发不发都行，人生最大的追求就是——别来烦我。升职加薪？随缘。世间纷纷扰扰，与我何干？你已经达到了「不以物喜，不以己悲」的人生境界，妥妥的躺平修仙党。<br><br>你的微信签名可能是「一切随缘」，但你内心OS是「别找我」。如果有人问你「在吗」，你的回复永远是「在的，怎么了」然后祈祷对方只是群发祝福。",
-    personal:"你的佛系可能源于看透，也可能源于懒。你不需要太多就能满足，这是优点，但也是陷阱。没有欲望就没有动力，没有动力就没有成长。试着找一件能让你「不佛」的事，哪怕只是一点点。",
-    relation:"你是朋友中最好相处的人——不争、不抢、不计较。但这种态度可能让人觉得你没有立场。适当表达喜好，是对自己负责。",
-    career:"适合稳定的、不需要太多竞争的工作：技术、创作、学术。你的淡定让你在这些领域很专注，但也可能让你错过机会。",
-    love:"感情中你是「被动型」，不太主动追求，觉得有缘自会相见。这种心态让你不会受伤，但也可能让你单身很久。",
-    grow:"你的成长是「找到热爱」。你没有什么特别想追求的，这是自由，也是迷茫。试着找一件能让你「不佛」的事。",
-    a:"佛系是你的保护色，但偶尔也要入世尝尝红尘滋味，不然老了写回忆录都没素材。",
-    tags:["佛系","躺平大师","内心平静","低调王者"],dims:{z:5},bars:{s:20,a:30,z:95,c:15,g:60,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🦊",n:"社牛之王",s:92},{e:"🐼",n:"搞钱狂魔",s:45}],clr:"#9b59b6"},
-  Z2:{n:"躺平大师",cn:"悠然自得"
-    cpc: {🧘:"你们是「精神躺平+行动躺平」的双胞胎，躺的境界各有不同。相处毫无压力，可以一起研究「怎么舒服地度过一生」。",🤖:"你躺平在现实，他躺平在屏幕——你们的共同点是都不想动。但你们的差异是：他沉溺于数字世界，你沉溺于内心世界。"},
-    si:"躺平精英，内卷消耗自己，不如躺平寻找自我",zy:"紫微星淡然，官禄宫弱化，对世俗成功欲望不高。田宅宫饱满，需要属于自己的舒适空间。财帛宫随缘，够用就好。疾厄宫强健，知足常乐心态好。",tx2:"躺平是选择，不是放弃",,t:"FLAT-D",tx:"Flatliner Downshifter · 躺平大师",q:"你的人生哲学：努力不一定有回报，但不努力一定很舒服。与其在内卷中消耗自己，不如在躺平中寻找自我——这逻辑，无懈可击。",
-    d:"你是那种在「躺平」这件事上做到极致的人。你不是不努力，你只是选择了不内卷。你相信「努力不一定有回报，但不努力一定很舒服」。与其在内卷中消耗自己，不如在躺平中寻找自我。",
-    personal:"你的躺平可能是一种反抗，也可能是自我保护。你不想被社会时钟绑架，你想按自己的节奏生活。这种态度需要资本——要么有家底，要么有能力。",
-    relation:"你可能是朋友圈里的「低欲望」代表——不买房、不买车、不结婚。朋友可能会觉得你「没追求」，但你知道自己要什么。",
-    career:"你适合自由职业、远程工作、创作类工作。不喜欢被管理，不喜欢打卡，不喜欢形式主义。你的价值不在于加班，在于产出。",
-    love:"感情中你可能是「无所谓」心态——有也好，没有也行。这种心态让你轻松，但也可能错过对的人。偶尔主动一下，不会死的。",
-    grow:"你的成长是「建立核心竞争力」。躺平需要资本，要么有钱，要么有能力。趁年轻积累一些不可替代的能力，这样躺平才安心。",
-    a:"躺平是你的生活态度，但别让躺平变成放弃。偶尔卷一下，也是对自己的尊重。",
-    tags:["躺平精英","反卷达人","人间清醒","低欲望"],dims:{z:4,c:2},bars:{s:25,a:25,z:88,c:45,g:55,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🧘",n:"佛系隐士",s:95},{e:"🤖",n:"数码僵尸",s:55}],clr:"#8e44ad"},
-  Z3:{n:"反卷先锋",cn:"边界守卫"
-    cpc: {🧘:"你的反卷有策略，他的躺平是本能。你们对「工作意义」有相似的看法：工作不是人生的全部。战友关系，彼此理解。",🐴:"你的反抗精神和他的务实态度是对话。他不反对你，但他也不激进——你们能在「不卷」这件事上达成共识，互相掩护。"},
-    si:"反卷先锋，到点下班是有骨气的站姿",zy:"紫微星有节，官禄宫见天梁，不受无意义规则约束。迁移宫旺，喜欢往外走但有边界。财帛宫稳定，靠能力而非内卷谋生。福德宫饱满，内心秩序感强。",tx2:"反卷需要实力，躺平需要资本",,t:"REB-X",tx:"Rebel Anti-Hustle · 反卷先锋",q:"你对996说「不」，对无意义加班说「到点下班」——你是站着拒绝内卷的人，不是躺平，是有骨气的躺。",
-    d:"你是那种敢对996说「不」的人，敢对无意义加班说「到点下班」的人。你不是躺平，你是站着拒绝内卷。你相信工作是为了更好的生活，而不是生活为了工作。",
-    personal:"你是有底线的人，不愿意为了工作牺牲一切。你的反抗是理性的、有策略的，不是鲁莽的。这种态度需要实力支撑——你需要有能力才能「说不」。",
-    relation:"你可能是朋友圈里的「反卷先锋」，经常发反内卷的文章、说反内卷的话。朋友可能觉得你太激进，也可能视你为同道中人。",
-    career:"适合强调Work-Life Balance的外企、自由职业、创业。你的价值观在这些地方更容易被尊重。但体制内可能要调整一下策略。",
-    love:"感情中你可能是那种「工作归工作、生活归生活」的人，界限清晰。你的伴侣需要接受你的工作态度，不能接受的人可能走不到最后。",
-    grow:"你的成长是「有策略地反卷」。反卷需要实力，你先要证明自己有实力，才能有资格说不。提升能力，是反卷的前提。",
-    a:"反卷需要实力，躺平需要资本。在你有足够的底气之前，先积累实力。",
-    tags:["反内卷","准时下班","边界感强","清醒打工人"],dims:{c:3,w:2,z:2},bars:{s:40,a:55,z:70,c:55,g:45,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🧘",n:"佛系隐士",s:85},{e:"🐴",n:"纯正打工人",s:65}],clr:"#2c3e50"},
-  Z4:{n:"情绪稳定达人",cn:"定海神针"
-    cpc: {🧘:"你们都是「情绪平静派」，不同在于：他是天生的淡定，你是修炼来的稳定。你们的组合是「安全感制造机」，身边人有你们就安心。",🐴:"你的稳定性是他的灯塔。他有焦虑，你有淡定——你们的相处模式是：你负责稳住，他负责前进。"},
-    si:"情绪稳定达人，泰山崩于前而色不变",zy:"紫微星稳重，疾厄宫强健，身心调节能力强。官禄宫见天同，压力下依然能保持稳定。父母宫与兄弟宫平衡，靠自己扛事。财帛宫稳扎稳打，不好高骛远。",tx2:"稳定是能力，释放是智慧",,t:"EMO-S",tx:"Emotional Steadfast · 情绪稳定达人",q:"泰山崩于前而色不变，但你内心的小剧场已经演完了一整部《权游》——表面平静的人，其实内心最丰富。",
-    d:"你是那种遇到任何事都能保持冷静的人。方案被打回？没事，重做。工作出问题？不慌，解决。你永远是一群人里最淡定的那个，像一块定海神针。",
-    personal:"你的情绪稳定是一种稀缺能力，但也是双刃剑。你处理问题的能力强，但表达感受的能力弱。你习惯了「解决问题」，却忘了「感受问题」也是正常的。",
-    relation:"你是朋友中的「定海神针」，大家有危机都会找你。但你可能不擅长处理情感问题——你给建议比给安慰更在行。学会倾听，少给方案。",
-    career:"适合高压工作：医生、律师、应急响应、金融交易。你的冷静让你在这些领域很出色。但要小心：长期压抑情绪可能出问题。",
-    love:"感情中你可能是「理性派」，解决问题比表达爱意更在行。试着多说「我爱你」而不是「我帮你」，情感表达和解决问题一样重要。",
-    grow:"你的成长是「允许自己有情绪」。情绪稳定不是压抑情绪，而是学会和情绪相处。偶尔崩溃一下，不会死。",
-    a:"情绪稳定是你的优点，但偶尔释放情绪也是健康的体现。",
-    tags:["情绪稳定","冷场王","定海神针","理性派"],dims:{z:3,w:3},bars:{s:30,a:65,z:85,c:30,g:40,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🧘",n:"佛系隐士",s:88},{e:"🐴",n:"纯正打工人",s:70}],clr:"#34495e"},
-  Z5:{n:"咸鱼翻身",cn:"行动拖延"
-    cpc: {🧘:"你是想动但动不了，他是根本不想动。他不会嘲笑你的拖延，因为他根本不在乎效率。奇怪的组合，但相处很轻松。",🐴:"你们都想稳定，不同的是：他稳得住，你稳不住。他的稳定能影响你，你的焦虑也能提醒他：偶尔动一动也是好的。"},
-    si:"明日派选手，年初立flag年末倒，但明天还有明天",zy:"紫微星拖延，官禄宫见天机，想法多但落地慢。财帛宫随缘，赚多少花多少。疾厄宫稍弱，作息不规律埋隐患。福德宫尚可，内心不纠结就是幸福。",tx2:"别等到明天，今天就是明天的昨天",,t:"TURN-O",tx:"Turnover Procrastinator · 明日派",q:"你的flag永远在立，年终复盘永远是「明年一定」——但没关系，反正明天还有明天。",
-    d:"你是那种年初立flag、年末倒flag的人。你有无数个「从明天开始」：从明天开始减肥，从明天开始学习，从明天开始存钱……明天的明天，你依然在原地。",
-    personal:"你不是不努力，是努力太累了。你经常在深夜反思自己，但第二天醒来一切照旧。这种拖延的根源可能是完美主义——怕做不好，所以不做。",
-    relation:"朋友可能会觉得你「说话不算话」，答应的事总是拖延。这可能会影响别人对你的信任。试着先做一件小事，证明自己可以。",
-    career:"你可能适合需要创意、灵活的工作，而不是需要严格遵守deadline的工作。找到你喜欢的事，拖延症会不药而愈。",
-    love:"感情中你可能是「等等再说」型——表白等等、纪念日准备准备等等。试着提前一点点，别让拖延伤害了你的感情。",
-    grow:"你的成长是「先完成再完美」。不要等准备好了再开始，先做再改，比永远不开始强一百倍。",
-    a:"别等到明天，今天就是明天的昨天。哪怕只做一点点，也是进步。",
-    tags:["拖延症","flag倒了","明日派","嘴上努力"],dims:{h:3,a:2},bars:{s:35,a:40,z:50,c:75,g:60,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🧘",n:"佛系隐士",s:70},{e:"🐴",n:"纯正打工人",s:60}],clr:"#7f8c8d"},
-  Z6:{n:"生活美学派",cn:"生活艺术家"
-    cpc: {💝:"你们是「美学+温度」的组合。你的格调是他的生活灵感，他的温暖让你的精致有了人情味。彼此赋能，共同提升生活品质。",🦊:"你的精致和他的热情相遇，你们能一起创造「有质感+有温度」的美好时光。他的社牛让你的美学被更多人看见。"},
-    si:"生活艺术家，把出租屋收拾得比样板间还有格调",zy:"紫微星美学，田宅宫见天同，把生活过成诗。迁移宫稍弱，远行欲不强但身边美感足。财帛宫一般，舍得在格调上花钱。福德宫极旺，享受当下的能力强。",tx2:"精致是态度，不是炫耀",,t:"LIFE-A",tx:"Life Aesthetics · 生活美学派",q:"你愿意为了一束花跑半个城，把出租屋收拾得比样板间还有格调——你的生活，是别人眼里的小确幸，也是自己的真热爱。",
-    d:"你是那种愿意为一束花跑半个城的人，是那种会把出租屋收拾得很有格调的人，是那种周末去逛美术馆的人。你相信生活的质量不在于花了多少钱，而在于花了多少心思。",
-    personal:"你对美的追求是你的标签，但你可能也因此花费太多时间在「精致」而不是「实质」上。形式和内容要平衡。",
-    relation:"你是朋友圈里的「生活家」，大家羡慕你的格调。但也要小心：不要让「精致」变成炫耀的工具。",
-    career:"适合创意、设计、艺术、媒体类工作。你的审美眼光在这些领域是优势。但要记住：好的设计师不只是追求美，还要解决问题。",
-    love:"感情中你可能是「仪式感」达人，纪念日、生日、各种节日都要精心安排。这让你的伴侣很幸福，但也要注意：日常的小温暖比隆重的仪式更重要。",
-    grow:"你的成长是「从精致到深刻」。追求美是好的，但不要让表面掩盖了深度。学会在精致的背后，有真正的内涵支撑。",
-    a:"生活美学是你的追求，但别让「精致穷」成为负担。",
-    tags:["生活家","精致","小确幸","仪式感"],dims:{j:3,z:2},bars:{s:50,a:45,z:65,c:30,g:50,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"💝",n:"温暖人间客",s:85},{e:"🦊",n:"社牛之王",s:70}],clr:"#e91e63"},
-
-  // ── 数码系 ──
-  D1:{n:"数码僵尸",cn:"手机依存"
-    cpc: {🧘:"你们都「不社交」，但原因不同：他主动选择独处，你被动沉溺手机。他能帮你找到更健康的独处方式。",🎭:"你和他是「数字世界居民」，在一起可以安静地各自刷手机，偶尔交流一句「这个视频好笑」——最低成本的陪伴。"},
-    si:"手机本体，睡前最后放下早上第一拿起，屏幕时间每日破10小时",zy:"紫微星过度活跃，疾厄宫红灯，眼睛和颈椎长期超负荷。迁移宫弱化，宅文化特征明显。财帛宫随手机消费大。福德宫波动，情绪随屏幕内容起伏。",tx2:"数字排毒是必修课，充电宝是续命神器",,t:"DIG-Z",tx:"Digital Zombie · 数码僵尸",q:"你是「手机本体」，睡前最后一件事是放下手机，早上第一件事是拿起手机——手机知道你所有的秘密，但手机从不出卖你。",
-    d:"你是那种手机电量低于20%就开始焦虑的人，是那种睡前最后一秒还在刷、起床第一秒又在摸手机的人。屏幕使用时间每日破10小时，脖子越来越酸，眼睛越来越差，但就是停不下来。<br><br>据说你是「手机本体」，睡前最后一件事是放下手机，早上第一件事是拿起手机。你跟手机的关系比跟任何人都亲密——手机知道你所有的秘密，你所有的浏览记录，但手机从不出卖你。",
-    personal:"你对手机的依赖可能掩盖了更深层的问题——也许是孤独，也许是焦虑。手机是逃避现实的工具，但不是解决方案。试着问问自己：我在逃避什么？",
-    relation:"你可能是那种「人在心不在」的陪伴者——和朋友在一起，却一直刷手机。这种陪伴是假的，会伤害关系。约定时间放下手机，专注陪伴。",
-    career:"你适合需要紧跟互联网趋势的工作：新媒体运营、社群运营、自媒体。但要学会控制使用时间，不然工作效率会很低。",
-    love:"感情中你可能是那种「手机比伴侣重要」的人——约会被手机打断，聊天被手机分散注意力。试着在相处时间设定「手机禁区」。",
-    grow:"你的成长是「数字排毒」。每天给自己设定一段无手机时间，从30分钟开始，逐渐增加。你会发现：没有手机，你也可以。",
-    a:"每天给自己设1小时数字排毒，实在不行就多买几个充电宝。",
-    tags:["手机成瘾","熬夜冠军","低头族","屏幕战士"],dims:{g:5,h:2},bars:{s:30,a:40,z:15,c:85,g:98,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🧘",n:"佛系隐士",s:55},{e:"🎭",n:"躺平大师",s:60}],clr:"#1abc9c"},
-  D2:{n:"深夜emo怪",cn:"双面人格"
-    cpc: {💝:"你是黑夜，他是阳光。你的emo他不一定能完全理解，但他的温暖能融化你的一些阴暗。互补，是最好的治愈。",🧘:"你的深夜emo他的淡然恰好中和。你想太多，他什么都不想——他的存在本身就能让你学会「算了」。"},
-    si:"双面人格，白天岁月静好深夜网抑云",zy:"紫微星内敛，疾厄宫见天机，情绪敏感度高。福德宫波动大，深夜emo是常规剧本。财帛宫一般，赚的不够花的多。父母宫与迁移宫弱化，内心安全感不足。",tx2:"整合两个自己，让白天和黑夜都能安宁",,t:"NGT-E",tx:"Nighttime Emo · 深夜emo怪",q:"白天岁月静好，深夜网抑云——你把最真实的情绪藏在凌晨两点，藏在没有熟人的时刻。",
-    d:"你是那种白天朋友圈岁月静好、半夜两点发「人间不值得」的人。你把最真实的情绪藏在深夜，藏在没有熟人的凌晨。你常常失眠，脑子里装着很多事，很多未完成，很多遗憾。",
-    personal:"你的白天和黑夜像是两个不同的人。白天的你是给世界看的，黑夜的你是给自己看的。你把脆弱藏得很好，但深夜会崩溃。这说明：你需要更健康的情绪出口。",
-    relation:"朋友可能觉得你是「阳光型」，但其实你内心有很多没说出口的苦。试着找一个可以倾诉的人，把深夜的情绪放到白天来处理。",
-    career:"你可能适合创意、艺术、写作类工作——这些工作允许你表达内心的敏感。但要注意职业倦怠，因为你的情绪感知太强了。",
-    love:"感情中你可能是那种「报喜不报忧」的人，不想让伴侣担心。但长期压抑会让情绪在某个点爆发。学会适度表达脆弱，让对方走进你的内心。",
-    grow:"你的成长是「整合两个自己」。不是要你放弃阳光，也不是要你放弃脆弱，而是学会让两者共存。白天的你可以继续坚强，但不用在深夜独自崩溃。",
-    a:"emo是情绪的出口，但别让深夜的情绪控制你的人生。",
-    tags:["深夜emo","失眠患者","内心脆弱","白天伪装者"],dims:{r:3,a:2},bars:{s:35,a:55,z:25,c:80,g:85,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"💝",n:"温暖人间客",s:75},{e:"🧘",n:"佛系隐士",s:60}],clr:"#2c3e50"},
-  D3:{n:"冲浪达人",cn:"键盘战士"
-    cpc: {🎭:"你们都是「表演型」，线上比线下更自在。但你的表达是攻击性，他的是戏剧性。你们在一起，评论区永远热闹。",🧘:"你的键盘侠言论他不会点赞也不会批评，他会淡淡地说「有必要吗」——你的愤怒，他的不在乎，恰好是互补。"},
-    si:"键盘战神，网上重拳出击现实唯唯诺诺",zy:"紫微星敢言，迁移宫见天魁，线上表达欲强。疾厄宫一般，久坐影响健康。财帛宫偏弱，键盘输出的变现能力待开发。福德宫紧张，现实压力需要出口。",tx2:"线上线下一致，才是真正的勇敢",,t:"SURF-D",tx:"Surfing Daredevil · 键盘侠冲浪达人",q:"网上重拳出击，现实唯唯诺诺——你是互联网的战神，也是电梯里不敢跟邻居打招呼的社恐。",
-    d:"你是那种在网上能跟人Battle 300回合、但现实中连服务员都不敢大声说话的人。你键盘侠附体，谁都敢说，什么都敢喷，仿佛整个互联网都是你的战场。",
-    personal:"你的「网络勇敢」可能是现实压力的释放口。在网上你可以做现实中不敢做的自己，但这不是真正的成长。试着在现实中也能表达自己。",
-    relation:"你可能是那种网上很活跃、现实很安静的人。这可能让不了解你的人觉得你有「双重人格」。试着在线下也展示真实的自己。",
-    career:"你可能适合需要舆论监控、网络舆情、危机公关的工作。你的网感在这些领域是优势。但要学会把「战斗力」转化为正向的影响力。",
-    love:"感情中你可能不太擅长表达需求，在关系中处于被动地位。试着在伴侣面前勇敢一点，说出你的真实想法。",
-    grow:"你的成长是「线上线下一致」。不是要你放弃网络，而是学会在两个世界都能做真实的自己。当你能在线下也勇敢表达，你就成长了。",
-    a:"网上的你和现实中的你，都是你。但学会在现实中表达，会让你更完整。",
-    tags:["键盘侠","冲浪达人","网上勇敢","现实温和"],dims:{d:3,g:2},bars:{s:25,a:35,z:35,c:90,g:88,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🎭",n:"Drama Queen",s:70},{e:"🧘",n:"佛系隐士",s:50}],clr:"#9b59b6"},
-  D4:{n:"追剧狂魔",cn:"剧情沉浸"
-    cpc: {🤖:"你们是「屏幕二人组」，在一起可以各自追剧，偶尔交换观后感。最低社交成本的陪伴，却有丰富的精神交流。",🧘:"你的追剧热忱能让他感到「原来还有人比我还宅」。他不会打扰你的观剧时间，你也理解他的低欲望——默契满分。"},
-    si:"追剧狂魔，一口气刷完整部剧是基本素养",zy:"紫微星沉浸，田宅宫见天同，窝在家里看剧是顶级享受。疾厄宫稍弱，久坐和熬夜双杀。财帛宫随缘，会员费是一笔可观支出。福德宫起伏，剧里哭完现实继续。",tx2:"追剧是娱乐，别让它代替了你的人生",,t:"SERI-R",tx:"Series Rush · 追剧狂魔",q:"你的人生信条：人生苦短，先看为敬。一口气追完整部剧是基本素养，通宵追剧是常规操作。",
-    d:"你是那种一口气追完整部剧的人，是那种为了追剧可以通宵的人，是那种能把所有热门剧集的剧情倒背如流的人。你的片单永远很长，你的VIP会员永远在续费。",
-    personal:"追剧是你逃避现实的方式——现实可能很无聊、很艰难，但剧里的世界很精彩。但逃避久了，你会发现现实越来越难以面对。",
-    relation:"你可能是那种和朋友聊剧比聊自己更多的人。剧是话题，但不是生活。试着在追剧之外，也建立真实的生活连接。",
-    career:"你可能适合需要「故事感」的工作：编剧、影评人、内容策划、编剧。你的审美和对叙事的理解是优势。",
-    love:"感情中你可能是那种「理想主义」者，从剧中学习恋爱，但现实不是剧。学会接受真实的不完美比追求剧中的完美更重要。",
-    grow:"你的成长是「从观众到主角」。追剧可以继续，但要开始书写自己的故事。你的人生比任何剧都精彩，只要你愿意参与。",
-    a:"追剧是娱乐不是学习，但别让剧情代替了你自己的思考。",
-    tags:["追剧","VIP会员","熬夜看剧","剧情专家"],dims:{g:3,j:2},bars:{s:35,a:30,z:40,c:70,g:90,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🤖",n:"数码僵尸",s:80},{e:"🧘",n:"佛系隐士",s:65}],clr:"#e74c3c"},
-  D5:{n:"内容创作者",cn:"数字生活家"
-    cpc: {🦊:"你是创作者，他是社牛——你们的组合是「内容+传播」。他的社交能力帮你放大内容价值，你们可以合作共赢。",🎭:"你们都是「表现型」，在一起会产生内容火花。但要注意：两个都需要关注的人在一起，谁来当观众？"},
-    si:"数字生活家，朋友圈精心设计，抖音日更不停",zy:"紫微星活跃，迁移宫见天机，在网络世界四处出击。疾厄宫红灯，长期屏幕使用已亮警告。财帛宫多元，流量变现有潜力。福德宫波动，真实感受被记录绑架。",tx2:"放下镜头，才能真正活着",,t:"CON-T",tx:"Content Creator · 内容创作者",q:"你的朋友圈是精心设计的，你的抖音是日更的——你不是在生活，你是在记录生活。但记录久了，你可能已经忘了「不记录」是什么感觉。",
-    d:"你是那种拍个吃饭要剪辑、加个滤镜、调个色的精致生活博主范儿的人。你的朋友圈是精心设计的，你的抖音是日更的，你的B站是认真做的。",
-    personal:"你活在「内容」和「真实」之间的夹缝里。你不是在生活，你是在记录生活。但记录久了，你可能已经忘了「不记录」的生活是什么样子。",
-    relation:"你的社交媒体是精心包装的个人形象，但真正的关系需要真实的你。试着在朋友面前展示「没有滤镜」的自己。",
-    career:"你适合自媒体、内容创作、博主、数字营销工作。这是你的赛道，但要记住：真实的你比人设更有吸引力。",
-    love:"感情中你可能会过度在意「CP感」和「撒狗粮」，而忽略了感情本身的质量。试着让感情少一些表演，多一些真实。",
-    grow:"你的成长是「放下镜头」。你可以继续创作，但要学会在创作之外，真正地活着。真实的体验比完美的内容更重要。",
-    a:"创作是表达，但不是表演。别让「内容」绑架了真实的你。",
-    tags:["自媒体","内容创作","精致生活","个人IP"],dims:{g:4,a:2},bars:{s:65,a:70,z:25,c:65,g:92,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🦊",n:"社牛之王",s:85},{e:"🎭",n:"Drama Queen",s:70}],clr:"#3498db"},
-
-  // ── 戏精系 ──
-  R1:{n:"Drama Queen",cn:"情绪演绎者"
-    cpc: {🤖:"你的戏剧性他能接受但不一定理解。你需要一个能承接你情绪的人，他可能更擅长给你物理空间。",🧘:"你的Drama是他的绝缘体。他不回应你的情绪，让你学会：不是所有的情绪都需要观众。奇怪的老师，却是最好的老师。"},
-    si:"Drama戏精，小事变热搜内心戏够拍50集",zy:"紫微星动荡，福德宫过旺，情绪起伏大消耗多。疾厄宫见天机，身心亚健康信号多。父母宫弱化，内心渴望被看见但说不出口。财帛宫波动大，冲动消费需警惕。",tx2:"把戏剧天赋变成作品，比消耗在生活中更有价值",,t:"DRM-Q",tx:"Drama Queen · 情绪戏精",q:"小事变大、大事变热搜，你的内心戏够拍50集宫廷剧——你是朋友圈的收视保障，也是自己人生的导演。",
-    d:"你是那种小事变大、大事变热搜的体质。群里不说话则为已，一说话就是万字长文。你的内心戏够拍50集宫廷剧，观众的情绪由你主导。<br><br>你为每一件事都能找到情绪出口，你相信情绪是需要表达的。你经常在深夜发朋友圈又秒删，在群里发表长篇大论然后后悔。你的生活从来不无聊，因为你自己就是一出好戏。",
-    personal:"你的表演欲源于对关注的深层需求。你渴望被看见、被理解、被记住。这种渴望让你成为人群中的焦点，但也可能让你在独处时感到空虚。试着在创作中找到出口，把戏剧天赋转化为作品。",
-    relation:"你是社交中的'气氛制造机'，朋友聚会有你在就不会冷场。但你的情绪起伏大，可能让身边的人感到疲惫。学会在情绪高涨时踩刹车，给关系一些喘息空间。",
-    career:"适合表演类、创意类、内容创作类工作：主播、演员、编剧、自媒体。你的戏剧天赋在这些领域是优势。但要小心：把工作和生活分开，别把Drama带到职场。",
-    love:"恋爱中你是'高能量'伴侣，给对方带来惊喜和刺激，但也可能因为情绪波动让关系不稳定。试着学会'软着陆'，不要让每次冲突都变成大戏。",
-    grow:"你的成长是'升华'——把戏剧天赋用在创作上，而不是消耗在生活中。写下来、拍下来，比演出来更健康。",
-    a:"Drama是天赋，但过度使用会消耗自己。把这份才华用在创作上——写小说、拍短视频都是出路。",
-    tags:["戏精","宫斗选手","内心戏丰富","表情包大师"],dims:{d:5,r:2},bars:{s:70,a:45,z:10,c:95,g:65,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🤖",n:"数码僵尸",s:70},{e:"🧘",n:"佛系隐士",s:30}],clr:"#e91e63"},
-  R2:{n:"深宫怨兽",cn:"隐忍者"
-    cpc: {🦊:"你是暗，他是光。你内心积压的情绪，他阳光的态度恰好能化解。但他可能不理解你的隐忍，需要时间慢慢打开你。",🧘:"你们是「内敛型二人组」，不主动表达，但内心世界都丰富。他懂得不打扰你，你理解他的距离感——无声的默契。"},
-    si:"深宫怨兽，表面平静内心800集复仇大戏",zy:"紫微星内收，疾厄宫见天刑，情绪积压严重。福德宫饱满但压抑，爆发风险高。父母宫弱化，倾诉渠道不足。财帛宫保守，不爱冒险。",tx2:"说出来，是放过自己，不是原谅别人",,t:"DPG-M",tx:"Deep Palace Grudge · 深宫怨兽",q:"你表面平静，内心已经演了800集复仇大戏。你记性好，记得每个人说过的每句伤人的话——但你也记恩，记得每个温暖瞬间。",
-    d:"你是那种被人欺负了不说出来、在心里记了三年小本本的人。表面上云淡风轻，实际上内心已经在复仇大戏里演了800集。你记性好，记得每个人说过的每句伤人的话；但你也记恩，记得每个温暖瞬间。<br><br>你的情绪不外露，但这不代表你没有情绪。你的情绪都在深夜向内消化了，所以你的内心比谁都丰富。",
-    personal:"你的隐忍是一种自我保护机制。你不轻易展示脆弱，因为你害怕被利用。但这种压抑会让情绪积累，最终以更激烈的方式爆发。学会定期'放气'，而不是等到爆炸。",
-    relation:"你是那种'慢热但记得一切'的朋友。别人可能觉得你冷淡，但其实你把每个人都记在心里。你不会主动表达，但会在关键时刻出手相助——只是别人可能都不知道。",
-    career:"适合需要耐心和细心的岗位：研究、编辑、财务、档案管理。你的记忆力在这些领域是优势。但要学会表达，不然你的付出可能没人看见。",
-    love:"感情中你是'记恩不记仇'的类型——对方的好你会记一辈子，对方的坏你也会记一辈子。试着学会放下，不是原谅别人，是放过自己。",
-    grow:"你的成长是'表达'。你习惯了隐忍，但隐忍不是成熟，是压抑。学会用适当的方式表达不满，而不是积攒到临界点再爆发。",
-    a:"内心戏丰富是天赋，但如果永远不表达，身边的人会以为你真的无所谓。学会说出来，是必修课。",
-    tags:["记仇","高冷","内心戏丰富","慢热"],dims:{r:4,z:2},bars:{s:25,a:50,z:35,c:70,g:45,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🦊",n:"社牛之王",s:50},{e:"🧘",n:"佛系隐士",s:80}],clr:"#8e44ad"},
-  R3:{n:"焦虑体质",cn:"忧虑者"
-    cpc: {🧘:"你的焦虑他的淡然是最强的互补。他让你学会「算了」，你让他意识到「有人比我还紧张」。互相看见，互相平衡。",🐴:"你的焦虑他的务实是对话。他帮你落地，你帮他看到更大的图景。但要注意：不要让焦虑传染给他。"},
-    si:"焦虑忧虑者，做决定前权衡所有可能性，出门检查三遍门锁",zy:"紫微星多虑，疾厄宫见天机，身体长期处于紧绷状态。官禄宫过旺，工作学习强迫症。财帛宫谨慎，花钱也要三思。福德宫脆弱，需要系统性的减压方式。",tx2:"学会接受不确定性，大多数担心的事不会发生",,t:"ANX-Y",tx:"Anxious Yogi · 焦虑忧虑者",q:"你做决定前要权衡所有可能性，发消息要反复修改措辞，出门前检查三遍门锁——你担心的很多事永远不会发生，但你还是停不下来。",
-    d:"你是那种做决定前要权衡所有可能性的人，是那种发消息要反复修改措辞的人，是那种出门前要检查三遍门锁的人。你活在一种慢性焦虑中，脑子里永远有做不完的事、解不开的结。<br><br>你担心的很多事永远不会发生，但你还是停不下来担心。你对自己要求高，对未来有预期，对不确定有恐惧。",
-    personal:"你的焦虑源于对未来的过度控制欲。你相信'想得多就能避免问题'，但往往是想得多反而更焦虑。你需要学会信任自己——你已经做得很好了。",
-    relation:"你可能是那种'想太多'的朋友——朋友的一句话你要琢磨半天，朋友的一个眼神你要分析半天。这种过度解读可能让你很累，也让朋友觉得压力大。学会直接问，而不是自己猜。",
-    career:"适合需要计划性和细心的岗位：项目管理、编辑、审计、咨询。但要学会接受'不确定性'是工作的一部分，不是每个问题都能提前想好答案。",
-    love:"感情中你可能会过度担心——他为什么不回消息？她是不是生气了？这种焦虑会传递给对方，给关系带来压力。试着直接沟通，而不是自己推理。",
-    grow:"你的成长是'接纳不确定性'。你越想控制一切，一切就越失控。试着练习'允许坏事发生'，你会发现：大多数担心的事都不会发生。",
-    a:"焦虑是对未来的过度预演。学会接受不确定性，是成长的一步。",
-    tags:["焦虑症","想太多","高敏感","谨慎派"],dims:{a:4,w:2},bars:{s:35,a:75,z:20,c:85,g:75,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🧘",n:"佛系隐士",s:70},{e:"🐴",n:"纯正打工人",s:65}],clr:"#e74c3c"},
-  R4:{n:"暴躁老哥",cn:"烈焰者"
-    cpc: {🦊:"你的直爽他的社牛会产生火花，也可能产生冲突。你们的交流是「直接型」，没有弯弯绕绕，但需要学会控制情绪。",🧘:"你的暴脾气他的淡然是考验。他不回应你的愤怒，让你慢慢学会「对着棉花打」。这是最好的情绪修炼。"},
-    si:"暴躁老哥，忍无可忍无需再忍，来得快去得也快",zy:"紫微星暴烈，疾厄宫见天伤，怒火伤身是真实风险。官禄宫冲动，职场易惹祸。财帛宫不稳，冲动决策后悔多。福德宫起伏大，大起大落是人生常态。",tx2:"三秒钟延迟，是成熟和冲动的分水岭",,t:"HOT-H",tx:"Hot Head · 暴躁老哥",q:"忍无可忍，无需再忍——你的情绪像夏天的雷阵雨，来得快去得也快。你事后可能会后悔，但当下就是忍不住。",
-    d:"你是那种憋不住气的人，遇到不公平的事就要说，遇到不爽的人就要怼。你的情绪像夏天的雷阵雨，来得快去得也快。你事后可能会后悔，但当下就是忍不住。<br><br>你的朋友都说你是个直爽的人，你自己也这么觉得。虽然有时候会因为冲动吃亏，但你觉得总比憋出内伤强。",
-    personal:"你的火爆脾气是你最明显的标签，但也是你最深的伤口。愤怒往往是其他情绪的伪装——可能是受伤、可能是恐惧、可能是无力。试着在发火前问自己：我到底在气什么？",
-    relation:"你说话直接，不喜欢绕弯子，这让有些人喜欢你，也有些人怕你。朋友知道你是'刀子嘴豆腐心'，但你的'刀子嘴'还是会伤人。学会用对方能接受的方式表达。",
-    career:"你是天生的战士，适合需要勇气和决断力的岗位：销售、执法、谈判、救援。但要学会控制脾气，不然冲动可能让你付出代价。",
-    love:"感情中你是'暴风雨'型伴侣——情绪来得快去得也快，但每次暴风雨都会留下痕迹。你的伴侣需要'皮糙肉厚'才能承受你的脾气。试着在爆发前深呼吸，给情绪一个缓冲。",
-    grow:"你的成长是'延迟反应'。不是不反应，而是给自己3秒钟的时间。这3秒钟能让你从'战斗模式'切换到'思考模式'，避免很多后悔。",
-    a:"直爽是性格，但冲动是魔鬼。学会延迟反应，是成熟的表现。",
-    tags:["暴脾气","直爽","忍不住","火药桶"],dims:{d:4},bars:{s:50,a:55,z:20,c:80,g:45,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🦊",n:"社牛之王",s:60},{e:"🧘",n:"佛系隐士",s:35}],clr:"#c0392b"},
-  R5:{n:"内心戏王",cn:"幻想家"
-    cpc: {🎭:"你们都是「内心丰富型」，但表达方式不同：他外放，你内收。你们在一起，能创造最戏剧化的人生剧本。",💝:"你的内心世界需要有人承接，他的温暖恰好能触及你。你们的组合是「深度+温度」，能走得很深很远。"},
-    si:"脑洞幻想家，看广告都能想出整部剧，脑子里过完一生",zy:"紫微星丰富，想象力无限是天赋也是负担。疾厄宫稍弱，用脑过度休息不足。财帛宫偏弱，创意变现能力待开发。福德宫活跃，脑内剧场永不落幕。",tx2:"把脑洞写下来画下来，不要困在心里",,t:"WUX-U",tx:"Wuxia Universe · 内心戏王",q:"看个广告都能想出一整部连续剧，等人的时候能在脑子里过完一生——你的脑洞比宇宙还大，就是不太好落地。",
-    d:"你是那种看个广告都能想出一整部连续剧的人，是那种等人的时候能在脑子里过完一生的人。你常常在现实和幻想之间切换，你对世界的感知比常人更强烈、更细腻。<br><br>你的想象力是你的财富，也是你的负担。你经常想太多，想得自己都累了。但没办法，你就是这样的人。",
-    personal:"你的内心世界比任何电影都精彩，但这个精彩只属于你自己。你活在自己的想象中，有时候分不清现实和幻想。学会偶尔'接地气'，感受真实的当下。",
-    relation:"你可能是那种'想太多'的朋友——别人无心的一句话你能分析出十层含义。这种敏感让你很累，也让关系变得复杂。试着相信字面意思，不要过度解读。",
-    career:"适合创意类、艺术类工作：作家、编剧、设计师、策划。你的想象力是稀缺资源。但要学会把想象落地，而不是永远在脑子里'拍电影'。",
-    love:"感情中你是'理想主义'者，你对爱情有完美的想象，但现实总是有差距。学会接受不完美，接受'差不多'也可以很幸福。",
-    grow:"你的成长是'落地'。你有满脑子的想法，但缺乏行动。试着把一个想法完整地做出来，而不是永远在构思下一个'更精彩的'。",
-    a:"丰富的内心世界是你的天赋，把它写下来、画下来，而不是困在心里。",
-    tags:["脑洞大","想太多","想象力丰富","内心精彩"],dims:{r:3,j:2},bars:{s:40,a:50,z:35,c:80,g:70,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🎭",n:"Drama Queen",s:80},{e:"💝",n:"温暖人间客",s:65}],clr:"#9b59b6"},
-  R6:{n:"碎碎念专家",cn:"话唠者"
-    cpc: {🦊:"你们都是「社交型」，但你是「说」，他是「连」。你们的组合是「话痨+气氛组」，有你们在的地方，永远不会冷场。",💝:"你的唠叨他的温暖相遇，你的关心需要出口，他的付出需要对象。你们的组合是「唠叨+被在乎」，刚刚好。"},
-    si:"话痨本痨，能跟自己聊一天，小作文起步500字",zy:"紫微星话多，父母宫与兄弟宫旺，关心人靠嘴不靠心。疾厄宫一般，久坐说话多运动少。财帛宫一般，口才变现能力待开发。福德宫活跃，输出是充电方式。",tx2:"倾听比说话更高级，学会给自己留白",,t:"NAG-E",tx:"Nagging Expert · 碎碎念专家",q:"你能跟自己聊一天，写小作文一定要写500字，开会能补充20条意见——你的嘴和你的脑子一样，停不下来。",
-    d:"你是那种自己能跟自己聊一天的人，是那种写小作文一定要写500字的人，是那种开会能补充20条意见的人。你的嘴和你的脑子一样，停不下来。<br><br>你说的话比任何人都多，你产的文字比任何人都长。你关心人的方式是唠叨，你表达爱的方式也是唠叨。你的朋友都怕跟你打电话，因为你一开口就是半小时起。",
-    personal:"你的话多是一种能量释放，也是一种存在感的证明。你需要被听见、被回应、被认可。如果没有人听你说话，你会感到空虚。这种需求不是缺点，只是需要找到合适的出口。",
-    relation:"你是朋友中的'话匣子'，有你在就不会冷场。但你的话太多可能会让人感到压力，特别是当对方只想安静待着的时候。学会观察对方的反馈，给对方说话的机会。",
-    career:"适合需要大量沟通的工作：销售、客服、培训、老师、主持。你的嘴上功夫在这些领域是优势。但要学会'听'，不然你永远在输出，没有输入。",
-    love:"你是那种'话多型'伴侣——每天有说不完的话，分享不完的事。你的伴侣可能觉得你有活力，也可能觉得你太吵。学会给对话留白，让对方也有说话的空间。",
-    grow:"你的成长是'倾听'。你已经具备了表达能力，但还需要学会'听'。倾听是比说话更高级的能力，它意味着你在乎对方，而不只是在说自己。",
-    a:"话多是热情，但学会倾听是智慧。有时候，少说多听，效果更好。",
-    tags:["话痨","小作文","爱操心","操心命"],dims:{s:3,r:2},bars:{s:85,a:50,z:20,c:65,g:60,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🦊",n:"社牛之王",s:90},{e:"💝",n:"温暖人间客",s:75}],clr:"#f39c12"},
-
-  // ── 独立系 ──
-  I1:{n:"孤狼独行侠",cn:"独行侠"
-    cpc: {🧘:"你们是「独行二人组」，但性格内核不同：他选择独处来修炼，你选择独处来生存。互相尊重彼此的空间，关系反而更长久。",💝:"你是独狼，他是暖阳。他不试图拉你出孤独，你知道他的温暖随时在。淡淡的牵挂，却是最舒服的关系。"},
-    si:"独行侠，一个人吃饭看电影旅行，不觉得孤独觉得自由",zy:"紫微星独立，田宅宫饱满，一个人也能精彩。迁移宫弱化，不喜远行和变动。疾厄宫强健，自律能力强。财帛宫平衡，赚多少花多少不攀比。",tx2:"独处是能力，但关系是滋养",,t:"LONE-W",tx:"Lone Wolf · 孤狼独行侠",q:"你一个人吃饭、一个人看电影、一个人旅行——你不觉得孤独，你觉得这是自由。但有时候，你也会想：如果有人懂我就好了。",
-    d:"你是那种不需要任何人陪伴也能活得很精彩的人。你一个人吃饭，一个人看电影，一个人旅行，一个人搬家。你不觉得孤独，你觉得这是自由。<br><br>你有很好的独处能力，你有丰富的内心世界，你不需要从别人那里获得存在感。但有时候，你也会想：如果有人懂我就好了。",
-    personal:"你的独立不是冷漠，是一种主动的选择。你享受独处，因为在人群中你反而觉得不自在。你的内心世界很丰富，但很少有人能走进去。这不是缺点，只是你的节奏。",
-    relation:"你是朋友中那个'不需要联系但感情不变'的类型。你不喜欢频繁社交，但一旦有需要，你会第一时间出现。这种关系模式让有些人觉得疏离，但也让真正懂你的人更加珍惜。",
-    career:"适合独立完成的工作：研究、创作、技术、自由职业。你不需要太多团队协作，一个人也能创造价值。但要学会适度展示成果，不然你的付出可能被埋没。",
-    love:"感情中你是'宁缺毋滥'类型——宁可单身，也不要将就。你享受独处，但这不代表你不需要爱情。试着打开一点心门，给可能性一个机会。",
-    grow:"你的成长是'适度连接'。独处是能力，但关系是滋养。试着每个月主动联系一个老朋友，让关系保持温度。",
-    a:"独立是能力，但独处太久也会孤独。学会适度依赖，是关系的开始。",
-    tags:["独行者","高冷","独立","不需要人陪"],dims:{i:4,z:2},bars:{s:15,a:55,z:75,c:40,g:45,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🧘",n:"佛系隐士",s:88},{e:"💝",n:"温暖人间客",s:50}],clr:"#2c3e50"},
-  I2:{n:"内向的思想家",cn:"沉思者"
-    cpc: {🧘:"你们的共同点是：不需要太多社交就能满足。他的淡然你懂，你的深度他欣赏。君子之交淡如水，却最持久。",🐼:"你的深度思考和他的务实行动是对话。你出想法，他来执行——如果有合作的机会，你们会是很好的搭档。"},
-    si:"内向思想家，开会最后发言但一发言震惊全场",zy:"紫微星深沉，官禄宫见天梁，用深度而非广度取胜。疾厄宫平衡，深度思考需要好身体支撑。财帛宫稳定，靠专业能力吃饭。福德宫饱满，内心世界丰富。",tx2:"内向是力量，不是短板",,t:"THI-N",tx:"Thinking Introvert · 内向思想家",q:"你话不多但每句都有分量，开会时最后一个发言但一发言就震惊全场——你深藏不露，是因为你觉得大部分人不值得你开口。",
-    d:"你是那种话不多但每句都有分量的人，是那种开会时最后一个发言但一发言就震惊全场的人。你的能量来自独处，你的思考深度来自内向。<br><br>你不喜欢无效社交，你觉得大部分社交都是在浪费时间。你宁愿一个人待着思考，也不愿意去参加无聊的聚会。但一旦有人触碰到你的精神世界，你会是一个很棒的交流者。",
-    personal:"你的内向不是缺陷，是力量。你对世界的理解比大多数人都深刻，只是你选择只对少数人展示。你的沉默不是无话可说，而是在思考要不要说。",
-    relation:"你是朋友中那个'一语点醒梦中人'的存在。你平时话不多，但关键时刻总能说出最有价值的话。这种朋友关系淡如水，却比任何酒肉朋友都持久。",
-    career:"适合深度思考的工作：研究、学术、战略、咨询、创作。你的洞察力在这些领域是稀缺资源。但要学会表达，不然你的想法永远只存在于脑子里。",
-    love:"感情中你是'慢热'型，需要很长时间才能建立信任。但一旦信任建立，你会是一个非常忠诚和深度的伴侣。对方需要有耐心，才能等到你敞开心扉的那一天。",
-    grow:"你的成长是'表达'。你的想法很有价值，但只存在脑子里就毫无意义。学会用文字或语言把思考表达出来，这是比思考本身更重要的能力。",
-    a:"内向是你的力量，不是你的短板。深度思考的人，才是真正改变世界的人。",
-    tags:["思想者","深度","内向高敏感","低调实力派"],dims:{w:3,i:2},bars:{s:20,a:70,z:65,c:35,g:40,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🧘",n:"佛系隐士",s:90},{e:"🐼",n:"搞钱狂魔",s:55}],clr:"#34495e"},
-  I3:{n:"规矩守护者",cn:"秩序者"
-    cpc: {🐴:"你们都是「靠谱型」，不同在于：他随遇而安，你坚持原则。你们在一起，能建立最稳定的工作和生活秩序。",🧘:"你的原则他的随意是对话。他让你学会「有些事不用那么较真」，你让他意识到「规则是必要的底线」。互补成长。"},
-    si:"规矩守护者，过马路等绿灯，做事都有planABC",zy:"紫微星守正，官禄宫见天寿，规则意识根深蒂固。疾厄宫强健，生活规律好。财帛宫保守，不赚风险钱。迁移宫稍弱，不喜欢不确定性。",tx2:"守规矩是美德，但世界不是非黑即白",,t:"RUL-E",tx:"Rule Enforcer · 规矩守护者",q:"你过马路一定等绿灯，做任何事都有plan A、B、C——你经常在内心给陌生人打分，分数往往不高，因为这个世界上不守规矩的人实在太多了。",
-    d:"你是那种过马路一定等绿灯的人，是那种看电影一定坐到自己的座位的人，是那种做任何事都有plan A、B、C的人。你相信规则是保护所有人的底线，遵守规则是基本的素养。<br><br>你看不惯插队、闯红灯、随地吐痰这些行为，你觉得这是做人的基本。你经常在内心给陌生人打分，分数往往不高。",
-    personal:"你的原则性强是你的标签，也是你的枷锁。你相信世界非黑即白，但现实往往是灰色的。学会接纳'灰色地带'，会让你活得更轻松。",
-    relation:"你是朋友中最靠谱的那个——你答应的事一定会做到，你守时、守约、守信用。但你可能会用同样的标准要求别人，这会让一些朋友感到压力。",
-    career:"你是天生的合规专家，适合财务、审计、法务、质量管理等岗位。你的原则性在这些领域是优势。但要学会灵活，不然你会成为团队中的'卡点'。",
-    love:"感情中你是'契约型'伴侣——你会认真对待每一个承诺。但对方可能觉得你有距离感，不够浪漫。试着增加一些'计划外'的温柔。",
-    grow:"你的成长是'灵活'。原则是你的底线，但灵活是你的智慧。学会在不违背底线的前提下，给自己和他人一些空间。",
-    a:"守规矩是美德，但也要理解世界不是非黑即白。灵活是一种智慧。",
-    tags:["规矩人","原则强","计划控","一丝不苟"],dims:{w:4,z:2},bars:{s:35,a:65,z:60,c:30,g:35,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🐴",n:"纯正打工人",s:80},{e:"🧘",n:"佛系隐士",s:65}],clr:"#27ae60"},
-  I4:{n:"省钱老干部",cn:"节俭者"
-    cpc: {🧘:"你们是「极简二人组」，消费观高度一致。你们在一起，钱不会乱花，东西不会乱买——最经济的相处模式。",🐼:"你是精打细算，他是赚钱高手。你们在一起是「节流+开源」的最强组合：他能赚钱，你能守住钱。"},
-    si:"省钱老干部，塑料袋叠好收起来，剩饭必须吃完",zy:"紫微星节俭，财帛宫见地空，存钱能力极强。疾厄宫过省，营养不均是隐患。田宅宫极旺，置产执念深。父母宫与兄弟宫弱化，人情往来不多。",tx2:"节俭是美德，但别让舍不得变成枷锁",,t:"OLD-G",tx:"Old-school Frugalist · 省钱老干部",q:"塑料袋要叠好收起来，剩饭剩菜一定要吃完——你的节俭深入骨髓，你父母那辈人节俭是因为穷，你节俭是因为习惯了。",
-    d:"你是那种塑料袋要叠好收起来的人，是那种剩饭剩菜一定要吃完的人，是那种什么东西都舍不得扔、万一以后用得上的人。你的节俭深入骨髓，已经成为了一种本能。<br><br>你的父母那辈人节俭是因为穷，你节俭是因为习惯了。你觉得浪费是最大的犯罪，不管这个东西值不值钱。",
-    personal:"你的节俭已经不只是理财方式，而是一种生活哲学。你从节俭中获得安全感，这种安全感比任何储蓄都实在。但有时候，你也因为'舍不得'错过了体验生活的机会。",
-    relation:"你是朋友中那个'太会过日子'的人，朋友可能会觉得你抠门。但其实你只是觉得钱要花在刀刃上。你的节俭也延伸到了感情——不会轻易开始，但一旦开始会很珍惜。",
-    career:"你天生适合财务、会计、精打细算的工作。你的每一分钱都花在有意义的地方，这种品质在这些领域是优势。但要注意：工作不只是省钱，还要学会花钱换价值。",
-    love:"感情中你可能是'实用型'——不会买花哨的礼物，但会在你需要的时候给你最实在的支持。你的爱不浪漫，但很踏实。偶尔也浪漫一下，不会死的。",
-    grow:"你的成长是'投资思维'。省钱是本能，但有些钱花出去才能赚回来。试着把'舍不得花'变成'有目的的花'，你会发现钱是工具，不是目的。",
-    a:"节俭是美德，但别让「舍不得」变成人生的枷锁。",
-    tags:["节俭","老干部风","不浪费","老派"],dims:{m:3,z:2},bars:{s:30,a:40,z:70,c:30,g:30,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🧘",n:"佛系隐士",s:85},{e:"🐼",n:"搞钱狂魔",s:70}],clr:"#7f8c8d"},
-  I5:{n:"人间清醒打工人",cn:"务实者"
-    cpc: {🐴:"你们都是「务实型」，目标和方法相近。你们在一起，稳定感满满，不会鸡血也不会崩溃——最踏实的关系。",🧘:"你的清醒他的淡然是「知足常乐」的最好注解。你们不需要太多解释，价值观一致，相处最轻松。"},
-    si:"务实打工人，拿多少钱干多少活，不多不少刚刚好",zy:"紫微星务实，官禄宫平衡，不求晋升但求稳定。疾厄宫强健，作息规律。财帛宫尚可，够用就好。福德宫平稳，不焦虑不躁进。",tx2:"上班为生活，但生活也需要意义",,t:"CLR-W",tx:"Clear-eyed Worker · 人间清醒打工人",q:"你的职场信条：拿多少钱干多少活，不多不少刚刚好。你不内卷也不躺平，是职场里的中等生——稳稳当当。",
-    d:"你是那种对工作没有滤镜的人，你知道工作就是用时间换钱，别给它附加太多意义。你不会为工作拼命，但也不会不负责任。你是那种准时上下班、该干活干活、到点就走的人。<br><br>你的职场信条是：拿多少钱干多少活，不多不少刚刚好。你不内卷也不躺平，你是职场里的中等生，稳稳当当。",
-    personal:"你的清醒让你活得很通透，你看透了职场的本质——工作只是生活的一部分，不是全部。这种态度保护了你，但也可能让你错过了'全力以赴'的成就感。",
-    relation:"你是朋友中那个'不瞎忙'的人，你有自己的节奏，不会被朋友的焦虑传染。这种淡定让你在朋友圈里很受欢迎，大家都觉得你稳。",
-    career:"你适合稳定型岗位：国企、事业单位、体制内、职能岗位。你不需要晋升来证明自己，但你有自己稳定的输出。这种模式在这些岗位很受认可。",
-    love:"感情中你是'务实派'——不追求轰轰烈烈，只求稳稳当当。你的伴侣会觉得你踏实、靠谱，但可能也缺少一点激情。偶尔给对方一点惊喜，会让关系更有活力。",
-    grow:"你的成长是'找到意义'。工作是为了生活，但生活也需要意义。在工作之外找到让你有热情的事情，这样的人生才完整。",
-    a:"清醒是好事，但别让「上班只是为了钱」变成不求上进的理由。",
-    tags:["务实","清醒打工人","不卷不躺","边界清晰"],dims:{z:2,w:2},bars:{s:45,a:55,z:65,c:50,g:45,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🐴",n:"纯正打工人",s:85},{e:"🧘",n:"佛系隐士",s:75}],clr:"#16a085"},
-  I6:{n:"人间计算器",cn:"精算者"
-    cpc: {🐼:"你们是「理性二人组」，不同在于：他用直觉省钱，你用计算省钱。你们在一起的「分析能力」可以共同破解任何财务问题。",🧘:"你的计算他的无欲是对话。偶尔放下计算，跟着感觉走，你会发现：有些东西，算不出来才是最好的。"},
-    si:"人间计算器，相亲都要打分，做决定前先列方程",zy:"紫微星精密，财帛宫见天机，算账能力一流。疾厄宫一般，用脑过度身体透支。官禄宫旺，适合分析类工作。迁移宫弱化，不喜欢跑动和冒险。",tx2:"人生不是数学题，有些东西算不出来",,t:"CAL-M",tx:"Calculator Master · 人间计算器",q:"你做任何决定前都要算一笔账，相亲都要评估对方综合得分——你的人生像一道数学题，严谨而精确，唯一的未知数是：什么时候能遇到让你不想算的人？",
-    d:"你是那种做任何决定前都要算一笔账的人，是那种相亲都要评估对方综合得分的人，是那种买东西一定要比价到小数点后两位的人。你的大脑永远在运转，你的每一个选择都是理性计算的结果。<br><br>你很少冲动，你很少后悔，因为你在行动前已经把最坏的结果算清楚了。你的人生像一道数学题，严谨而精确。",
-    personal:"你的理性是你最大的优势，也是最大的局限。你不相信直觉，不相信运气，只相信数据和逻辑。这种思维方式让你很少犯错，但也让你错过了'意外惊喜'的快乐。",
-    relation:"你是朋友中那个'冷静分析'的存在，大家遇到问题都喜欢来问你。你的建议往往很靠谱，但有时候太理性会让人觉得没有温度。学会在分析之外，也给一点情感支持。",
-    career:"你是天生的分析师、策划、战略顾问。你的理性思维在这些领域是绝对优势。但要学会平衡：不是所有问题都需要逻辑解决，有时候'感觉对'比'算对了'更重要。",
-    love:"感情中你可能会'计算'——这段关系值不值得投入？对方条件如何？但爱情不是数学题，有些'亏本'的恋爱也值得谈。试着让心带路，而不是让脑子带路。",
-    grow:"你的成长是'接受模糊'。你习惯精确，但人生没有精确答案。学会在信息不完整时做决定，在不确定中前行——这是比计算更高级的能力。",
-    a:"计算是能力，但人生不是数学题。有些东西，算不出来。",
-    tags:["理性派","计算达人","精打细算","逻辑控"],dims:{w:3,m:2},bars:{s:40,a:70,z:45,c:45,g:45,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🐼",n:"搞钱狂魔",s:80},{e:"🧘",n:"佛系隐士",s:60}],clr:"#2980b9"},
-
-  // ── 干饭系 ──
-  F1:{n:"干饭战神",cn:"美食家"
-    cpc: {🐴:"你们是「生活搭档」，一起吃饭是最大的乐趣。他的务实平衡你的冲动，你们的组合是「享受+理性」的完美平衡。",🐼:"你爱吃，他省钱——表面矛盾，但你们其实都务实。你们能一起找到「好吃+不贵」的最佳组合。"},
-    si:"干饭战神，早上吃什么中午吃什么晚上吃什么，排2小时队也值",zy:"紫微星美食，疾厄宫见天厨，天生是美食家。财帛宫随胃口变胖，钱包变瘦。田宅宫饱满，在家做饭也是享受。迁移宫弱化，旅行以吃为目的。",tx2:"热爱美食，也别忘了每年一体检",,t:"FOD-W",tx:"Food Warrior · 干饭战神",q:"你的人生三大哲学问题：早上吃什么、中午吃什么、晚上吃什么。你对美食的热爱超越一切，排2小时的队也觉得值。",
-    d:"你的人生三大哲学问题是：早上吃什么、中午吃什么、晚上吃什么。你对美食的热爱超越一切，距离5公里的网红店说去就去，排2小时的队也觉得值。你的胃容量是个谜，嘴上说不饿，一开吃就没完没了。<br><br>你看到美食就走不动道，你的相册里一半是食物照片，你的人生理想是吃遍全世界的米其林。",
-    personal:"你对美食的热爱是你生活乐趣的重要来源。吃对你来说不只是填饱肚子，而是一种生活态度。你懂得享受当下，这在任何年龄段都是珍贵的能力。",
-    relation:"你是朋友中的'美食地图'，大家想吃好吃的都会来问你。你的饭局是朋友聚会的主要形式，你用美食连接人与人之间的关系。但要注意：朋友聚会不只是吃饭，也要关心朋友的'精神食粮'。",
-    career:"适合美食相关的工作：美食博主、餐饮评论、食评人、自媒体。你的舌头比任何人都灵敏，对美食的热爱可以转化为事业。但美食行业的竞争也很激烈，需要找到自己的差异化。",
-    love:"感情中你是'用吃表达爱'的类型——给伴侣做饭、找好吃的餐厅、带对方探店。你们的约会往往围绕美食展开。这种方式很实在，但也要注意：偶尔也要'吃环境'而不是'吃味道'。",
-    grow:"你的成长是'健康平衡'。热爱美食没问题，但要注意身体健康。每年的体检是必须的，毕竟胃只有一个，要用它一辈子。",
-    a:"干饭是热爱，但每年一体检，这是干饭人的年度义务。",
-    tags:["吃货","干饭王","探店达人","深夜放毒"],dims:{j:4},bars:{s:65,a:30,z:40,c:60,g:70,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🐴",n:"纯正打工人",s:88},{e:"🐼",n:"搞钱狂魔",s:65}],clr:"#e67e22"},
-  F2:{n:"养生小达人",cn:"健康守护"
-    cpc: {🧘:"你们都「自律」，方式不同：他靠意志力，你靠习惯。你们的组合能互相监督，互相鼓励，一起活得更长更好。",🐴:"你的养生他不一定认同，他的工作狂你也不理解。但你们能在「各自坚持自己」的同时，彼此尊重。"},
-    si:"养生小达人，20岁开始抗糖抗氧化，保健品比化妆品多",zy:"紫微星惜命，疾厄宫见天寿，健康意识极强。财帛宫随保健品支出大。田宅宫旺，居所要舒适。官禄宫平衡，工作不拼命。",tx2:"养生是对的，但别养生成焦虑",,t:"HEA-D",tx:"Health Devotee · 养生小达人",q:"你从20岁就开始抗糖、抗衰老、抗氧化，你的保健品比你化妆品还多——你的朋友觉得你活得像老年人，你觉得这叫「赢在起跑线」。",
-    d:"你是那种秋天就要穿秋裤的人，是那种不喝冰水的人，是那种11点前必须睡觉的人，是那种保健品比你化妆品多的人。你从20岁就开始抗糖、抗衰老、抗氧化。<br><br>你的朋友都觉得你活得像个老年人，但你觉得这叫「赢在起跑线」。你深信养生是最值得的投资，因为没有健康，其他都是零。",
-    personal:"你对健康的重视是一种智慧，但有时候也会变成焦虑。你过度担心身体，可能会让'养生'变成另一种压力。学会放松心态，不然养生的目的就本末倒置了。",
-    relation:"你是朋友中的'健康顾问'，大家有养生问题都会来问你。你关心朋友的健康，但也可能因为过度关心而让人感到压力。学会尊重朋友的选择，哪怕他们的生活方式跟你不一样。",
-    career:"适合健康、医疗、养老、保险相关行业。你的健康意识让你在这些领域有天然的优势。但要记住：工作不要太拼，你的健康也是生产力。",
-    love:"感情中你是'健康监督员'型伴侣——管饮食、管睡眠、管运动。对方可能觉得你管太多，但内心知道你是为他好。学会用更温和的方式表达关心，而不是'命令'。",
-    grow:"你的成长是'放下焦虑'。健康是重要，但不需要成为执念。学会享受美食、享受夜生活偶尔带来的'放纵'，不然人生太无聊了。",
-    a:"养生是对的，但别养生成焦虑。过度养生也是一种执念。",
-    tags:["养生","惜命","健康生活","保温杯"],dims:{z:3,w:2},bars:{s:45,a:50,z:75,c:25,g:40,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"🧘",n:"佛系隐士",s:80},{e:"🐴",n:"纯正打工人",s:65}],clr:"#27ae60"},
-  F3:{n:"超级奶爸/辣妈",cn:"超级父母"
-    cpc: {💝:"你们都是「照顾型」，但方向不同：他照顾身边人，你照顾家庭。你们的组合是「温柔+责任」，能撑起最温暖的小世界。",🐴:"你为了家，他为了工作——你们的共同点是「有责任感」。你们在一起，能建立最稳定的家庭经济基础。"},
-    si:"超级父母，孩子生日提前一个月准备，自己的生日靠提醒",zy:"紫微星奉献，田宅宫与子女宫皆旺，把家庭放第一位。财帛宫紧张，为孩子舍得对自己抠。疾厄宫一般，透支照顾家人。福德宫满足，家庭成功感强。",tx2:"孩子是未来，但别忘了自己也是主角",,t:"PAR-S",tx:"Parenting Star · 超级奶爸/辣妈",q:"你经常忘了自己的生日，但孩子生日你提前一个月就开始准备——孩子是你这辈子最重要的作品，但别忘了：你先是你自己，才是父母。",
-    d:"你是那种所有社交都围绕孩子展开的人，是那种孩子发个烧就请假三天的人，是那种孩子的事永远排在第一位的人。你的人生重心，全在下一代。<br><br>你经常忘了自己的生日，但孩子生日你提前一个月就开始准备。你省吃俭用给孩子最好的，你觉得自己吃穿无所谓，孩子不能输在起跑线上。",
-    personal:"你的自我价值很大程度上与'父母'这个身份绑定。你把所有精力都放在孩子身上，有时候忘了自己也需要成长。但别忘了：你先是你自己，才是父母。",
-    relation:"你是家庭的中心，所有关系都围绕孩子转。这让你在家庭中很有存在感，但也可能给孩子带来压力——'妈妈/爸爸为我付出这么多，我不能让他们失望'。试着给孩子一点空间，也给自己一点空间。",
-    career:"你可能为了孩子放弃了一些职业机会，这是你的选择，不后悔。但也请记住：你有自己的价值，不只是'XX的妈妈/爸爸'。",
-    love:"感情中你可能把孩子放在第一位，伴侣排在后面。这种排序可能让伴侣感到被忽视。试着每周安排一次'二人世界'，让伴侣知道你没有忘记他/她。",
-    grow:"你的成长是'找回自己'。孩子会长大，他们会离开你独立生活。到那时候，你是谁？在那一天到来之前，先找到答案。",
-    a:"孩子是未来，但别忘了自己也是人生的主角。你先是自己，再是父母。",
-    tags:["超级家长","付出型","孩子至上","无私父母"],dims:{l:4},bars:{s:55,a:50,z:40,c:50,g:45,h:40,r:40,i:40,m:40,w:40,j:40,l:40,d:40,t:40},cp:[{e:"💝",n:"温暖人间客",s:90},{e:"🐴",n:"纯正打工人",s:70}],clr:"#e91e63"},
+const TYPES={
+  社牛现金王:{t:'社牛现金王',cn:'现金王',name:'CashKing',d:'你是朋友圈里的社交天花板兼钱包担当。群里一喊你就到，红包永远最大份，聚餐永远你买单。别人觉得你大方，自己知道其实就是图个开心。你的钱包可能永远是扁的，但你的快乐永远是满的。',s:'今朝有酒今朝醉，明日愁来明日当',tx:'社交达人×金钱如土=朋友圈的散财童子',cn2:'社牛现金王',s2:'花钱买关系型',d2:'在社交场合如鱼得水，愿意为氛围和关系一掷千金，对金钱的感知较弱，更在意当下的体验和人际回报。',r2:'朋友多但交心的少，容易被当冤大头，财务风险高',c2:'大客户销售、商务拓展、活动策划',tx2:'钱是赚来花的，不是攒的——你赚的每一分快乐都溢价',tags:['社交天花板','人情世故','及时行乐'],zy:'守财建议：下次发红包前先看一眼余额，社交货币也需要底线。',q:'「今晚我请！」——然后默默吃土一周',dcols:['s:88','m:35','r:82','i:70','c:40','w:65','g:22','h:45','a:60','j:50','l:75','d:40','t:30','g2:20','i2:78','w2:68','c2:35','a2:58']},
+  现金王者:{t:'现金王者',cn:'现金王者',name:'MoneyMaster',d:'你深谙一个道理：钱是赚来的，不是省来的。与其斤斤计较，不如大开大合。你愿意为品质生活买单，也愿意为机会下重注。别人精打细算的时候，你在思考怎么赚更多。',s:'小钱靠省，大钱靠赚',tx:'搞钱能力满格×品质生活追求=财富自由的潜力股',cn2:'现金王者',s2:'投资增值型',d2:'对财富有强烈渴望，愿意承担合理风险，注重提升赚钱能力和资产增值，消费理性但不失品质。',r2:'容易过度自信忽视风险，社交圈功利化',c2:'投资理财、创业经营、项目管理',tx2:'省钱的终点是省钱本身，赚钱的终点是自由',q:'「这个收益率不高啊，有没有更高的？」',dcols:['g:92','m:30','r:45','i:65','c:55','w:60','s:42','h:40','a:35','j:62','l:30','d:50','t:35','g2:95','i2:48','w2:55','c2:50','a2:32']},
+  红包教父:{t:'红包教父',cn:'红包教父',name:'RedEnvMaster',d:'你发红包的速度比光速还快群里有人发"饿了"，你已经在发红包的路上了。红包对你来说不是钱，是入场券，是存在感，是证明自己还活着的仪式感。',s:'红包是门艺术，我是艺术家',tx:'无条件付出型社交×即时满足需求=永远的热心大哥/大姐',cn2:'红包教父',s2:'社交投资型',d2:'用红包建立和维护关系，对情感连接的渴望强烈，愿意以物质付出换取社交认同，内心渴望被需要和感谢。',r2:'付出感过重容易心态失衡，被人当提款机',c2:'公关商务、活动运营、人力资源',tx2:'红包发出去的是钱，收回来的是人情——但人情有时不值钱',q:'「红包不大，表达个心意！」',dcols:['s:85','r:80','m:28','i:58','c:35','w:55','g:38','h:42','a:72','j:45','l:68','d:48','t:40','g2:15','i2:72','w2:52','c2:30','a2:68']},
+  铁公鸡财神:{t:'铁公鸡财神',cn:'铁公鸡财神',name:'TightwadDeity',d:'你的每一分钱都花在刀刃上——而你眼里只有刀刃。红包？能不发就不发。聚餐AA精确到分，转账要等24小时确认收货。你知道自己是朋友圈里的"铁公鸡"，但你更知道自己的账户数字在悄悄变大。',s:'一毛不拔照样跑天下',tx:'极致理性消费×财富积累欲强=时间越久越富的存在',cn2:'铁公鸡财神',s2:'极度节俭型',d2:'对消费有极强的克制力，财务规划清晰，长期主义，愿意延迟满足，对他人消费行为有评判倾向。',r2:'人缘受损，被认为小气，错过一些体验',c2:'财务管理、成本控制、投资分析',tx2:'铁公鸡也有春天——当你的资产足够大时，没人再计较你的抠门',q:'「这次我请……下次你请啊」',dcols:['m:15','g:96','s:22','r:30','i:52','c:80','w:48','h:58','a:25','j:88','l:18','d:62','t:38','g2:98','i2:35','w2:45','c2:75','a2:22']},
+  外卖鉴定大师:{t:'外卖鉴定大师',cn:'外卖鉴定大师',name:'DeliveryMaster',d:'你吃外卖吃出了博士学位。哪家的卤肉饭最正宗，哪家外卖图不符实，哪家性价比之王，你了如指掌。你花在选外卖上的时间，可能比吃饭时间还多。',s:'外卖选不对，宁可饿着睡',tx:'外卖重度用户×消费精打细算=舌尖上的哲学家',cn2:'外卖鉴定大师',s2:'外卖依赖型',d2:'生活便利性强但自炊意愿低，对消费品质有追求但预算有限，愿意花时间做功课获取最优解。',r2:'饮食健康隐患，生活便利性依赖外卖平台',c2:'美食博主、生活类自媒体、消费测评',tx2:'会选外卖的人，做人也挑不出毛病',q:'「等一下，让我看看有没有更划算的」',dcols:['c:88','m:55','i:75','r:42','s:38','w:60','g:35','h:35','a:40','j:45','l:50','d:32','t:25','g2:28','i2:62','w2:55','c2:82','a2:38']},
+  外卖自由王:{t:'外卖自由王',cn:'外卖自由王',name:'DeliveryKing',d:'你对价格不敏感，对品质很敏感。点外卖从不看价格，只看评分。别人凑满减凑到崩溃，你一键下单不看小票。你追求的是：吃到嘴里那一刻的满足感。',s:'满减什么的不重要，好吃最重要',tx:'品质至上×价格脱敏=外卖界的VIP',cn2:'外卖自由王',s2:'品质优先型',d2:'消费决策快，对价格敏感度低，注重体验和品质，愿意为好东西付出溢价，生活效率高但消费较随意。',r2:'容易月光，财务规划意识弱',c2:'品牌管理、市场营销、体验设计',tx2:'对自己好一点，不需要理由——这就是理由',q:'「这个看着不错，点了！」',dcols:['c:92','m:70','i:68','s:45','r:38','w:58','g:25','h:40','a:50','j:35','l:48','d:40','t:30','g2:35','i2:55','w2:50','c2:88','a2:45']},
+  夜猫哲学家:{t:'夜猫哲学家',cn:'夜猫哲学家',name:'NightOwlPhilosopher',d:'你的灵魂属于深夜。23点才是你一天的开始，凌晨3点你还在和自己对话。你在夜里想通了人生，也在夜里熬秃了头。你不是在熬夜，你是在和宇宙对话。',s:'睡什么睡，起来嗨',tx:'睡眠后置×深夜高思考力=当代熬夜冠军',cn2:'夜猫哲学家',s2:'睡眠推迟型',d2:'夜间精力充沛，思维活跃，独处时效率高，有一定的存在主义倾向，对白天生活有疏离感。',r2:'健康风险高，社交时间受限，与常规作息人群错位',c2:'创意写作、深夜直播、独立音乐制作',tx2:'夜里想通的事，白天往往不敢做——所以你还在夜里想',q:'「夜深人静的时候，思路特别清晰」',dcols:['h:92','w:75','s:38','a:65','i:58','r:28','m:42','c:40','g:35','j:48','l:35','d:45','t:32','g2:40','i2:50','w2:70','c2:42','a2:62']},
+  早睡早起侠:{t:'早睡早起侠',cn:'早睡早起侠',name:'EarlyBirdHero',d:'你可能是朋友圈里唯一每天准时睡觉的人。22点跟世界道晚安，6点跟太阳说早安。你的人生像你的作息一样规律，也像你的作息一样……有点无聊。',s:'早起改变人生，早睡保护人生',tx:'极度自律型作息×稳定情绪基础=朋友圈的正能量源泉',cn2:'早睡早起侠',s2:'高度自律型',d2:'作息规律，自律性强，情绪稳定，生活可控感强，对熬夜行为有强烈批判倾向。',r2:'与夜生活社交脱节，被认为是无聊的老年人作息',c2:'老师、公务员、早间主播、健康管理',tx2:'自律给我自由——但偶尔也想体验一下夜蒲是什么感觉',q:'「你们12点睡？我10点就睡了」',dcols:['h:95','g:75','s:42','r:55','i:40','c:48','w:25','m:35','a:30','j:58','l:38','d:55','t:48','g2:68','i2:35','w2:22','c2:45','a2:28']},
+  手机奴隶:{t:'手机奴隶',cn:'手机奴隶',name:'PhoneSlave',d:'你的手机比你更了解你。你在哪里，你喜欢什么，你几点睡——它全知道。你刷手机的收入是零，但你刷的时间可以绕地球一圈。',s:'再刷五分钟就睡（重复无限次）',tx:'数字成瘾型×碎片时间吞噬者=手机的最佳朋友，生活的陌生人',cn2:'手机奴隶',s2:'手机重度依赖型',d2:'对手机和社交媒体高度依赖，碎片时间利用率低，注意力分散，在虚拟世界获得快感和逃避感。',r2:'现实社交能力退化，时间效率极低，影响身心健康',c2:'手机依赖不需要工作——需要治疗',tx2:'手机里的世界很精彩，但手放开的时候最真实',q:'「不好意思，刚才在看手机没听到」',dcols:['w:98','s:48','i:72','c:50','r:35','m:40','h:28','g:18','a:42','j:25','l:65','d:30','t:22','g2:10','i2:60','w2:95','c2:45','a2:38']},
+  自律达人:{t:'自律达人',cn:'自律达人',name:'DisciplineMaster',d:'你是朋友圈里的自律传说。跑步、读书、单词、冥想，日程表比你的人生规划还满。你自律到让人怀疑你是不是机器人。',s:'比你优秀的人比你还努力',tx:'极度自律型×目标驱动强=自我管理的终身实践者',cn2:'自律达人',s2:'自我驱动型',d2:'目标导向强，自我管理能力卓越，有清晰的长期规划，对拖延和放纵有强烈批判，成就感来源于完成计划。',r2:'过度自律导致压力，社交和个人生活被压缩，不允许自己犯错',c2:'创业者、项目管理、企业家、投资人',tx2:'自律不是目的，自由才是——但没有自律，你永远不知道自由是什么滋味',q:'「我每天5点起床，你呢？」',dcols:['g:88','h:80','j:85','r:40','i:55','s:38','c:45','m:30','a:35','w:28','l:25','d:52','t:45','g2:78','i2:42','w2:25','c2:48','a2:32']},
+  记仇小本本:{t:'记仇小本本',cn:'记仇小本本',name:'GrudgeKeeper',d:'你不记开心的事，因为开心的事不用记。你只记那些伤害过你的人，一笔一笔，清清楚楚。有人说这是格局小，你只是笑笑：格局大的人，通常是受伤最多的人。',s:'不是不报，时候未到',tx:'高敏感×强记忆系统=永远在内心小本本上记账的人',cn2:'记仇小本本',s2:'记仇型',d2:'对负面情绪记忆深刻，自尊心强，不轻易原谅他人，内心戏丰富，有强烈的公平感和恩怨分明的价值观。',r2:'人际关系紧张，内心消耗大，容易陷入负面情绪循环',c2:'律师、审计、风控、纪检监察',tx2:'记仇是本能，不记是修行——你还在修行的路上',q:'「你说的那句话我还记得，别以为我忘了」',dcols:['a:92','r:35','s:30','i:52','m:38','c:42','w:48','h:35','g:45','j:72','l:40','d:38','t:50','g2:42','i2:45','w2:45','c2:40','a2:88']},
+  佛系大师:{t:'佛系大师',cn:'佛系大师',name:'ZenMaster',d:'你是"随便、都行、没关系"的代言人。吃什么你定，去哪玩你定，吵不吵架你随意。你的人生哲学是：不争不抢，岁月静好。别人觉得你境界高，其实你只是懒得计较。',s:'一切随缘',tx:'低欲望×高包容度=活在当下的修行者',cn2:'佛系大师',s2:'低欲望型',d2:'情绪稳定，包容度极高，不争不抢，存在感较低，内心平和但可能缺乏目标和动力。',r2:'容易被人忽视或占便宜，缺乏竞争意识，机会来时可能错过',c2:'图书管理员、宗教人士、心理咨询师、手工艺人',tx2:'佛系是种选择，不是无奈——但生活有时候需要你努努力',q:'「都行，你决定」',dcols:['d:92','h:72','s:38','r:48','i:42','c:45','w:38','m:32','a:15','j:35','l:42','g:40','t:55','g2:38','i2:35','w2:35','c2:42','a2:12']},
+  内卷之王:{t:'内卷之王',cn:'内卷之王',name:'InvolutionKing',d:'你不允许自己停下来。别人下班你在加班，别人休息你在学习，你永远在追逐一个叫"更好"的影子。你是最努力的普通人，也是最焦虑的奔跑者。',s:'比你优秀的人比你还努力，你只能更努力',tx:'高度竞争意识×成就驱动强=永远在奔跑的马拉松选手',cn2:'内卷之王',s2:'竞争驱动型',d2:'成就动机极强，对自我要求严苛，竞争意识强，有较强的危机感，在资源和机会争取上具有攻击性。',r2:'身心健康风险高，幸福感低，忽视过程中的风景',c2:'金融、销售、律师、咨询、创业',tx2:'卷到最后，你会发现健康和时间比什么都贵——但你可能不会听',q:'「这个项目必须拿第一」',dcols:['g:85','j:90','a:70','w:75','s:45','r:32','i:60','c:50','m:42','h:25','l:35','d:40','t:30','g2:80','i2:52','w2:72','c2:55','a2:65']},
+  躺平宗师:{t:'躺平宗师',cn:'躺平宗师',name:'FlatMaster',d:'你悟了。工作不是人生的全部，赚钱也不是，社交也不是。你选择了一种最低能耗的生存方式：躺着。别人说你没追求，你笑他人看不穿。',s:'只要躺得够平，镰刀就割不到我',tx:'低欲望×高自我保护意识=当代职场哲学大师',cn2:'躺平宗师',s2:'躺平型',d2:'主动选择低欲望、低竞争的生活方式，有较强的自我保护意识，内心平静但可能缺乏生活热情。',r2:'经济压力大，抗风险能力弱，社会评价低，容易自我放弃',c2:'自由职业、兼职、远程工作、田园生活',tx2:'躺平是对内卷的无声抗议——但抗议完了，肚子还是饿',q:'「不想动，明天再说」',dcols:['d:88','h:65','s:25','r:38','i:35','c:55','w:40','m:30','a:20','j:28','g:35','l:32','t:45','g2:30','i2:30','w2:38','c2:50','a2:18']},
+  社交牛杂:{t:'社交牛杂',cn:'社交牛杂',name:'SocialMeatball',d:'你在社牛和社恐之间横跳。今天KTV麦霸，明天发布会哑巴。你自己也搞不清到底是外向还是内向，只能说是——有社交牛杂症。',s:'时而社牛，时而社恐，看心情',tx:'社交能力不稳定×情境依赖强=情景喜剧型人格',cn2:'社交牛杂',s2:'情境依赖型',d2:'社交能力随环境和情绪波动，对陌生人社恐对熟人社牛，内心敏感，在安全环境下表现外向。',r2:'给人忽冷忽热的感觉，社交关系维护不稳定',c2:'销售、公关、演员、主持人',tx2:'你不是社恐，你只是还没遇到让你放开的场子',q:'「看情况吧，有时候我挺能聊的」',dcols:['s:62','a:55','r:50','i:60','c:42','w:52','m:40','h:42','g:35','j:45','l:55','d:45','t:35','g2:40','i2:52','w2:48','c2:42','a2:52']},
+  独行侠:{t:'独行侠',cn:'独行侠',name:'LoneWolf',d:'你享受一个人吃饭、一个人看电影、一个人旅行。别人觉得你孤独，你觉得别人才孤独。你不需要被理解，也不需要被陪伴。你的自由，建立在强大的内心之上。',s:'一个人就是一支队伍',tx:'高度独立性×低社交需求=孤独但自由的灵魂',cn2:'独行侠',s2:'高度独立型',d2:'独立自主，社交需求低，情感自给自足，不依赖他人认可，内心强大且边界感清晰。',r2:'情感支持网络薄弱，遇到困难时缺少援手，社交技能可能退化',c2:'独立开发者、作家、艺术家、咨询顾问',tx2:'独行是一种能力，不是孤僻——但偶尔也需要有人在旁边',q:'「一个人挺好的，不用迁就别人」',dcols:['s:25','r:18','i:55','g:65','h:60','a:48','j:55','c:45','w:40','m:35','l:30','d:75','t:52','g2:58','i2:48','w2:38','c2:45','a2:45']},
+  群聊话痨:{t:'群聊话痨',cn:'群聊话痨',name:'GroupChatKing',d:'群里没有你接不上的话，没有你不知道的八卦，没有你不敢发的表情包。你是群里的气氛组组长，也是深夜话题的终结者。你的手机永远在震，你的消息永远99+，你的打字速度永远跟得上话题的转速。',s:'看到消息必须回，不回会死',tx:'社交依赖强×表达欲旺盛=群里永远在线的存在',cn2:'群聊话痨',s2:'群聊依赖型',d2:'社交依赖性高，表达欲强烈，需要持续的社交互动来获取存在感和愉悦感，线上社交能力强于线下。',r2:'影响专注力和工作效率，社交质量可能不高，过度依赖外部反馈',c2:'主播、运营、社区管理、主持人',tx2:'群里的热闹是真实的，但热闹散场后的冷清也是',q:'「999+消息是什么体验？我天天体验」',dcols:['s:95','l:88','w:72','i:70','r:55','c:38','m:42','h:30','a:58','g:28','j:38','d:25','t:28','g2:22','i2:65','w2:68','c2:38','a2:55']},
+  朋友圈潜水员:{t:'朋友圈潜水员',cn:'朋友圈潜水员',name:'MomentDiver',d:'你看了所有人发的朋友圈，但从来没人知道你也在看。你点赞都是偷偷点，从不评论，因为你怕暴露自己的存在。你是朋友圈的隐形冠军。',s:'只潜水，不上浮',tx:'高度观察型×低表达欲=朋友圈的幽灵观众',cn2:'朋友圈潜水员',s2:'潜水型',d2:'观察力强，情感细腻，表达意愿低，内心戏丰富，在人多的场合容易紧张，更喜欢独处或小群体。',r2:'社交圈难以深化，容易被忽视，存在感低，机会可能因此流失',c2:'数据分析、市场研究、文学创作、编辑',tx2:'潜水不是不关心，潜水是更深的关心——但别人不知道',q:'「我就看看，不说话」',dcols:['r:38','s:22','i:58','h:55','a:45','w:48','c:42','m:35','g:40','j:48','l:15','d:65','t:50','g2:45','i2:52','w2:45','c2:42','a2:42']},
+  亲戚终结者:{t:'亲戚终结者',cn:'亲戚终结者',name:'RelativeTerminator',d:'「有对象了吗」「买房了吗」「工资多少」——每一个亲戚的经典问题，在你这里都得到了完美的回击。你是亲戚聚会的噩梦，也是年轻一代的精神领袖。',s:'惹我可以，别惹我的嘴',tx:'社交防御力满级×幽默回击=亲戚桌上的孤独剑客',cn2:'亲戚终结者',s2:'社交防御型',d2:'面对长辈和群体压力有强烈的防御机制，用幽默和反问作为武器，有清晰的个人边界感，不轻易让步。',r2:'可能影响家庭关系，容易被贴上"不礼貌"的标签，内心压力大',c2:'律师、记者、危机公关',tx2:'终结亲戚话题是技术活，你是那个掌握了核心技术的人',q:'「您孩子结婚了吗？工作稳定吗？买房了吗？」',dcols:['r:65','a:80','s:55','j:62','l:58','i:48','c:38','w:45','m:35','h:40','g:42','d:35','t:72','g2:48','i2:50','w2:42','c2:40','a2:75']},
+  催婚反击王:{t:'催婚反击王',cn:'催婚反击王',name:'AntiPushback',d:'每到过年，你都准备好了台词。「不急」「没遇到」「先忙事业」——这三板斧你已经练了十年。你不是不想找，你只是不想将就，更不想被催。',s:'我的婚姻我做主，不接受任何形式的催',tx:'独立意识强×家庭压力高=催婚战场的常胜将军',cn2:'催婚反击王',s2:'婚姻自主型',d2:'对婚恋有自主意识，不轻易被家庭压力左右，对"社会时钟"有批判态度，有自己的生活节奏和标准。',r2:'与父母关系紧张，外部压力持续存在，可能错过一些机会',c2:'独立创业、艺术创作、自由职业',tx2:'婚姻是人生大事，不应该是一场催促下的赶集',q:'「缘分到了自然就有了」',dcols:['d:78','t:85','g:55','r:42','s:38','i:50','c:40','w:42','m:35','a:55','j:48','l:35','h:45','g2:52','i2:45','w2:40','c2:42','a2:52']},
+  数码达人:{t:'数码达人',cn:'数码达人',name:'TechGadgetGuru',d:'你对新品的追求永无止境。苹果发布会你必看，数码博主你全关注，买过的数码产品能开博物馆。你是最懂参数的那批人，也是最容易冲动消费的那批人。',s:'不是追新，就是在追新的路上',tx:'科技爱好者×消费冲动强=数码产品界的活体测评博主',cn2:'数码达人',s2:'科技消费型',d2:'对科技产品有浓厚兴趣和专业知识，追新意愿强，消费决策快，愿意为新技术付出溢价。',r2:'容易冲动消费，经济压力大，对非科技话题兴趣缺缺',c2:'数码博主、科技编辑、产品经理',tx2:'买的时候真香，买完吃灰——但下次还是会买',q:'「这个参数一出来我就知道必火」',dcols:['i:92','w:75','c:55','m:42','s:45','r:35','h:38','a:42','j:48','l:52','d:32','t:28','g2:40','i2:85','w2:70','c2:52','a2:40']},
+  技术宅:{t:'技术宅',cn:'技术宅',name:'TechOtaku',d:'你的世界是二进制的。你懂代码、懂系统、懂所有别人不懂的东西。你的聊天记录里emoji出现频率最低，但你解决问题的效率是最高的。',s:'Talk is cheap, show me the code',tx:'技术专精×表达力弱=数字世界的筑梦师',cn2:'技术宅',s2:'技术导向型',d2:'技术能力突出，逻辑思维强，对技术以外的话题兴趣有限，线上沟通优于线下，喜欢解决问题带来的成就感。',r2:'社交圈狭窄，与非技术人群沟通困难，线下存在感低',c2:'软件工程师、系统架构、网络安全、数据科学',tx2:'代码不会骗人，人会——所以你更相信代码',q:'「这个bug我知道怎么修」',dcols:['g:72','j:68','i:70','w:62','s:20','r:22','c:48','m:38','h:45','a:32','l:28','d:55','t:35','g2:70','i2:65','w2:58','c2:52','a2:30']},
+  游戏成瘾:{t:'游戏成瘾',cn:'游戏成瘾',name:'GameAddict',d:'你的段位是你的人生履历，你的装备是你的人格外挂。游戏里你是王者，现实里你可能还在青铜。但你不在乎，因为你的快乐在游戏里，不需要别人定义。',s:'游戏虐我千百遍，我待游戏如初恋',tx:'虚拟世界沉浸深×现实逃避倾向=数字时代的隐居者',cn2:'游戏成瘾',s2:'游戏依赖型',d2:'在虚拟世界中获得成就感和归属感，对游戏有较强依赖性，在现实中可能感到挫败或无聊。',r2:'严重影响现实生活，社交能力退化，健康和财务受损',c2:'电竞选手、游戏策划、游戏主播',tx2:'游戏里的段位再高，也换不来现实里的一顿饭钱——但你还是会继续玩',q:'「等我打完这把就去」',dcols:['w:88','i:75','s:30','r:25','m:35','c:42','h:32','a:45','g:28','j:42','l:55','d:38','t:25','g2:15','i2:70','w2:85','c2:40','a2:42']},
+  氪金大佬:{t:'氪金大佬',cn:'氪金大佬',name:'Whale',d:'你不追游戏，你养游戏。648的礼包你眼都不眨648，你抽的不是卡，是梦想，是多巴胺，是区别于普通玩家的优越感。你的银行账单是你最不想看到的文件。',s:'能用钱解决的事，都不叫事',tx:'冲动消费型×游戏成瘾=数字时代的慈善家',cn2:'氪金大佬',s2:'游戏消费型',d2:'消费冲动性强，对喜欢的事物愿意大额投入，在游戏中有强烈的优越感和地位追求，财务风险极高。',r2:'财务健康严重受损，家庭关系紧张，游戏以外没有生活',c2:'不需要——游戏就是工作（但最好还是找一份）',tx2:'648不是钱，是通往快乐的门——但门后面的快乐好像越来越贵了',q:'「这次必中！最后十连！」',dcols:['m:30','c:75','w:80','i:78','s:38','r:28','h:32','a:48','g:20','j:35','l:60','d:35','t:25','g2:12','i2:72','w2:75','c2:72','a2:45']},
+  购物狂魔:{t:'购物狂魔',cn:'购物狂魔',name:'Shopaholic',d:'你的快递比你先到家，你的花呗比你先爆。每次清空购物车的那一刻，你感到人生圆满。然后你又开始看新的东西。',s:'买完这件就收手（永远有下一件）',tx:'购物成瘾型×即时满足强=拆快递的永动机',cn2:'购物狂魔',s2:'购物依赖型',d2:'购物作为情绪调节手段，有冲动消费倾向，在购买时获得强烈的快感，事后常有后悔。',r2:'财务状况糟糕，东西越买越多，快乐越来越短',c2:'不适合工作——或者说，所有工作都只是为了继续买东西',tx2:'拆快递的那一刻你是全世界最快乐的人，但账单日除外',q:'「这个有券！买！」',dcols:['c:90','m:25','w:68','i:70','s:42','r:35','h:38','a:45','g:18','j:30','l:58','d:32','t:28','g2:15','i2:65','w2:65','c2:85','a2:42']},
+  薅羊毛大师:{t:'薅羊毛大师',cn:'薅羊毛大师',name:'DealHunter',d:'你有三头六臂，能找到全网所有的优惠券。你为了省10块钱可以花1个小时研究攻略，你为了一杯免费奶茶可以拉30个人头。你不是抠门，你只是热爱这场薅羊毛的游戏。',s:'省到就是赚到，没有羊毛的日子是不完整的',tx:'极致精打细算×社交裂变强=羊毛界的极限运动选手',cn2:'薅羊毛大师',s2:'羊毛型',d2:'价格敏感度高，愿意为省钱付出时间和精力，有较强的信息搜索和社交裂变能力，消费有规划。',r2:'时间成本高，有时为小钱花大精力，容易被营销套路',c2:'电商运营、优惠券平台、金融保险销售',tx2:'省下的钱是小钱，花的时间也是钱——但这个游戏太好玩了',q:'「先别买，等我找找有没有券」',dcols:['c:95','m:40','i:72','l:58','s:45','r:42','w:52','h:42','a:38','g:30','j:55','l:52','d:38','t:30','g2:58','i2:60','w2:48','c2:90','a2:35']},
+  断舍离高手:{t:'断舍离高手',cn:'断舍离高手',name:'MinimalistMaster',d:'你定期清理房间，定期清理衣柜，定期清理朋友圈。你的人生哲学是：少即是多。你买一样新的，就扔一样旧的。你是朋友圈里最轻盈的人，也是最难被理解的人。',s:'Less is more',tx:'极简主义型×高度规划性=物质欲望低但精神要求高的清流派',cn2:'断舍离高手',s2:'极简型',d2:'物质欲望低，注重品质而非数量，有清晰的取舍标准，对杂乱和过度消费有强烈抵触，有较强的自我控制力。',r2:'被家人认为"不会过日子"，有时过于追求完美而错过体验',c2:'设计师、建筑师、作家、理财顾问',tx2:'拥有的东西少了，烦恼也少了——但偶尔也会觉得少了点什么',q:'「这件衣服一年没穿了吧，该扔了」',dcols:['d:82','g:68','h:58','c:65','s:35','r:40','i:48','w:38','m:28','a:32','j:52','l:30','t:48','g2:65','i2:40','w2:35','c2:62','a2:30']},
+  八卦情报员:{t:'八卦情报员',cn:'八卦情报员',name:'GossipAgent',d:'你是朋友圈的情报中心。谁和谁在一起了，谁最近状态不对，谁偷偷换了工作——你永远第一个知道。你不是爱管闲事，你只是对人充满好奇。',s:'知道别人不知道的，是一种快乐',tx:'信息收集型×社交网络广=行走的社交情报局',cn2:'八卦情报员',s2:'八卦型',d2:'信息收集欲望强烈，社交触角广，善于观察和记忆，对人际关系有敏锐洞察，但有时过于探听隐私。',r2:'容易卷入是非，被认为爱管闲事，信息传播有风险',c2:'记者、HR、公关、猎头',tx2:'八卦是了解一个人最快速的方式——虽然这种方式不太体面',q:'「你知道吗，我跟你说……」',dcols:['r:85','s:75','i:68','l:70','a:62','c:42','w:52','m:38','h:38','g:32','j:48','d:40','t:58','g2:40','i2:62','w2:48','c2:45','a2:58']},
+  人精:{t:'人精',cn:'人精',name:'SocialAnimal',d:'你读得懂空气，分得清眉眼高低，知道什么话该说什么时候说。你在社交场合游刃有余，在人际博弈中所向披靡。你不是城府深，你只是太了解人性。',s:'见人说人话，见鬼说鬼话',tx:'高度社交智慧×强人际洞察力=人际场上的六边形战士',cn2:'人精',s2:'人际操控型',d2:'社交能力强，人际洞察力极强，善于利用信息和关系达到目的，有较强的目的性和策略性。',r2:'可能被视为"滑头"，信任度低，深度关系难以建立',c2:'销售、公关、律师、创业者、投资者',tx2:'看透人心是本事，利用人心是选择——希望你选择善良',q:'「我知道你想说什么，我帮你说了吧」',dcols:['s:92','r:88','a:72','j:80','i:62','l:70','c:50','m:45','w:55','h:38','g:50','d:42','t:65','g2:55','i2:68','w2:50','c2:52','a2:68']},
+  情感专家:{t:'情感专家',cn:'情感专家',name:'RelationshipExpert',d:'你的感情线比你的人生还复杂。你分析别人头头是道，轮到自己就犯糊涂。你是最好的闺蜜/兄弟，却是最差的恋人。',s:'我给别人分析感情一流，自己的感情一塌糊涂',tx:'情感分析能力强×自我认知有盲区=别人的情感导师，自己的人生迷途者',cn2:'情感专家',s2:'情感分析型',d2:'对情感有深刻理解，善于分析和倾听，但往往对自己的情感问题缺乏客观性，有较强的共情能力。',r2:'自己的感情生活可能一团糟，容易被他人的情感问题消耗',c2:'心理咨询师、情感博主、HR、调解员',tx2:'你能看清别人的心，却常常看不清自己的——但没关系，大家都是这样',q:'「这个人的表现说明他肯定有问题……」',dcols:['a:78','r:72','s:60','h:55','i:55','c:42','w:48','m:40','g:38','j:50','l:58','d:45','t:60','g2:45','i2:55','w2:45','c2:45','a2:75']},
+  戏精本精:{t:'戏精本精',cn:'戏精本精',name:'DramaQueen',d:'你的朋友圈就是你的个人舞台，每一条都是精心设计的表演。你比演员更投入，因为你是本色出演——每一出戏你都信以为真。',s:'人生如戏，全靠演技',tx:'高度戏剧化×强烈表达欲=社交媒体上的永恒C位',cn2:'戏精本精',s2:'表演型',d2:'表现欲极强，情绪表达丰富，生活戏剧化，有较强的自我包装能力，在社交媒体上存在感极强。',r2:'真实关系难以建立，过度在意他人评价，情绪波动大',c2:'演员、主播、网红、营销',tx2:'演技太好有时候也是一种痛苦——因为你自己也分不清哪个是真的自己',q:'「这条朋友圈我要好好想想怎么发」',dcols:['s:88','l:82','a:78','r:60','i:65','w:62','c:45','m:42','h:35','g:28','j:42','d:30','t:50','g2:25','i2:72','w2:58','c2:48','a2:75']},
+  知心大姐:{t:'知心大姐',cn:'知心大姐',name:'BigSisterHeart',d:'你总是那个被朋友找来做情感咨询的人。你倾听，你分析，你给出建议，你的建议总是对的——但你自己遇到问题时，你也很需要一个知心大姐。',s:'我的肩膀永远给你靠',tx:'高共情×低自我关注=永远的朋友圈情绪稳定器',cn2:'知心大姐',s2:'照顾他人型',d2:'共情能力极强，善于倾听和安慰，总是把他人需求放在前面，有较强的照顾者特质，但容易忽略自己。',r2:'情绪负担重，容易被他人的负面情绪消耗，自我需求被压抑',c2:'心理咨询师、护士、教师、社工',tx2:'你总是给别人撑伞，却忘了自己也会被淋湿——记得偶尔为自己撑一把',q:'「没关系，你说，我在听」',dcols:['r:88','a:72','s:68','h:58','l:62','c:40','i:50','w:48','m:38','g:35','j:52','d:55','t:65','g2:42','i2:58','w2:45','c2:42','a2:70']},
+  孤独患者:{t:'孤独患者',cn:'孤独患者',name:'LonelySoul',d:'你在人群中感到孤独，在独处时感到更孤独。你的社交账号很多，朋友很多，但能说心里话的人很少。你是最热闹的孤独者。',s:'众人皆醒我独醉，众人皆乐我独悲',tx:'高孤独感×低连接深度=数字时代的孤岛居民',cn2:'孤独患者',s2:'孤独型',d2:'内心孤独感持续存在，表面社交活跃但深度连接少，有较高的情感需求但表达受限，容易陷入自我怀疑。',r2:'持续情绪低落，影响身心健康，可能形成社交退缩',c2:'需要先寻求专业帮助，再找适合的工作',tx2:'孤独是一种选择，也是一种惩罚——但你可以选择不那么孤独',q:'「我没事，就是有点累」',dcols:['h:72','r:55','a:68','s:35','i:50','c:42','w:52','m:32','g:35','j:45','l:38','d:48','t:58','g2:38','i2:48','w2:50','c2:42','a2:65']},
+  社恐患者:{t:'社恐患者',cn:'社恐患者',name:'SocialPhobic',d:'你害怕聚会，害怕打电话，害怕点餐，害怕所有需要开口的场景。你的沉默不是高冷，是你真的不知道该说什么。',s:'不要跟我说话，不要让我说话',tx:'社交焦虑型×自我意识强=内心戏丰富的独处爱好者',cn2:'社恐患者',s2:'社恐型',d2:'在社交场合感到不适和焦虑，有较强的自我意识，担心被评判，内心戏丰富，独处时更自在。',r2:'社交机会减少，影响职业发展，可能被误解为傲慢',c2:'技术类、创作类、研究类岗位',tx2:'你不是不喜欢人，你只是不知道怎么跟人相处——这是可以学习的',q:'「我先走了，今天有点不舒服」',dcols:['s:15','r:20','a:55','h:62','i:55','g:48','c:42','w:38','m:32','j:42','l:20','d:70','t:48','g2:45','i2:48','w2:35','c2:40','a2:52']},
+  职场老黄牛:{t:'职场老黄牛',cn:'职场老黄牛',name:'WorkHorse',d:'你是公司里干活最多的，也是被夸最少的。你加班最多，升职最慢。你总觉得自己做得够好了，但老板不这么认为。',s:'吃亏是福，多做多错',tx:'高付出×低汇报能力=职场被遗忘的底座',cn2:'职场老黄牛',s2:'埋头苦干型',d2:'勤劳踏实，不善于表现和汇报，有较强的服从性，但缺乏主动争取意识和职场政治智慧。',r2:'付出与回报不成正比，容易产生委屈和抱怨，职业发展受限',c2:'技术专家、专业领域深耕',tx2:'会做也要会说，不会说就要会表现，否则你的付出就是别人的嫁衣',q:'「我做完再汇报吧」',dcols:['g:75','j:65','s:38','r:50','i:48','c:45','w:58','h:42','a:28','m:35','l:32','d:55','t:40','g2:65','i2:40','w2:55','c2:48','a2:25']},
+  职场人际王:{t:'职场人际王',cn:'职场人际王',name:'OfficePoliticsKing',d:'你是办公室里最会搞关系的那个人。领导喜欢你，同事不讨厌你，客户信任你。你不一定是业务能力最强的，但你是最会借力的。',s:'做事靠能力，更靠关系',tx:'人际智慧型×目标导向强=职场上的六边形战士',cn2:'职场人际王',s2:'人际经营型',d2:'职场人际经营能力强，善于协调各方利益，有清晰的目标导向，在组织中具有较强的影响力和动员能力。',r2:'可能被视为"滑头"，专业能力发展受限，过于依赖关系',c2:'管理者、公关、商务拓展、HRBP',tx2:'关系是生产力，但专业是底气——两者兼备才是真王',q:'「这个事我帮你问问，应该问题不大」',dcols:['s:85','r:80','a:72','j:78','i:60','c:50','w:55','m:42','h:42','g:55','l:65','d:48','t:62','g2:60','i2:62','w2:52','c2:55','a2:70']}
 };
-    const DLABELS = {s:'社交气场',a:'卷王指数',z:'躺平修为',c:'搞事道行',g:'业障深浅'};
-const DCOLORS = ['#e74c3c','#f39c12','#9b59b6','#e91e63','#1abc9c'];
 
-// 生肖命格加成
-const ZODIAC_BONUS={
-  '龙':{c:15,a:10},'虎':{d:10,a:10},'兔':{z:15},'蛇':{r:10,z:5},
-  '马':{a:10},'羊':{z:10,l:5},'猴':{c:10,a:10},'鸡':{w:5},
-  '狗':{l:10},'猪':{z:15,j:10},'鼠':{c:10,m:10},'牛':{w:10,m:5}
-};
-// 十二黄道宫命盘加成
-const STAR_BONUS={
-  '白羊':{d:10,a:10},'金牛':{m:10,z:10},'双子':{c:10,s:5},'巨蟹':{l:15,r:10},
-  '狮子':{d:15,s:5},'处女':{w:10,a:10},'天秤':{s:10,l:5},'天蝎':{r:15,z:10},
-  '射手':{c:10,a:5},'摩羯':{a:15,w:10},'水瓶':{c:15,i:10},'双鱼':{r:15,j:5}
-};
-// 年龄命格加成（不同年龄段命盘能量不同）
-function ageBonus(age){
-  const b={};
-  if(age<22){b.c=15;b.a=10;b.g=10;}       // 少年运：躁动期
-  else if(age<28){b.a=5;b.c=5;}            // 青年初期：开始卷
-  else if(age>35){b.z=15;b.w=10;b.r=5;}    // 中年运：沉淀期
-  return b;
-}
-
-// 合并加成
-function mergeBonus(base,...bonuses){
-  const r={...base};
-  bonuses.forEach(b=>{
-    if(!b)return;
-    Object.keys(b).forEach(k=>r[k]=(r[k]||0)+b[k]);
-  });
-  return r;
-}
-
-// 核心计分
-// 各维度满分系数（理论最大原始分 * coef ≈ 85，留余量区分度）
+// ═══════════════════════════════════════════════
+// 维度权重 & 加成系统
+// ═══════════════════════════════════════════════
 const DIM_COEF={s:1.6,a:1.75,z:1.1,c:1.45,g:2.6,h:3.7,r:2.1,i:3.1,m:3.7,w:1.25,j:3.0,l:1.9,d:1.45,t:4.5};
-function calc(){
-  const d={s:0,a:0,z:0,c:0,g:0,h:0,r:0,i:0,m:0,w:0,j:0,l:0,d:0,t:0};
-  answers.forEach(scores=>{
-    Object.keys(scores).forEach(k=>{if(d.hasOwnProperty(k))d[k]+=scores[k];});
-  });
-  const age=parseInt(document.getElementById('fAge')?.value)||25;
-  const zb=ZODIAC_BONUS[window.sZodiac]||{};
-  const sb=STAR_BONUS[window.sStar]||{};
-  const ab=ageBonus(age);
-  const bd=mergeBonus(d,zb,sb,ab);
-  // 归一化到0-100，每个维度用自己的系数
-  const dims={};
-  Object.keys(d).forEach(k=>{
-    const coef=DIM_COEF[k]||2;
-    dims[k]=Math.min(100,Math.max(0,(bd[k]||0)*coef));
-  });
-  // 综合维度
-  const fin={};
-  fin.s=Math.min(100,dims.s+dims.d*0.3);
-  fin.a=Math.min(100,dims.a+dims.w*0.4);
-  fin.z=Math.min(100,dims.z+dims.i*0.5);
-  fin.c=Math.min(100,dims.c+dims.h*0.3);
-  fin.g=Math.min(100,dims.g+dims.t*0.2);
-
-  // ── 相反属性强互斥处理 ──
-  // 上进(a) vs 佛系(z)：不能同时过高
-  if(fin.a>=55 && fin.z>=55){
-    const diff=Math.abs(fin.a-fin.z);
-    if(diff<20){
-      // 差值小则大幅削弱较低项
-      const reduce=diff<10?18:12;
-      if(fin.a>fin.z)fin.a=Math.max(fin.a-reduce,50);
-      else fin.z=Math.max(fin.z-reduce,50);
-    } else {
-      // 差值中等则小幅削弱
-      if(fin.a>fin.z)fin.a=Math.max(fin.a-5,52);
-      else fin.z=Math.max(fin.z-5,52);
-    }
-  }
-  // 社交(s) vs 内向(i)：互斥
-  if(fin.s>=60 && dims.i>=15){
-    fin.s=Math.min(fin.s,dims.i+25);
-  }
-  if(dims.i>=60 && fin.s>=60){
-    dims.i=Math.min(dims.i,fin.s-15);
-  }
-  // 搞事(c) vs 稳定(w)：互斥
-  if(fin.c>=60 && dims.w>=20){
-    fin.c=Math.min(fin.c,dims.w+20);
-  }
-  if(dims.w>=60 && fin.c>=60){
-    dims.w=Math.min(dims.w,fin.c-15);
-  }
-  // 熬夜(h) vs 自律(w)：强互斥
-  if(dims.h>=20 && dims.w>=20){
-    const reduce=(dims.h+dims.w>80)?20:12;
-    if(dims.h>dims.w)fin.g=Math.max(fin.g-reduce,35);
-    else fin.g=Math.max(fin.g-reduce,45);
-  }
-  // 记仇(r) vs 大度(w)：互斥
-  if(dims.r>=25 && dims.w>=25){
-    const reduce=Math.min(dims.r,dims.w)-10;
-    if(reduce>0){
-      if(dims.r>dims.w)dims.r=Math.max(dims.r-reduce,20);
-      else dims.w=Math.max(dims.w-reduce,20);
-    }
-  }
-  // 冲动(d) vs 谨慎(w)：互斥
-  if(dims.d>=25 && dims.w>=25){
-    const reduce=8;
-    if(dims.d>dims.w)dims.d=Math.max(dims.d-reduce,20);
-    else dims.w=Math.max(dims.w-reduce,20);
-  }
-
-  return fin;
-}
-
-// 匹配人格 — 加权欧氏距离算法（用原始dims，不依赖fin复合维度）
-function matchType(dims,age){
-  const DK=['s','a','z','c','g','h','r','i','m','w','j','l','d','t'];
-  const W={s:2.0,a:1.8,z:2.0,c:1.8,g:1.5,h:1.0,r:1.5,i:1.5,m:1.5,w:1.8,j:1.5,l:1.5,d:1.5,t:1.2};
-  let best=null,bestScore=-Infinity;
-  Object.keys(TYPES).forEach(tk=>{
-    const type=TYPES[tk];
-    const bars=type.bars||{};
-    let dist2=0;
-    DK.forEach(dk=>{
-      const uv=dims[dk]||40;
-      const tv=bars[dk]||40;
-      const diff=uv-tv;
-      dist2+=W[dk]*(diff*diff);
-    });
-    if(dist2<bestScore||best===null){bestScore=dist2;best=type;}
-  });
-  return best||TYPES.Z1;
-}
+const ZODIAC_BONUS={
+  鼠:{s:1.1,a:1.0,z:1.0,c:0.9,m:1.0,w:1.1,g:1.0,i:1.0,h:0.9,r:1.0,j:1.0,l:1.1,d:1.0,t:1.0},
+  牛:{s:0.9,a:1.0,z:1.2,c:1.1,m:0.9,w:0.9,g:1.2,i:1.0,h:1.1,r:1.1,j:1.2,l:0.9,d:1.1,t:1.0},
+  虎:{s:1.2,a:1.2,z:1.0,c:1.0,m:1.0,w:1.0,g:0.9,i:1.1,h:1.0,r:1.0,j:0.9,l:1.0,d:0.9,t:1.1},
+  兔:{s:1.0,a:0.9,z:1.1,c:1.1,m:1.1,w:1.2,g:1.0,i:1.0,h:1.2,r:1.1,j:1.0,l:1.0,d:1.1,t:1.0},
+  龙:{s:1.3,a:1.1,z:1.0,c:1.0,m:1.0,w:1.0,g:0.9,i:1.2,h:0.9,r:0.9,j:0.9,l:1.1,d:0.9,t:1.2},
+  蛇:{s:1.0,a:1.2,z:1.1,c:1.0,m:1.0,w:1.0,g:1.1,i:1.0,h:1.0,r:1.0,j:1.1,l:1.0,d:1.1,t:1.1},
+  马:{s:1.1,a:1.0,z:0.9,c:1.0,m:1.1,w:1.0,g:0.9,i:1.0,h:1.0,r:1.0,j:0.9,l:1.2,d:0.9,t:1.0},
+  羊:{s:1.0,a:0.9,z:1.1,c:1.1,m:1.2,w:1.1,g:1.0,i:0.9,h:1.1,r:1.1,j:1.0,l:1.0,d:1.2,t:1.0},
+  猴:{s:1.2,a:1.1,z:0.9,c:1.0,m:0.9,w:1.0,g:0.9,i:1.2,h:0.9,r:0.9,j:0.9,l:1.1,d:0.8,t:1.0},
+  鸡:{s:1.0,a:1.0,z:1.1,c:1.1,m:1.0,w:0.9,g:1.1,i:1.0,h:1.0,r:1.1,j:1.1,l:1.0,d:1.0,t:1.0},
+  狗:{s:1.1,a:1.2,z:1.0,c:0.9,m:1.0,w:1.0,g:1.1,i:1.0,h:1.0,r:1.2,j:1.1,l:1.0,d:1.0,t:1.0},
+  猪:{s:1.0,a:0.9,z:1.1,c:1.0,m:1.1,w:1.1,g:1.0,i:0.9,h:1.1,r:1.0,j:1.0,l:1.0,d:1.1,t:1.0}
+};
+const STAR_BONUS={
+  '魔羯':{g:1.1,h:1.1,d:1.1,m:0.9,j:1.1,a:0.9,s:0.9,r:0.9,i:0.9,c:0.9,w:0.9,l:0.9,t:0.9},
+  '水瓶':{i:1.1,g:1.1,w:1.1,s:1.0,a:1.0,j:0.9,r:0.9,m:0.9,c:0.9,h:0.9,l:0.9,d:0.9,t:0.9},
+  '双鱼':{h:1.1,r:1.1,a:1.0,s:1.0,j:0.9,m:1.0,i:0.9,c:0.9,g:0.9,w:0.9,l:0.9,d:0.9,t:0.9},
+  '白羊':{a:1.2,j:1.1,g:1.0,s:1.1,r:0.9,i:0.9,m:0.9,c:0.9,w:0.9,h:0.9,l:0.9,d:0.9,t:0.9},
+  '金牛':{g:1.2,c:1.1,h:1.1,d:1.0,m:0.9,j:1.0,s:0.9,r:0.9,i:0.9,w:0.9,l:0.9,a:0.9,t:0.9},
+  '双子':{w:1.2,i:1.1,s:1.1,a:1.0,j:0.9,r:0.9,m:0.9,c:0.9,g:0.9,h:0.9,l:0.9,d:0.9,t:0.9},
+  '巨蟹':{h:1.1,r:1.2,a:1.0,s:0.9,m:1.1,j:0.9,i:0.9,c:0.9,g:0.9,w:0.9,l:0.9,d:0.9,t:0.9},
+  '狮子':{s:1.2,a:1.1,g:1.0,j:1.0,r:0.9,i:0.9,m:0.9,c:0.9,w:0.9,h:0.9,l:0.9,d:0.9,t:0.9},
+  '处女':{g:1.1,j:1.1,i:1.0,a:1.0,s:0.9,r:0.9,m:0.9,c:1.0,w:0.9,h:0.9,l:0.9,d:0.9,t:0.9},
+  '天秤':{r:1.1,s:1.1,l:1.1,a:1.0,i:1.0,j:0.9,m:0.9,c:0.9,g:0.9,w:0.9,h:0.9,d:0.9,t:0.9},
+  '天蝎':{a:1.1,j:1.1,r:1.1,m:1.0,s:1.0,i:0.9,c:0.9,g:0.9,w:0.9,h:0.9,l:0.9,d:0.9,t:0.9},
+  '射手':{j:1.1,w:1.1,g:1.0,s:1.0,i:1.0,a:0.9,r:0.9,m:0.9,c:0.9,h:0.9,l:0.9,d:0.9,t:0.9}
+};
+const DCOLORS=['#e74c3c','#f39c12','#9b59b6','#e91e63','#1abc9c'];
 
 // ═══════════════════════════════════════════════
-// UI
+// 题目展示 & 答题
 // ═══════════════════════════════════════════════
-let ci=0,answers=[];
-window.sZodiac='';window.sStar='';window.sGender='';
-window._manualZodiac=false; // 用户手动选了生肖
-window._manualStar=false;   // 用户手动选了星座
-window._show=function(id){try{var el=document.getElementById(id);if(!el){alert('元素#'+id+'不存在');return}var ss=document.querySelectorAll('.screen');for(var i=0;i<ss.length;i++)ss[i].classList.remove('active');el.classList.add('active');}catch(e){alert('show错误:'+e.message)}};
-
-// pick 必须挂到 window，否则 HTML onclick="pick(...)" 找不到
-window.pick=function(el,type,val){
-  // 严格隔离：只清除同type同容器内的选项
-  var gId=type==='gender'?'fGender':type==='zodiac'?'fZodiac':'fStar';
-  var g=document.getElementById(gId);
-  if(!g)return;
-  var cls=type==='gender'?'rg-opt':type==='zodiac'?'zg-opt':'sg-opt';
-  // toggle：点击已选 → 取消；否则清本组 → 选中
-  if(el.classList.contains('sel')){
-    el.classList.remove('sel');
-    if(type==='zodiac'){window.sZodiac='';window._manualZodiac=false;}
-    else if(type==='star'){window.sStar='';window._manualStar=false;}
-    else{window.sGender='';}
-  }else{
-    // 只清本组容器内的同类选项，绝对不跨组
-    var items=g.querySelectorAll('.'+cls);
-    for(var i=0;i<items.length;i++){items[i].classList.remove('sel');}
-    el.classList.add('sel');
-    if(type==='zodiac'){
-      window.sZodiac=val;window._manualZodiac=true;
-      var hint=document.getElementById('autoHintZodiac');
-      if(hint)hint.style.display='none';
-    }else if(type==='star'){
-      window.sStar=val;window._manualStar=true;
-      var hint2=document.getElementById('autoHintStar');
-      if(hint2)hint2.style.display='none';
-    }else{
-      window.sGender=el.textContent.trim();
-    }
-  }
+var ci=0,answers=[];
+function startQuiz(){
+  renderQ();
+}
+function renderQ(){
+  if(ci>=QS.length){doResult();return}
+  var q=QS[ci];
+  var pct=(ci/QS.length*100).toFixed(1);
+  document.getElementById('qN').textContent=ci+1;
+  document.getElementById('qT').textContent=QS.length;
+  document.getElementById('pFill').style.width=pct+'%';
+  var html='<div class="q-card"><div class="q-meta">第 '+(ci+1)+' / '+QS.length+' 题</div><div class="q-dim">'+['社交享乐','理性规划','人际和谐','数码生活','消费观念','工作态度','身心健康','情绪管理','沟通表达','决策风格'][['s','m','r','i','c','w','g','h','a','j'].indexOf(q.d)]+'</div><div class="q-q">'+q.q+'</div><div class="q-opts">';
+  q.o.forEach(function(opt,idx){
+    html+='<div class="q-opt" onclick="selectOpt(this,'+idx+')">'+opt+'</div>';
+  });
+  html+='</div></div>';
+  document.getElementById('quizArea').innerHTML=html;
+}
+window.selectOpt=function(el,idx){
+  document.querySelectorAll('.q-opt').forEach(function(o){o.classList.remove('sel')});
+  el.classList.add('sel');
+  answers.push({d:QS[ci].d,o:idx});
+  ci++;
+  setTimeout(renderQ,120);
 };
 
-function beginQuiz(){
-  // 必须有日期
-  const dInput=document.getElementById('fDate');
-  const dateVal=dInput&&dInput.value;
-  if(!dateVal){
-    dInput.style.borderColor='#e74c3c';
-    setTimeout(()=>{dInput.style.borderColor='';},1500);
-    return;
-  }
-  // 年龄从日期计算（全局变量已在 onNativeDateChange 写入）
-  let age=window.sAge;
-  if(!age||age<1||age>120){
-    age=calcAge(dateVal);
-  }
-  if(!age||age<1||age>120){
-    dInput.style.borderColor='#e74c3c';
-    setTimeout(()=>{dInput.style.borderColor='';},1500);
-    return;
-  }
-  window.sAge=age;
-  ci=0;answers=[];
-  window._show('sQuiz');
-  document.getElementById('prog').classList.add('show');
-  document.getElementById('qT').textContent=QS.length;
-  rq();
-}
-
-function rq(){
-  const q=QS[ci];
-  document.getElementById('qN').textContent=ci+1;
-  document.getElementById('pFill').style.width=((ci)/QS.length*100)+'%';
-  const box=document.getElementById('qBox');
-  // 选项尽量均匀：固定行数，文字超过的行尾截断显示
-  const opts=q.o.map((opt,i)=>{
-    const txt=opt.o.length>20?opt.o.slice(0,18)+'…':opt.o;
-    const selMark=answers[ci]&&answers[ci]===opt.d?'●':'○';
-    return `<button class="opt${answers[ci]&&answers[ci]===opt.d?' sel':''}" onclick="sel(${i})"><span class="opt-mark">${selMark}</span>${opt.o}</button>`;
-  }).join('');
-  box.innerHTML=`<div class="card"><div class="q-num">第 ${ci+1} 题</div><div class="q-text">${q.q}</div><div class="q-sub">${q.sub}</div><div>${opts}</div></div>`;
-  // 显示/隐藏上一题按钮
-  const nav=document.getElementById('nWrap');
-  nav.classList.remove('hidden');
-  document.getElementById('btnPrev').style.visibility=ci>0?'visible':'hidden';
-  document.getElementById('btnNext').textContent=ci>=QS.length-1?'查看结果 →':'下一题 →';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function sel(i){
-  answers[ci]=QS[ci].o[i].d;
-  // 直接更新当前 DOM，不再 innerHTML 重刷，避免消失问题
-  document.querySelectorAll('#qBox .opt').forEach((o,j)=>{
-    o.classList.toggle('sel',j===i);
-    o.querySelector('.opt-mark').textContent=j===i?'●':'○';
+// ═══════════════════════════════════════════════
+// 计算核心
+// ═══════════════════════════════════════════════
+function calc(){
+  var ds={s:0,m:0,r:0,i:0,c:0,w:0,g:0,h:0,a:0,j:0,l:0,d:0,t:0};
+  answers.forEach(function(ans){
+    var wt=[3,2,1,0];
+    ds[ans.d]+=(wt[ans.o]||0);
   });
-  // 立即自动跳转下一题
-  setTimeout(()=>{
-    ci++;
-    if(ci>=QS.length){window._show('sLoad');document.getElementById('prog').classList.remove('show');document.getElementById('sLoad').querySelector('.load').classList.add('active');setTimeout(showResult,2500);}
-    else rq();
-  },350);
-}
-
-function prevQ(){
-  if(ci<=0)return;
-  ci--;
-  rq();
-}
-
-function nextQ(){
-  if(answers[ci]===undefined)return;
-  ci++;
-  if(ci>=QS.length){window._show('sLoad');document.getElementById('prog').classList.remove('show');document.getElementById('sLoad').querySelector('.load').classList.add('active');setTimeout(showResult,2500);}
-  else rq();
-}
-
-function showResult(){
-  const dims=calc();
-  const pt=matchType(dims,parseInt(window.sAge||25));
-  const age=parseInt(window.sAge)||25;
-  document.getElementById('rBadge').textContent='你的中式人格';
-  document.getElementById('rAgeTag').style.display='block';
-  document.getElementById('rAgeTag').textContent=age<22?'🌱 命定Z世代·青春加持':age>35?'🍷 命定不惑年·成熟加持':'🔥 命定当打年·正值巅峰';
-  // 英文缩写一行
-  document.getElementById('rType').textContent=pt.t;
-  // 英文说明一行（小字）
-  document.getElementById('rTx').textContent=(pt.tx || pt.n || pt.name || '');
-  // 中文名一行（不要 undefined）
-  const cn = (pt.cn || '').strip ? pt.cn : (pt.cn || '');
-  const en = (pt.name || '').strip ? pt.name : (pt.name || '');
-  document.getElementById('rName').textContent=(cn && cn!==en) ? cn + ' · ' + en : (cn || en || '');
-  document.getElementById('rSub').textContent=pt.s;
-  const qel=document.getElementById('rQuote');
-  const quoteText = (pt.q || '你这种人，命中注定与众不同。');
-  qel.innerHTML='💬 ' + quoteText + (pt.tx2 ? '<br>⚡ ' + pt.tx2 : '');
-  qel.style.display='block';
-  document.getElementById('rDesc').innerHTML=pt.d;
-  document.getElementById('rPersonal').innerHTML=pt.personal||pt.d;
-  document.getElementById('rRelation').innerHTML=pt.relation||pt.d;
-  document.getElementById('rCareer').innerHTML=pt.career||pt.d;
-  document.getElementById('rLove').innerHTML=pt.love||pt.d;
-  document.getElementById('rGrow').innerHTML=pt.grow||pt.a;
-  document.getElementById('rAdvice').textContent=pt.a;
-  document.getElementById('rZy').innerHTML=pt.zy||'命盘信息暂未解锁，持续修为自有天意。';
-
-  // bars - MBTI风格正反对应对
-  const RADAR_PAIRS = [
-    {pk:'s', pl:'社交气场',    nk:'i', nl:'内心世界',   color:'#e74c3c'},
-    {pk:'a', pl:'卷王指数',    nk:'z', nl:'躺平修为',   color:'#f39c12'},
-    {pk:'c', pl:'搞事指数',    nk:'w', nl:'稳重指数',   color:'#9b59b6'},
-    {pk:'m', pl:'物质欲望',    nk:'j', nl:'精神追求',   color:'#e91e63'},
-    {pk:'l', pl:'情感浓度',    nk:'r', nl:'理性指数',   color:'#1abc9c'},
-  ];
-  let bh='';
-  RADAR_PAIRS.forEach(pair => {
-    const rawPos = dims[pair.pk]||0;
-    const rawNeg = dims[pair.nk]||0;
-    const total  = rawPos + rawNeg;
-    const posV   = total > 0 ? Math.round(rawPos/total*100) : 50;
-    const negV   = 100 - posV;
-    const posPct = Math.max(3, posV);
-    const negPct = Math.max(3, negV);
-    // 同色系：左（正值）满色，右（负值）淡化版
-    const darkColor = pair.color;
-    // 淡化：取色相，降低饱和+明度
-    const mutedColor = pair.color + '55'; // 透明度
-    bh+=`<div class="srow">
-      <div class="slbl slbl-l">${pair.pl}</div>
-      <div class="sbarbg-l"><div class="sbarfill-l" id="barL${pair.pk}" style="width:${posPct}%;background:${darkColor}"></div></div>
-      <div class="sval-center"><span style="color:${darkColor};font-weight:700">${posV}</span><span style="color:var(--text3)"> vs </span><span style="color:${darkColor};opacity:0.5;font-weight:700">${negV}</span></div>
-      <div class="sbarbg-r"><div class="sbarfill-r" id="barR${pair.nk}" style="width:${negPct}%;background:${darkColor};opacity:0.4"></div></div>
-      <div class="slbl slbl-r">${pair.nl}</div>
-    </div>`;
+  var keys=Object.keys(ds);
+  keys.forEach(function(k){
+    ds[k]*=(DIM_COEF[k]||1);
+    if(ZODIAC_BONUS[window.sZodiac]&&ZODIAC_BONUS[window.sZodiac][k])ds[k]*=ZODIAC_BONUS[window.sZodiac][k];
+    if(window.sStar&&STAR_BONUS[window.sStar]&&STAR_BONUS[window.sStar][k])ds[k]*=STAR_BONUS[window.sStar][k];
+    if(window.sGender==='🙋‍♀️ 女'||window.sGender==='🤖 武装直升机'){var fadj={'s':.92,'g':1.08,'r':1.05,'w':1.05,'h':1.03,'j':.95};if(fadj[k])ds[k]*=fadj[k];}
   });
-  document.getElementById('rBars').innerHTML=bh;
+  if(window.sAge&&window.sAge<22){var ymad={'g':1.1,'w':1.15,'i':1.1,'j':.9};Object.keys(ymad).forEach(function(k){ds[k]*=ymad[k]})}
+  if(window.sAge&&window.sAge>40){var omad={'g':1.12,'h':1.1,'r':1.08};Object.keys(omad).forEach(function(k){ds[k]*=omad[k]})}
+  return ds;
+}
 
-  // cp
-  let ch='';
-  pt.cp.forEach(c=>{
-    const cls=c.s>=80?'hi':c.s>=60?'mi':'lo';
-    ch+=`<div class="ci"><div class="ci-emo">${c.e}</div><div class="ci-t">${c.n}</div><div class="ci-s ${cls}">${c.s}%</div></div>`;
-  });
-  document.getElementById('rCp').innerHTML=ch;
-  // 人格对比：根据CP列表生成对比描述
-  const cpc = pt.cpc || {};
-  const topCp = pt.cp && pt.cp[0];
-  const topCpText = topCp ? (cpc[topCp.e] || '') : '';
-  const compareEl = document.getElementById('rCompare');
-  if(compareEl && topCpText){
-    compareEl.innerHTML = '<div style="margin-top:8px;padding:10px 12px;background:linear-gradient(135deg,rgba(255,107,107,.06),rgba(255,165,2,.06));border-left:3px solid var(--accent2);border-radius:0 8px 8px 0;font-size:12px;color:var(--text2);line-height:1.7"><b>💡 与' + (topCp.n||'') + '相处之道：</b>' + topCpText + '</div>';
-  } else if(compareEl) {
-    compareEl.innerHTML = '';
-  }
-
-  // tags
-  let th='';
-  pt.tags.forEach(t=>th+=`<span class="rtag">${t}</span>`);
-  if(window.sZodiac)th+=`<span class="rtag">🐉 ${window.sZodiac}年</span>`;
-  if(window.sStar)th+=`<span class="rtag">☀️ ${window.sStar}宫</span>`;
-  document.getElementById('rTags').innerHTML=th;
-
-  window._show('sRes');
-  window.scrollTo({top:0,behavior:'smooth'});
-  document.body.classList.add('nosel');
-  // 内联保护：确保 sInfo 里的 select/input 始终可点（不受 nosel 影响）
-  document.querySelectorAll('#sInfo select,#sInfo input').forEach(function(el){el.style.cssText+='pointer-events:auto!important;touch-action:auto!important;-webkit-user-select:text!important;user-select:text!important;-webkit-appearance:auto!important;appearance:auto!important;';});
-  // 显示水印
-  const wm=document.getElementById('watermark');
-  document.getElementById('wmType').textContent=pt.t+' '+pt.name;
-  wm.classList.add('show');
-  setTimeout(()=>{
-    RADAR_PAIRS.forEach(pair => {
-      const rawPos=dims[pair.pk]||0, rawNeg=dims[pair.nk]||0;
-      const total=rawPos+rawNeg;
-      const posV=total>0?Math.round(rawPos/total*100):50;
-      const negV=100-posV;
-      const pb=document.getElementById('barL'+pair.pk);
-      const nb=document.getElementById('barR'+pair.nk);
-      if(pb)pb.style.width=Math.max(3,posV)+'%';
-      if(nb)nb.style.width=Math.max(3,negV)+'%';
+function matchType(ds,age){
+  var minD=Infinity,best=null;
+  Object.keys(TYPES).forEach(function(k){
+    var t=TYPES[k],s=0;
+    (t.dcols||[]).forEach(function(dc){
+      var kv=dc.split(':');
+      var dv=ds[kv[0]]||0;
+      s+=Math.abs(dv-parseFloat(kv[1]));
     });
-  },100);
+    if(s<minD){minD=s;best=t}
+  });
+  return best||TYPES[Object.keys(TYPES)[0]];
 }
 
-// 页面加载：读取URL参数，展示已有结果（好友通过链接查看）
+// ═══════════════════════════════════════════════
+// 结果页
+// ═══════════════════════════════════════════════
+function doResult(){
+  window._show('sLoad');
+  setTimeout(function(){
+    var dims=calc();
+    var age=calcAge(document.getElementById('fDate').value);
+    window.sAge=age;
+    var pt=matchType(dims,age);
+    var cn=(pt.cn||'').replace(/undefined/g,'');
+    var en=(pt.name||'').replace(/undefined/g,'');
+    document.getElementById('rName').textContent=(cn&&cn!==en)?cn+' · '+en:(cn||en||pt.t||'');
+    document.getElementById('rType').textContent=pt.t;
+    document.getElementById('rSub').textContent=pt.d;
+    var tx=pt.tx||pt.n||pt.name||'';
+    document.getElementById('rTx').innerHTML=(tx?'<p style="font-size:15px;color:var(--accent);font-weight:600;margin-bottom:8px">'+tx+'</p>':'')+(pt.d2||'');
+    document.getElementById('rQuote').innerHTML=(pt.q?'<p style="font-size:14px;color:var(--text2);line-height:1.8;font-style:italic">💬 '+pt.q+'</p>':'');
+    document.getElementById('rDesc').innerHTML=(pt.d2?'<p style="font-size:14px;line-height:1.7;color:var(--text2);margin-bottom:8px">'+pt.d2+'</p>':'')+(pt.r2?'<p style="font-size:13px;color:var(--accent2)">⚠️ 注意：'+pt.r2+'</p>':'');
+    document.getElementById('rAdvice').textContent=pt.tx2||'';
+    var zy=pt.zy||'';
+    document.getElementById('rZy').innerHTML=(zy?'<p style="font-size:14px;line-height:1.7;margin-bottom:8px">'+zy+'</p>':'');
+    var tags='';
+  (pt.tags||[]).forEach(function(tag){tags+='<span class="rtag">'+tag+'</span>'});
+    document.getElementById('rTags').innerHTML=tags;
+    document.getElementById('rAgeTag').textContent='出生于 '+document.getElementById('fDate').value+(window.sZodiac?'，属'+window.sZodiac:'')+(window.sStar?'，'+window.sStar[1]+'座':'')+(window.sGender?'，'+window.sGender:'');
+    // 各维度
+    var barsHtml='';
+    var dims2=[{k:'s',n:'社交指数'},{k:'m',n:'财运指数'},{k:'r',n:'人缘指数'},{k:'i',n:'数码指数'},{k:'c',n:'消费指数'},{k:'w',n:'网瘾指数'},{k:'g',n:'搞钱指数'},{k:'h',n:'作息指数'},{k:'a',n:'记仇指数'},{k:'j',n:'卷王指数'},{k:'l',n:'话痨指数'},{k:'d',n:'独立指数'},{k:'t',n:'社恐指数'}];
+    dims2.forEach(function(dim,idx){
+      var v=Math.min(100,Math.max(0,dims[dim.k]||0));
+      barsHtml+='<div class="dim-row"><div class="dim-lbl">'+dim.n+'</div><div class="dim-bar"><div class="dim-fill" style="width:'+v+'%;background:'+DCOLORS[idx%5]+'"></div></div><div class="dim-val">'+Math.round(v)+'</div></div>';
+    });
+    document.getElementById('rBars').innerHTML=barsHtml;
+    // CP组合
+    var cpHtml='';
+    var cpKeys=Object.keys(TYPES).filter(function(k){return k!==pt.cn&&k!==pt.name});
+    cpKeys.slice(0,3).forEach(function(k){
+      var cp=TYPES[k];
+      cpHtml+='<div class="cp-card"><div class="cp-avatar">'+(cp.tags&&cp.tags[0]?cp.tags[0].charAt(0):'?')+'</div><div class="cp-info"><div class="cp-name">'+(cp.cn||cp.name||'')+'</div><div class="cp-type">'+cp.t+'</div><div class="cp-tags">'+(cp.tags||[]).slice(0,2).map(function(t){return'<span class="cp-tag">'+t+'</span>'}).join('')+'</div></div></div>';
+    });
+    document.getElementById('rCpList').innerHTML=cpHtml;
+    // 人格对比
+    document.getElementById('rPersonalDetail').innerHTML='<p style="font-size:14px;color:var(--text2);line-height:1.7">'+(pt.d2||pt.d||'')+'</p>';
+    document.getElementById('rRelationDetail').innerHTML='<p style="font-size:14px;color:var(--text2);line-height:1.7">'+(pt.r2||'你的人际关系处理方式独特，需要了解你的人才能真正读懂你。')+'</p>';
+    document.getElementById('rCareerDetail').innerHTML='<p style="font-size:14px;color:var(--text2);line-height:1.7">适合你的职业方向需要发挥你的核心优势。'+(pt.c2?'推荐：'+pt.c2+'。':'')+'</p>';
+    document.getElementById('rLoveDetail').innerHTML='<p style="font-size:14px;color:var(--text2);line-height:1.7">你的情感模式是'+(pt.s2||'独特')+'的，需要一个能理解你深层需求的人。'+(pt.tx2?'核心忠告：'+pt.tx2.replace(/[「」]/g,''):'')+'</p>';
+    document.getElementById('rGrowDetail').innerHTML='<p style="font-size:14px;color:var(--text2);line-height:1.7">'+(pt.zy||'每个人都有自己的节奏，不必和别人比较。专注自己的成长，你就是你。')+'</p>';
+    document.getElementById('rCompareList').innerHTML=cpHtml;
+    document.getElementById('watermark').classList.add('show');
+    document.getElementById('wmType').textContent=pt.name;
+    window._show('sRes');
+    document.getElementById('prog').classList.remove('show');
+    document.body.classList.add('nosel');
+    // 分享URL
+    var params=new URLSearchParams(location.search);
+    if(!params.get('t')){
+      var n=cn||en||pt.t||'';
+      var newUrl=location.pathname+'?t='+encodeURIComponent(pt.t||'')+'&n='+encodeURIComponent(n);
+      history.replaceState(null,'',newUrl);
+    }
+  },1200);
+}
+
+// ═══════════════════════════════════════════════
+// 重新测试
+// ═══════════════════════════════════════════════
+window._showRestartConfirm=function(callback){
+  var modal=document.getElementById('restartModal');
+  if(!modal){callback&&callback(false);return}
+  modal.classList.add('show');
+  var ok=document.getElementById('modalOk');
+  var cancel=document.getElementById('modalCancel');
+  function cleanup(){modal.classList.remove('show');ok.onclick=null;cancel.onclick=null}
+  ok.onclick=function(){cleanup();callback&&callback(true)};
+  cancel.onclick=function(){cleanup();callback&&callback(false)};
+};
+
+function doRestart(){
+  window._showRestartConfirm(function(ok){
+    if(!ok)return;
+    ci=0;answers=[];window.sZodiac='';window.sStar='';window.sGender='';
+    document.getElementById('quizArea').innerHTML='';
+    document.getElementById('btnPreview').style.display='block';
+    document.getElementById('btnPreview').textContent='正在进行的星辰属相测算 →';
+    document.getElementById('btnPreview').disabled=false;
+    document.getElementById('btnPreview').style.opacity='1';
+    document.getElementById('btnConfirm').style.display='none';
+    document.getElementById('previewBox').classList.remove('show');
+    document.getElementById('previewTags').innerHTML='';
+    document.querySelectorAll('.rg-opt').forEach(function(o){o.classList.remove('sel')});
+    // 重置日期为2000-01-01
+    var yr=document.getElementById('fYear');
+    var mo=document.getElementById('fMonth');
+    var dy=document.getElementById('fDay');
+    if(yr)yr.value=2000;
+    if(mo)mo.value=1;
+    if(dy)dy.value=1;
+    updateFDate();
+    onNativeDateChange();
+    window._show('sHero');
+    document.body.classList.remove('nosel');
+  });
+}
+
+// ═══════════════════════════════════════════════
+// 页面初始化
+// ═══════════════════════════════════════════════
+// 检查分享链接
 (function(){
   try{
-    const params=new URLSearchParams(location.search);
-    const t=params.get('t'),n=params.get('n'),src=params.get('src');
+    var params=new URLSearchParams(location.search);
+    var t=params.get('t'),n=params.get('n'),src=params.get('src');
     if(t&&n){
-      // 找到对应人格
-      const keys=Object.keys(TYPES);
-      let pt=null;
-      for(const k of keys){if(TYPES[k].t===t){pt=TYPES[k];break;}}
+      var keys=Object.keys(TYPES);
+      var pt=null;
+      for(var ki=0;ki<keys.length;ki++){if(TYPES[keys[ki]].t===t){pt=TYPES[keys[ki]];break}}
       if(!pt)pt=TYPES[keys[0]];
-      document.title=`${n}的中式命格 · 中式命格测试`;
-      // 显示人格卡
-      document.getElementById('rBadge').textContent=`${n}的中式人格`;
+      document.title=n+'的中式人格 · 中式命格测试';
+      document.getElementById('rBadge').textContent=n+'的中式人格';
       document.getElementById('rAgeTag').style.display='block';
       document.getElementById('rAgeTag').textContent='👀 这是好友分享的结果';
       document.getElementById('rType').textContent=pt.t;
-      document.getElementById('rTx').textContent=(pt.tx || pt.n || pt.name || '');
-      const cn2=(pt.cn||'').replace(/undefined/g,'');
-      const en2=(pt.name||'').replace(/undefined/g,'');
+      document.getElementById('rTx').innerHTML=(pt.tx?'<p style="font-size:15px;color:var(--accent);font-weight:600;margin-bottom:8px">'+pt.tx+'</p>':'')+(pt.d2||'');
+      var cn2=(pt.cn||'').replace(/undefined/g,'');
+      var en2=(pt.name||'').replace(/undefined/g,'');
       document.getElementById('rName').textContent=(cn2&&cn2!==en2)?cn2+' · '+en2:(cn2||en2||'');
-      document.getElementById('rSub').textContent=pt.s;
-      // 金句
-      const qel2=document.getElementById('rQuote');
-      qel2.innerHTML='💬 '+(pt.q||'你这种人，命中注定与众不同。')+(pt.tx2?'<br>⚡ '+(pt.tx2||''):'');
-      qel2.style.display='block';
-      document.getElementById('rDesc').innerHTML=pt.d;
-      // 分享页只展示深度解读和最佳CP，其余隐藏
+      document.getElementById('rSub').textContent=pt.d;
+      var qel2=document.getElementById('rQuote');
+      qel2.innerHTML=(pt.q?'💬 '+pt.q:'')+(pt.tx2?'<br>⚡ '+pt.tx2:'');
+      qel2.style.display=pt.q||pt.tx2?'block':'none';
+      document.getElementById('rDesc').innerHTML=(pt.d2?'<p style="font-size:14px;line-height:1.7;color:var(--text2);margin-bottom:8px">'+pt.d2+'</p>':'')+(pt.r2?'<p style="font-size:13px;color:var(--accent2)">⚠️ 注意：'+pt.r2+'</p>':'');
       document.getElementById('rPersonal').innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:12px">🔒 完整性格画像仅本人测试后可见</div>';
       document.getElementById('rRelation').innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:12px">🔒 完整人际分析仅本人测试后可见</div>';
       document.getElementById('rCareer').innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:12px">🔒 完整职场分析仅本人测试后可见</div>';
       document.getElementById('rLove').innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:12px">🔒 完整情感指南仅本人测试后可见</div>';
       document.getElementById('rGrow').innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:12px">🔒 完整成长建议仅本人测试后可见</div>';
       document.getElementById('rAdvice').textContent='（完整忠告仅本人测试后可见）';
-      document.getElementById('rZy').innerHTML=pt.zy?'<span style="font-size:12px;color:var(--accent2);font-weight:600;margin-right:6px">🔮</span>'+pt.zy+'<br><span style="color:var(--text3);font-size:11px;margin-top:4px;display:block">完整命理解读需本人测试后查看</span>':'（完整命理解读需本人测试后查看）';
+      document.getElementById('rZy').innerHTML=(pt.zy?'<span style="font-size:12px;color:var(--accent2);font-weight:600;margin-right:6px">🔮</span>'+pt.zy+'<br><span style="color:var(--text3);font-size:11px;margin-top:4px;display:block">完整命理解读需本人测试后查看</span>':'（完整命理解读需本人测试后查看）');
       document.getElementById('rBars').innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:12px">🔒 人格雷达仅本人测试后可见</div>';
       document.getElementById('rCp').innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:8px">🔒 完整人格对比仅本人测试后可见</div>';
       document.getElementById('rCompare').innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:8px">🔒 完整人格对比仅本人测试后可见</div>';
-      let th='';pt.tags.forEach(t=>th+=`<span class="rtag">${t}</span>`);
+      var th='';
+      (pt.tags||[]).forEach(function(tag){th+='<span class="rtag">'+tag+'</span>'});
       document.getElementById('rTags').innerHTML=th;
-      // 水印
-      const wm=document.getElementById('watermark');
+      document.getElementById('watermark').classList.add('show');
       document.getElementById('wmType').textContent=pt.name;
-      wm.classList.add('show');
-      // 隐藏分享按钮区，显示"我也测一个"，去掉重新测试按钮
       document.querySelector('.res-act').innerHTML='<button class="btn" onclick="location.href=location.pathname" style="font-size:14px;padding:13px 36px">🎯 我也要测！</button>';
-      // 隐藏重新测试按钮
-      const rtBtns=document.querySelectorAll('.rt-btn');
-      rtBtns.forEach(b=>{if(b.textContent.includes('重新测试'))b.style.display='none';});
-      window._show('sRes');
-      // 反爬虫：结果页禁止选字
       document.body.classList.add('nosel');
-      document.querySelectorAll('#sInfo select,#sInfo input').forEach(function(el){el.style.cssText+='pointer-events:auto!important;touch-action:auto!important;-webkit-user-select:text!important;user-select:text!important;-webkit-appearance:auto!important;appearance:auto!important;';});
+      window._show('sRes');
       return;
     }
   }catch(e){}
+  // 正常流程：初始化日期选择器
+  initDateSelectors();
 })();
-
-function doRestart(){
-  window._showRestartConfirm(function(ok){
-    if(!ok)return;
-    ci=0;answers=[];window.sZodiac='';window.sStar='';window.sGender='';
-    document.getElementById('fAge').value='';
-    document.querySelectorAll('.rg-opt').forEach(o=>o.classList.remove('sel'));
-    // 重置日期为默认 2000-01-01，触发自动推算
-    document.getElementById('fDate').value='2000-01-01';
-    onNativeDateChange();
-    // 重置预览按钮状态
-    document.getElementById('btnPreview').style.display='block';
-    document.getElementById('btnConfirm').style.display='none';
-    document.getElementById('prog').classList.remove('show');
-    document.body.classList.remove('nosel');
-    window._show('sHero');
-  });
-}
-
-// ══ 页面初始化 ══
-initDateSelectors();
 </script>
+
 </body>
 </html>
-
