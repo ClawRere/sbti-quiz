@@ -388,9 +388,10 @@ body.nosel { -webkit-touch-callout: none }
         <div class="preview-box" id="previewBox">
           <div class="preview-header">
             <span class="preview-icon">✨</span>
-            <span class="preview-label">系统推算结果 · 可调整日期重算</span>
+                        <span class="preview-label">星辰属相 · 系统推算（可调整日期重算）</span>
           </div>
           <div class="preview-content" id="previewTags"></div>
+          <div class="preview-content" id="previewTags2"></div>
         </div>
       </div>
       <div class="form-row">
@@ -408,7 +409,7 @@ body.nosel { -webkit-touch-callout: none }
         </div>
       </div>
       <div class="btn-area">
-        <button class="btn btn-secondary hidden" style="width:100%" id="btnConfirm" onclick="beginQuiz()">✅ 确认，开始答题 →</button>
+        <button class="btn btn-secondary" style="width:100%" id="btnConfirm" onclick="beginQuiz()">✅ 确认，开始答题 →</button>
       </div>
     </div>
   </div>
@@ -430,7 +431,7 @@ body.nosel { -webkit-touch-callout: none }
       <div class="loading-circle"></div>
       <div class="loading-emoji">🔮</div>
     </div>
-    <div class="loading-text">正在解读你的命盘...</div>
+    <div class="loading-text" id="loadText">正在解读你的命盘...</div>
   </div>
 </div>
 
@@ -705,34 +706,79 @@ function updateFDate(){
 }
 
 // 点击"测算"按钮时计算生肖和星座
+function calcLunar(birthStr){
+  if(!birthStr) return null;
+  var bd = new Date(birthStr);
+  var y = bd.getFullYear(), m = bd.getMonth()+1, d = bd.getDate();
+  // 简化阴历判断（立春为界）+ 八字年柱
+  var isBeforeLB = (m===2 && d < 4) || (m===1);
+  var cy = isBeforeLB ? y-1 : y;
+  var animals = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+  var zodiac = animals[(cy-1900)%12];
+  // 天干（简化：60甲子，取前10个循环）
+  var tiangan = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+  var ganzhi = tiangan[(cy-4)%10] + zodiac;
+  // 八字时柱（简化：按出生小时估算）
+  var h = bd.getHours();
+  var shichen = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'][Math.floor((h+1)/2)%12];
+  var dz = tiangan[Math.floor((cy%10+Math.floor(h/2))%10)] + shichen;
+  // 生肖年份偏移
+  var yearOffset = ['1924','1936','1948','1960','1972','1984','1996','2008','2020','2032'];
+  var yearIdx = 0;
+  for(var i=0;i<yearOffset.length;i++){ if(cy>=parseInt(yearOffset[i])) yearIdx=i; }
+  var lunarYears = ['甲子','乙丑','丙寅','丁卯','戊辰','己巳','庚午','辛未','壬申','癸酉','甲戌','乙亥','丙子','丁丑','戊寅','己卯','庚辰','辛巳','壬午','癸未','甲申','乙酉','丙戌','丁亥','戊子','己丑','庚寅','辛卯','壬辰','癸巳','甲午','乙未','丙申','丁酉','戊戌','己亥','庚子','辛丑','壬寅','癸卯','甲辰','乙巳','丙午','丁未','戊申','己酉','庚戌','辛亥','壬子','癸丑','甲寅','乙卯','丙辰','丁巳','戊午','己未','庚申','辛酉','壬戌','癸亥'];
+  var lunarYear = lunarYears[yearIdx % lunarYears.length];
+  return {zodiac:zodiac, ganZhi:ganzhi, lunarYear:lunarYear, dayZhi:dz};
+}
+
 function calculateZodiacAndStar(){
   var dInput = document.getElementById('fDate');
   if(!dInput) return;
   var val = dInput.value;
   if(!val) return;
   document.getElementById('fBirth').value = val;
-  var zodiac = getZodiacFromBirth(val);
-  var starData = getStarFromBirth(val);
 
-  if(zodiac){
-    window.sZodiac = zodiac;
-    var emoji = ZODIAC_EMOJI[zodiac] || '❓';
-    var html = '<div class="preview-tag">';
+  var lunar = calcLunar(val);
+  var starData = getStarFromBirth(val);
+  window.sZodiac = lunar ? lunar.zodiac : '';
+  window.sStar = starData;
+
+  var html = '';
+  if(lunar){
+    var emoji = ZODIAC_EMOJI[lunar.zodiac] || '❓';
+    // 生肖框
+    html += '<div class="preview-tag" style="min-width:120px">';
     html += '<span class="emoji">' + emoji + '</span>';
-    html += '<span class="zodiac">' + zodiac + '</span>';
-    if(starData && starData.name){
-      window.sStar = starData;
-      var symbol = STAR_SYMBOLS[starData.name] || '☀️';
-      html += '<span class="sep">·</span>';
-      html += '<span class="emoji">' + symbol + '</span>';
-      html += '<span class="star">' + starData.name + '</span>';
-    }
+    html += '<span class="zodiac">' + lunar.zodiac + '年生</span>';
     html += '</div>';
-    var previewTags = document.getElementById('previewTags');
-    var previewBox = document.getElementById('previewBox');
-    if(previewTags) previewTags.innerHTML = html;
-    if(previewBox) previewBox.classList.add('show');
+    // 星座框
+    if(starData && starData.name){
+      var symbol = STAR_SYMBOLS[starData.name] || '☀️';
+      html += '<div class="preview-tag" style="min-width:120px">';
+      html += '<span class="emoji">' + symbol + '</span>';
+      html += '<span class="star">' + starData.name + '座</span>';
+      html += '</div>';
+    }
   }
+  var previewTags = document.getElementById('previewTags');
+  var previewBox = document.getElementById('previewBox');
+  if(previewTags) previewTags.innerHTML = html;
+
+  // 阴历/八字单独一行
+  var html2 = '';
+  if(lunar){
+    html2 += '<div class="preview-tag" style="min-width:130px">';
+    html2 += '<span style="font-size:12px;color:var(--accent-tertiary)">🌙</span>';
+    html2 += '<span style="font-size:13px;color:var(--text-secondary)">阴历' + lunar.lunarYear + '年</span>';
+    html2 += '</div>';
+    html2 += '<div class="preview-tag" style="min-width:160px">';
+    html2 += '<span style="font-size:12px;color:var(--accent-tertiary)">🀄</span>';
+    html2 += '<span style="font-size:13px;color:var(--text-secondary)">年柱' + lunar.ganZhi + '</span>';
+    html2 += '</div>';
+  }
+  var previewTags2 = document.getElementById('previewTags2');
+  if(previewTags2) previewTags2.innerHTML = html2;
+  if(previewBox) previewBox.classList.add('show');
 }
 
 // 保留原函数名用于兼容性
@@ -762,15 +808,12 @@ function showPreview(){
   btn.innerHTML = '<div class="btn-loading"><div class="spinner"></div>正在测算中...</div>';
   btn.disabled = true;
 
-  // 点击"测算"时计算生肖和星座
   calculateZodiacAndStar();
 
   setTimeout(function(){
     btn.innerHTML = '🔮 星辰属相测算';
     btn.disabled = false;
-    var cb = document.getElementById('btnConfirm');
-    if(cb) cb.classList.remove('hidden');
-  }, 1000);
+  }, 800);
 }
 
 function beginQuiz(){
@@ -906,8 +949,8 @@ function calc(){
     if(ds[k] < 0) ds[k] = 0;
   });
 
-  // 生肖加成
-  if(window.sZodiac && ZODIAC_BONUS[window.sZodiac]){
+  // 生肖加成（v2.0：生肖影响降低，直接取用户选择，无加成表时跳过）
+  if(window.sZodiac && typeof ZODIAC_BONUS !== 'undefined' && ZODIAC_BONUS[window.sZodiac]){
     Object.keys(ZODIAC_BONUS[window.sZodiac]).forEach(function(k){
       var b = ZODIAC_BONUS[window.sZodiac][k] - 1;
       ds[k] = Math.max(0, Math.min(100, ds[k] + b * 5));
@@ -915,7 +958,7 @@ function calc(){
   }
 
   // 星座加成
-  if(window.sStar && window.sStar.name && STAR_BONUS[window.sStar.name]){
+  if(window.sStar && window.sStar.name && typeof STAR_BONUS !== 'undefined' && STAR_BONUS[window.sStar.name]){
     Object.keys(STAR_BONUS[window.sStar.name]).forEach(function(k){
       var b = STAR_BONUS[window.sStar.name][k] - 1;
       ds[k] = Math.max(0, Math.min(100, ds[k] + b * 5));
@@ -993,6 +1036,8 @@ function matchType(ds){
 // ═══ 结果页 ═══
 function doResult(){
   window._show('sLoad');
+  var lt = document.getElementById('loadText');
+  if(lt) lt.textContent = '正在分析你的十三维度人格画像...';
   setTimeout(function(){
     var dims = calc();
     var age = calcAge(document.getElementById('fDate').value);
@@ -1044,11 +1089,12 @@ function doResult(){
 
     document.getElementById('rAgeTag').style.display = 'block';
     var starName = (window.sStar && window.sStar.name) ? window.sStar.name : '';
+    var lunar = window.sZodiac ? calcLunar(document.getElementById('fDate').value) : null;
     document.getElementById('rAgeTag').querySelector('.section-title').textContent =
       '👤 出生于 ' + document.getElementById('fDate').value +
-      (window.sZodiac ? '，属' + window.sZodiac : '') +
-      (starName ? '，' + starName + '座' : '') +
-      (window.sGender ? '，' + window.sGender : '');
+      (window.sZodiac ? ' · ' + (ZODIAC_EMOJI[window.sZodiac]||'') + ' ' + window.sZodiac + '年生' : '') +
+      (starName ? ' · ' + (STAR_SYMBOLS[starName]||'') + ' ' + starName + '座' : '') +
+      (window.sGender ? ' · ' + window.sGender : '');
 
     document.getElementById('rDesc').innerHTML = (pt.d2 ? '<p style="font-size:14px;line-height:1.7;color:var(--text-secondary);margin-bottom:10px">' + pt.d2 + '</p>' : '') + (pt.r2 ? '<p style="font-size:13px;color:var(--accent-primary)">⚠️ 注意：' + pt.r2 + '</p>' : '');
 
@@ -1191,11 +1237,13 @@ function doRestart(){
     window.sGender = '';
     document.getElementById('quizArea').innerHTML = '';
     var btnPreview = document.getElementById('btnPreview');
-    if(btnPreview){ btnPreview.classList.remove('hidden'); btnPreview.innerHTML = '🔮 星辰属相测算'; btnPreview.disabled = false; }
-    var btnConfirm = document.getElementById('btnConfirm');
-    if(btnConfirm) btnConfirm.classList.add('hidden');
+    if(btnPreview){ btnPreview.innerHTML = '🔮 星辰属相测算'; btnPreview.disabled = false; }
     var previewBox = document.getElementById('previewBox');
     if(previewBox) previewBox.classList.remove('show');
+    var pt1 = document.getElementById('previewTags');
+    if(pt1) pt1.innerHTML = '';
+    var pt2 = document.getElementById('previewTags2');
+    if(pt2) pt2.innerHTML = '';
     document.querySelectorAll('.gender-option').forEach(function(o){ o.classList.remove('sel') });
     var yr = document.getElementById('fYear');
     var mo = document.getElementById('fMonth');
