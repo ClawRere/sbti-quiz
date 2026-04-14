@@ -399,6 +399,7 @@ body.nosel { -webkit-touch-callout: none }
           </div>
           <div class="preview-content" id="previewTags"></div>
           <div class="preview-content" id="previewTags2"></div>
+          <div class="preview-content" id="previewTags3"></div>
         </div>
       </div>
       <div class="form-row">
@@ -680,8 +681,67 @@ function getStarFromBirth(birthStr){
 var ZODIAC_EMOJI = {'鼠':'🐭','牛':'🐮','虎':'🐯','兔':'🐰','龙':'🐉','蛇':'🐍','马':'🐎','羊':'🐑','猴':'🐵','鸡':'🐔','狗':'🐕','猪':'🐷'};
 var STAR_SYMBOLS = {'魔羯':'♑','水瓶':'♒','双鱼':'♓','白羊':'♈','金牛':'♉','双子':'♊','巨蟹':'♋','狮子':'♌','处女':'♍','天秤':'♎','天蝎':'♏','射手':'♐'};
 
-// 黄道十二宫：按阴历月日计算（命宫/财帛宫/兄弟宫...）
-var HUANGDAO_GONGS = ['命宫','兄弟宫','财帛宫','田宅宫','官禄宫','疾厄宫','迁移宫','仆役宫','事业宫','田宅宫','父母宫','福德宫'];
+// 十二星次：按阳历日期计算（对应太阳运行位置）
+var SHIER_XINGCI = [
+  {name:'星纪',symbol:'🌑',desc:'根基稳固，沉稳内敛',start:[1,5],end:[2,3]},
+  {name:'玄枵',symbol:'🫐',desc:'智慧深远，想象丰富',start:[2,4],end:[3,5]},
+  {name:'娵訾',symbol:'🌸',desc:'细腻敏感，艺术气息',start:[3,6],end:[4,4]},
+  {name:'降娄',symbol:'🌾',desc:'踏实勤劳，朴实无华',start:[4,5],end:[5,5]},
+  {name:'大梁',symbol:'🏛️',desc:'稳重踏实，建树立业',start:[5,6],end:[6,6]},
+  {name:'实沈',symbol:'🌿',desc:'精力充沛，行动力强',start:[6,7],end:[7,7]},
+  {name:'鹑首',symbol:'🐢',desc:'温和厚重，包容仁爱',start:[7,8],end:[8,8]},
+  {name:'鹑火',symbol:'🔥',desc:'热情洋溢，光明磊落',start:[8,9],end:[9,7]},
+  {name:'鹑尾',symbol:'🦚',desc:'忠诚可靠，细心周到',start:[9,8],end:[10,8]},
+  {name:'寿星',symbol:'🌲',desc:'福寿绵长，乐观豁达',start:[10,9],end:[11,7]},
+  {name:'大火',symbol:'💎',desc:'光明正大，坚毅不拔',start:[11,8],end:[12,6]},
+  {name:'析木',symbol:'⚡',desc:'刚健敏锐，行动果断',start:[12,7],end:[1,4]}
+];
+// 二十八星宿：按阴历月日计算（每宫含宿）
+var ERSHIBA_XINGXIU = [
+  // 东方苍龙七宿
+  {name:'角宿',symbol:'🦉',desc:'果断刚毅，领袖之才',month:1},{name:'亢宿',symbol:'🐉',desc:'精力旺盛，进取心强',month:1},
+  {name:'氐宿',symbol:'🌳',desc:'稳重务实，诚信可靠',month:1},{name:'房宿',symbol:'🏠',desc:'温和细腻，善于理财',month:1},
+  {name:'心宿',symbol:'❤️',desc:'忠诚深情，意志坚定',month:1},{name:'尾宿',symbol:'🦚',desc:'机敏灵活，社交能力强',month:1},
+  {name:'箕宿',symbol:'🌬️',desc:'开朗豁达，人脉广泛',month:1},
+  // 北方玄武七宿
+  {name:'斗宿',symbol:'🍶',desc:'深沉内敛，志向远大',month:2},{name:'牛宿',symbol:'🐮',desc:'勤勉踏实，任劳任怨',month:2},
+  {name:'女宿',symbol:'👩',desc:'细腻聪慧，心灵手巧',month:2},{name:'虚宿',symbol:'🌙',desc:'浪漫理想，艺术气质',month:2},
+  {name:'危宿',symbol:'⚡',desc:'警觉敏锐，直觉力强',month:2},{name:'室宿',symbol:'🏠',desc:'安稳守成，家庭观念重',month:2},
+  {name:'壁宿',symbol:'📚',desc:'好学深思，知识渊博',month:2},
+  // 西方白虎七宿
+  {name:'奎宿',symbol:'🦶',desc:'执行力强，善于统筹',month:3},{name:'娄宿',symbol:'🐕',desc:'忠诚可靠，人缘极佳',month:3},
+  {name:'胃宿',symbol:'🍽️',desc:'品味高雅，追求精致',month:3},{name:'昴宿',symbol:'🌟',desc:'才华出众，志向高远',month:3},
+  {name:'毕宿',symbol:'🎯',desc:'洞察力强，善于分析',month:3},{name:'觜宿',symbol:'🦅',desc:'小巧玲珑，灵活变通',month:3},
+  {name:'参宿',symbol:'🌲',desc:'正直豪爽，竞争心强',month:3},
+  // 南方朱雀七宿
+  {name:'井宿',symbol:'💧',desc:'清朗开阔，包容万象',month:4},{name:'鬼宿',symbol:'👻',desc:'神秘深邃，直觉敏锐',month:4},
+  {name:'柳宿',symbol:'🌿',desc:'温文尔雅，艺术气质',month:4},{name:'星宿',symbol:'⭐',desc:'耀眼出众，魅力非凡',month:4},
+  {name:'张宿',symbol:'🎭',desc:'多才多艺，表现力强',month:4},{name:'翼宿',symbol:'🦅',desc:'志向远大，善于传播',month:4},
+  {name:'轸宿',symbol:'🐦',desc:'聪慧灵敏，适应力强',month:4}
+];
+
+function getShierXingciFromBirth(birthStr){
+  if(!birthStr) return null;
+  var bd = new Date(birthStr);
+  var m = bd.getMonth() + 1, d = bd.getDate();
+  for(var i = 0; i < SHIER_XINGCI.length; i++){
+    var s = SHIER_XINGCI[i];
+    var ns = SHIER_XINGCI[(i+1)%12];
+    if(m > s.start[0] || (m === s.start[0] && d >= s.start[1])){
+      if(m < ns.start[0] || (m === ns.start[0] && d < ns.start[1])) return s;
+    }
+    if(i === 11){
+      if((m === 12 && d >= 7) || m === 1 || (m === 1 && d <= 4)) return s;
+    }
+  }
+  return SHIER_XINGCI[0];
+}
+
+function getErshibaXingxiu(lunarMo, lunarDy){
+  if(!lunarMo || !lunarDy) return null;
+  var idx = ((lunarMo - 1) * 7 + (lunarDy - 1)) % 28;
+  return ERSHIBA_XINGXIU[idx] || ERSHIBA_XINGXIU[0];
+}
 var HUANGDAO_SYMBOLS = ['🧬','🤝','💰','🏠','🏛️','⚕️','✈️','🤴','🎯','🏠','👴','🌿'];
 function getHuangdaoFromLunar(mo, dy){
   // 阴历月对应地盘（命宫起），阴历日决定推进步数
@@ -839,76 +899,80 @@ function calculateZodiacAndStar(){
   if(!val) return;
   document.getElementById('fBirth').value = val;
 
+  // 阳历计算：生肖、星座、十二星次
   var lunar = calcLunar(val);
   var starData = getStarFromBirth(val);
   window.sZodiac = lunar ? lunar.zodiac : '';
   window.sStar = starData;
+  var xingci = getShierXingciFromBirth(val);
+  window.sXingci = xingci;
 
-  // 黄道宫（按阴历月日计算）
+  // 阴历计算：黄道宫、二十八星宿
   var fMo = parseInt(document.getElementById('fMonth').value) || 1;
   var fDy = parseInt(document.getElementById('fDay').value) || 1;
   var huangdao = window.calType === 'lunar' ? getHuangdaoFromLunar(fMo, fDy) : null;
   window.sHuangdao = huangdao;
+  var xingxiu = window.calType === 'lunar' ? getErshibaXingxiu(fMo, fDy) : null;
+  window.sXingxiu = xingxiu;
 
+  // ========== 第一行：阴历年/月/日 ==========
   var html = '';
   if(lunar){
-    var emoji = ZODIAC_EMOJI[lunar.zodiac] || '❓';
-    // 生肖框（阳历计算）
-    html += '<div class="preview-tag" style="min-width:120px">';
-    html += '<span class="emoji">' + emoji + '</span>';
-    html += '<span class="zodiac">' + lunar.zodiac + '年生</span>';
+    var lunarMo = parseInt(starData && starData.month || 1);
+    var lunarDy = parseInt(starData && starData.day || 1);
+    var lunarMoTxt = LUNAR_MONTHS[lunarMo-1] || '正';
+    var lunarDyTxt = LUNAR_DAYS[lunarDy-1] || '初一';
+    html += '<div class="preview-tag" style="min-width:160px">';
+    html += '<span style="font-size:12px">🌙</span>';
+    html += '<span style="font-size:13px">阴历' + lunar.lunarYear + '年 ' + lunarMoTxt + lunarDyTxt + '</span>';
     html += '</div>';
-    // 星座框（阳历计算）
-    if(starData && starData.name){
-      var symbol = STAR_SYMBOLS[starData.name] || '☀️';
-      html += '<div class="preview-tag" style="min-width:120px">';
-      html += '<span class="emoji">' + symbol + '</span>';
-      html += '<span class="star">' + starData.name + '座</span>';
-      html += '</div>';
-    }
   }
   var previewTags = document.getElementById('previewTags');
-  var previewBox = document.getElementById('previewBox');
   if(previewTags) previewTags.innerHTML = html;
 
-  // 阴历/八字/黄道宫单独一行
+  // ========== 第二行：生肖 + 星座 ==========
   var html2 = '';
   if(lunar){
-    if(window.calType === 'lunar'){
-      // 阴历模式：显示输入的阴历月日 + 黄道宫
-      var moIdx = parseInt(starData && starData.month || 1) - 1;
-      var dayIdx = parseInt(starData && starData.day || 1) - 1;
-      var moNum = moIdx + 1;
-      var dayNum = dayIdx + 1;
-      html2 += '<div class="preview-tag" style="min-width:130px">';
-      html2 += '<span style="font-size:12px">🌙</span>';
-      html2 += '<span style="font-size:13px">阴历' + lunar.lunarYear + '年 ' + LUNAR_MONTHS[moIdx] + '(' + moNum + '月)</span>';
-      html2 += '</div>';
-      html2 += '<div class="preview-tag" style="min-width:130px">';
-      html2 += '<span style="font-size:12px">📅</span>';
-      html2 += '<span style="font-size:13px">' + LUNAR_DAYS[dayIdx] + '(' + dayNum + '日)</span>';
-      html2 += '</div>';
-      // 黄道宫（阴历计算）
-      if(huangdao){
-        html2 += '<div class="preview-tag" style="min-width:130px">';
-        html2 += '<span style="font-size:12px">' + huangdao.symbol + '</span>';
-        html2 += '<span style="font-size:13px">' + huangdao.name + '</span>';
-        html2 += '</div>';
-      }
-    } else {
-      // 阳历模式：显示阴历转换结果 + 八字
-      html2 += '<div class="preview-tag" style="min-width:130px">';
-      html2 += '<span style="font-size:12px">🌙</span>';
-      html2 += '<span style="font-size:13px">阴历' + lunar.lunarYear + '年</span>';
-      html2 += '</div>';
-      html2 += '<div class="preview-tag" style="min-width:160px">';
-      html2 += '<span style="font-size:12px">🀄</span>';
-      html2 += '<span style="font-size:13px">年柱' + lunar.ganZhi + '</span>';
+    var emoji = ZODIAC_EMOJI[lunar.zodiac] || '❓';
+    html2 += '<div class="preview-tag" style="min-width:120px">';
+    html2 += '<span class="emoji">' + emoji + '</span>';
+    html2 += '<span class="zodiac">' + lunar.zodiac + '年生</span>';
+    html2 += '</div>';
+    if(starData && starData.name){
+      var symbol = STAR_SYMBOLS[starData.name] || '☀️';
+      html2 += '<div class="preview-tag" style="min-width:120px">';
+      html2 += '<span class="emoji">' + symbol + '</span>';
+      html2 += '<span class="star">' + starData.name + '座</span>';
       html2 += '</div>';
     }
   }
   var previewTags2 = document.getElementById('previewTags2');
   if(previewTags2) previewTags2.innerHTML = html2;
+
+  // ========== 第三行：十二星次 + 二十八星宿 + 黄道宫 ==========
+  var html3 = '';
+  if(xingci){
+    html3 += '<div class="preview-tag" style="min-width:130px">';
+    html3 += '<span style="font-size:12px">' + xingci.symbol + '</span>';
+    html3 += '<span style="font-size:13px">' + xingci.name + '</span>';
+    html3 += '</div>';
+  }
+  if(xingxiu){
+    html3 += '<div class="preview-tag" style="min-width:130px">';
+    html3 += '<span style="font-size:12px">' + xingxiu.symbol + '</span>';
+    html3 += '<span style="font-size:13px">' + xingxiu.name + '</span>';
+    html3 += '</div>';
+  }
+  if(huangdao){
+    html3 += '<div class="preview-tag" style="min-width:130px">';
+    html3 += '<span style="font-size:12px">' + huangdao.symbol + '</span>';
+    html3 += '<span style="font-size:13px">' + huangdao.name + '</span>';
+    html3 += '</div>';
+  }
+  var previewTags3 = document.getElementById('previewTags3');
+  if(previewTags3) previewTags3.innerHTML = html3;
+
+  var previewBox = document.getElementById('previewBox');
   if(previewBox) previewBox.classList.add('show');
 }
 
@@ -1226,12 +1290,15 @@ function doResult(){
     document.getElementById('rAgeTag').style.display = 'block';
     var starName = (window.sStar && window.sStar.name) ? window.sStar.name : '';
     var huangdaoData = window.sHuangdao;
-    var lunar = window.sZodiac ? calcLunar(document.getElementById('fDate').value) : null;
+    var xingciData = window.sXingci;
+    var xingxiuData = window.sXingxiu;
     var sexTag = window.sGender ? ' · ' + window.sGender : '';
     document.getElementById('rAgeTag').querySelector('.section-title').innerHTML =
       '👤 出生于 ' + document.getElementById('fDate').value +
       (window.sZodiac ? ' · ' + (ZODIAC_EMOJI[window.sZodiac]||'') + ' ' + window.sZodiac + '年生' : '') +
       (starName ? ' · ' + (STAR_SYMBOLS[starName]||'') + ' ' + starName + '座' : '') +
+      (xingciData ? ' · ' + (xingciData.symbol||'') + ' ' + xingciData.name : '') +
+      (xingxiuData ? ' · ' + (xingxiuData.symbol||'') + ' ' + xingxiuData.name : '') +
       (huangdaoData ? ' · ' + (huangdaoData.symbol||'') + ' ' + huangdaoData.name + '命' : '') +
       sexTag;
 
@@ -1352,12 +1419,19 @@ function doResult(){
     // 性格标签取卦名配色
     var XLR_COLOR = { '留连':'#8e7cc3','速喜':'#e85a4f','赤口':'#d4a574','小吉':'#52b788','空亡':'#667eea','大安':'#52b788' };
     var xlrColor = XLR_COLOR[xlrName] || 'var(--accent-primary)';
-    // 阴历时追加黄道宫解读
+    // 阴历时追加黄道宫 + 二十八星宿解读
     var huangdaoExtra = '';
-    if(window.calType === 'lunar' && window.sHuangdao){
-      huangdaoExtra = '<div style="font-size:12px;color:var(--accent-secondary);margin-top:4px;font-weight:600">' +
-        '🏛️ 黄道' + window.sHuangdao.name + ' · ' + window.sHuangdao.symbol + '</div>' +
-        '<div style="font-size:12px;color:var(--text-secondary);margin-top:4px;line-height:1.6;max-width:280px;margin-left:auto;margin-right:auto">' + window.sHuangdao.desc + '</div>';
+    if(window.calType === 'lunar'){
+      if(window.sHuangdao){
+        huangdaoExtra += '<div style="font-size:12px;color:var(--accent-secondary);margin-top:6px;font-weight:600">' +
+          '🏛️ 黄道' + window.sHuangdao.name + ' · ' + window.sHuangdao.symbol + '</div>' +
+          '<div style="font-size:12px;color:var(--text-secondary);margin-top:4px;line-height:1.6;max-width:280px;margin-left:auto;margin-right:auto">' + window.sHuangdao.desc + '</div>';
+      }
+      if(window.sXingxiu){
+        huangdaoExtra += '<div style="font-size:12px;color:var(--accent-secondary);margin-top:6px;font-weight:600">' +
+          '⭐ 二十八宿 · ' + window.sXingxiu.symbol + ' ' + window.sXingxiu.name + '</div>' +
+          '<div style="font-size:12px;color:var(--text-secondary);margin-top:4px;line-height:1.6;max-width:280px;margin-left:auto;margin-right:auto">' + window.sXingxiu.desc + '</div>';
+      }
     }
     document.getElementById('rMeihua').style.display = 'block';
     document.getElementById('rMeihuaDetail').innerHTML =
@@ -1458,6 +1532,8 @@ function doRestart(){
     if(pt1) pt1.innerHTML = '';
     var pt2 = document.getElementById('previewTags2');
     if(pt2) pt2.innerHTML = '';
+    var pt3 = document.getElementById('previewTags3');
+    if(pt3) pt3.innerHTML = '';
     document.querySelectorAll('.gender-option').forEach(function(o){ o.classList.remove('sel') });
     var yr = document.getElementById('fYear');
     var mo = document.getElementById('fMonth');
