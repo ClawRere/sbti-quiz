@@ -796,14 +796,16 @@ body.nosel { -webkit-touch-callout: none }
       hour: window._getTimePillar(date, birthHour) || '\u5F85\u5B9A'
     };
   };
+  window.sZodiac = '';
+  window.sStar = '';
+  window.sGender = '';
+  window._manualZodiac = false;
+  window._manualStar = false;
 })();
 </script>
-window.sZodiac = '';
-window.sStar = '';
-window.sGender = '';
-window._manualZodiac = false;
-window._manualStar = false;
 
+<!-- 第五段：UI 逻辑 -->
+<script>
 // ═══ 屏幕切换 ═══
 window._show = function(id){
   var el = document.getElementById(id);
