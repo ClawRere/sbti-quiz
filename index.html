@@ -359,7 +359,7 @@ body.nosel { -webkit-touch-callout: none }
     </div>
     <button class="btn" type="button" onclick="window._show('sInfo')">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">V1.0.1</div>
+    <div class="hero-version">V1.0.2</div>
   </div>
 </div>
 
@@ -845,6 +845,7 @@ function initDateSelectors(){
 // ═══ 阴历/阳历切换 ═══
 window.calType = 'solar';
 window.switchCal = function(type){
+  if(type === window.calType) return; // 防重复点击
   window.calType = type;
   var solarEl = document.getElementById('calSolar');
   var lunarEl = document.getElementById('calLunar');
@@ -894,35 +895,40 @@ window.switchCal = function(type){
     var shSel = document.getElementById('fHour');
     if(shSel) shSel.value = '';
   }
-  // 切换时双向转换日期
-  var yrSel = document.getElementById('fYear');
-  var moSel = document.getElementById('fMonth');
-  var dySel = document.getElementById('fDay');
-  if(yrSel && moSel && dySel){
-    var curYr = parseInt(yrSel.value);
-    var curMo = parseInt(moSel.value);
-    var curDy = parseInt(dySel.value);
+  // 切换时双向转换日期（用 _switching 防止 updateFDate 循环触发）
+  window._switching = true;
+  var yrSel2 = document.getElementById('fYear');
+  var moSel2 = document.getElementById('fMonth');
+  var dySel2 = document.getElementById('fDay');
+  if(yrSel2 && moSel2 && dySel2){
+    var curYr = parseInt(yrSel2.value);
+    var curMo = parseInt(moSel2.value);
+    var curDy = parseInt(dySel2.value);
     if(curYr && curMo && curDy){
       if(type === 'lunar'){
-        // 阳历→阴历
         var lc = solarToLunar(curYr, curMo, curDy);
-        yrSel.value = lc.ly;
-        moSel.value = lc.lm;
-        dySel.value = Math.min(lc.ld, 31);
+        if(lc && lc.ly) {
+          yrSel2.value = lc.ly;
+          moSel2.value = lc.lm;
+          dySel2.value = Math.min(lc.ld, 31);
+        }
       } else {
-        // 阴历→阳历
         var sc = lunarToSolar(curYr, curMo, curDy);
-        yrSel.value = sc.sy;
-        moSel.value = sc.sm;
-        dySel.value = Math.min(sc.sd, 31);
+        if(sc && sc.sy) {
+          yrSel2.value = sc.sy;
+          moSel2.value = sc.sm;
+          dySel2.value = Math.min(sc.sd, 31);
+        }
       }
     }
   }
+  window._switching = false;
   updateFDate();
 };
 
 // ═══ 日期级联 ═══
 function updateFDate(){
+  if(window._switching) return; // switchCal 切换中跳过，避免循环触发
   var yr = document.getElementById('fYear').value;
   var mo = document.getElementById('fMonth').value;
   var dy = document.getElementById('fDay').value;
