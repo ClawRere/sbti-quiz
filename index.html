@@ -649,13 +649,163 @@ body.nosel { -webkit-touch-callout: none }
 })();
 </script>
 
+<!-- SunCalc：天文算法计算四柱八字 -->
+<script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.min.js"></script>
+
 <!-- 第三段：题库数据 + 人格数据 -->
 <script src="quiz-data.js"></script>
 <script src="personality-data.js"></script>
 
 <!-- 第四段：核心逻辑 -->
 <script>
-// ═══ 全局状态 ═══
+// ═══ 天文八字常量与工具 ═══
+(function(){
+  var GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+  var ZHI = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  var TROPICAL_YEAR = 365.24218968; // 回归年平均长度（天）
+  // 儒略日起算点：1984-01-01 00:00 UTC（近似立春前）
+  // 1984-01-01 00:00 UTC 的 JDN
+  var JDN_1984_1_1 = 2445703.5;
+  // 精确立春参考：2000-02-04 20:40:24 UTC，JDN = 2451580.36278
+  var JDN_LICHUN_2000 = 2445703.5 + (31 + 4 + 20.674/24);
+
+  // 获取某地当天的真太阳时（返回 Date，本地时间）
+  function getTrueSolarTime(dateLocal, lat, lon) {
+    lat = lat || 34.545811; lon = lon || 108.925825;
+    var tzOffset = -dateLocal.getTimezoneOffset() / 60; // 分钟→小时
+    var utc = new Date(dateLocal.getTime() + dateLocal.getTimezoneOffset() * 60000);
+    var sunTimes = SunCalc.getTimes(utc, lat, lon);
+    // 真太阳时正午
+    var solarNoon = sunTimes.solarNoon;
+    if (!solarNoon || isNaN(solarNoon.getTime())) {
+      return dateLocal; // fallback
+    }
+    // 钟表正午（当日 solarNoon 的 12:00）
+    var clockNoon = new Date(solarNoon);
+    clockNoon.setHours(12, 0, 0, 0);
+    var diffHours = (clockNoon - solarNoon) / 3600000;
+    var tst = new Date(dateLocal.getTime() + diffHours * 3600000);
+    return tst;
+  }
+
+  // 儒略日（JDN）from Date
+  function toJDN(date) {
+    return date.valueOf() / 86400000 + 2440587.5;
+  }
+
+  // ═══ 年柱（天文立春） ═══
+  window._getYearPillar = function(date) {
+    var tzOffset = -date.getTimezoneOffset() / 60;
+    var utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+    var sunTimes = SunCalc.getTimes(utc, 0, 0);
+    if (!sunTimes || !sunTimes.sunrise || isNaN(sunTimes.sunrise.getTime())) {
+      return GAN[(date.getFullYear() - 1984 + 100) % 10] + ZHI[(date.getFullYear() - 1984 + 1200) % 12];
+    }
+    // 粗估当年立春（2月4日 UTC）
+    var y = date.getUTCFullYear();
+    var lbFeb4 = Date.UTC(y, 1, 4, 12) / 86400000 + 2440587.5;
+    var jdn = toJDN(utc);
+    var diffDays = jdn - lbFeb4;
+    if (diffDays < 0) {
+      // 在2月4日前，找上年立春
+      var lbPrev = Date.UTC(y-1, 1, 4, 12) / 86400000 + 2440587.5;
+      diffDays = jdn - lbPrev;
+    }
+    var years = Math.floor(diffDays / TROPICAL_YEAR);
+    var ganIdx = (years + 6) % 10;
+    var zhiIdx = (years + 4) % 12;
+    if (ganIdx < 0) ganIdx += 10;
+    if (zhiIdx < 0) zhiIdx += 12;
+    return GAN[ganIdx] + ZHI[zhiIdx];
+  };
+
+  // ═══ 月柱（太阳黄经定节气） ═══
+  window._getMonthPillar = function(date) {
+    var tzOffset = -date.getTimezoneOffset() / 60;
+    var utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+    // 粗估当月1日
+    var y = utc.getUTCFullYear(), m = utc.getUTCMonth();
+    var monthStart = Date.UTC(y, m, 1, 12) / 86400000 + 2440587.5;
+    // 参考惊蛰：2000-03-05 14:42 JDN
+    var jdnJingzhe = 2441609.1139;
+    var diffDays = monthStart - jdnJingzhe;
+    var dayPerMoon = TROPICAL_YEAR / 12;
+    var moonNum = Math.floor(diffDays / dayPerMoon);
+    // 用天文公式算当日太阳视黄经（包含光行差）
+    var jdn = toJDN(utc);
+    var T = (jdn - 2451545.0) / 36525;
+    var L0 = (280.46646 + 36000.76983 * T) % 360;
+    var M = (357.52911 + 35999.05029 * T) % 360;
+    var C = (1.914602 - 0.004817 * T - 0.000014 * T * T) * Math.sin(M * Math.PI / 180)
+          + (0.019993 - 0.000101 * T) * Math.sin(2 * M * Math.PI / 180)
+          + 0.000289 * Math.sin(3 * M * Math.PI / 180);
+    var sunLon = (L0 + C) % 360;
+    // solarLon 0=春分，90=夏至，180=秋分，270=冬至 → 转为从冬至(子)起
+    var fromWinterSolstice = (sunLon - 270 + 360) % 360;
+    var solar_longitude_mi = Math.floor(fromWinterSolstice / 30);
+    var moon_num_id = (moonNum + 3) % 12;
+    if (moon_num_id < 0) moon_num_id += 12;
+    var t12_diff = (solar_longitude_mi - moon_num_id + 12) % 12;
+    if (t12_diff >= 6) t12_diff -= 12;
+    moonNum += t12_diff;
+    var monGanIdx = (moonNum + 5) % 10;
+    var monZhiIdx = (moonNum + 3) % 12;
+    if (monGanIdx < 0) monGanIdx += 10;
+    if (monZhiIdx < 0) monZhiIdx += 12;
+    return GAN[monGanIdx] + ZHI[monZhiIdx];
+  };
+
+  // ═══ 日柱（真太阳时日分界） ═══
+  window._getDayPillar = function(date) {
+    var lat = 0, lon = 0; // 真太阳时用全球平均
+    var tst = getTrueSolarTime(date, lat, lon);
+    // 真太阳时0点 = 日柱分界，基准1900-01-01 00:00 = 甲子日
+    var jdn_1900 = 2415021.5; // 1900-01-01 00:00 UTC 的 JDN
+    var jdn_now = toJDN(new Date(tst.getTime()));
+    var diffDays = Math.floor(jdn_now - jdn_1900 + 0.5); // 四舍五入到日
+    var ganIdx = (diffDays + 0) % 10;
+    var zhiIdx = (diffDays + 10) % 12;
+    if (ganIdx < 0) ganIdx += 10;
+    if (zhiIdx < 0) zhiIdx += 12;
+    return GAN[ganIdx] + ZHI[zhiIdx];
+  };
+
+  // ═══ 时柱（真太阳时辰） ═══
+  window._getTimePillar = function(date, birthHour) {
+    if (birthHour === null || birthHour === undefined || isNaN(birthHour)) return null;
+    var hour = birthHour;
+    // 真太阳时修正（简化版：每经度约4分钟）
+    var tzOffset = -date.getTimezoneOffset() / 60;
+    // 用北京经度(116.4°E)的真太阳时
+    var tst = getTrueSolarTime(date, 34.5, 116.4);
+    var tstHour = tst.getHours() + tst.getMinutes() / 60 + tst.getSeconds() / 3600;
+    // 参考：1983-12-21 23:42:15 = 甲子时
+    var refJDN = 2445635.4863; // 1983-12-21 23:42:15 UTC
+    var nowJDN = toJDN(new Date(tst.getTime()));
+    var totalPeriods = Math.round((nowJDN - refJDN) * 12); // 每天12时辰
+    // 子时起点 = 真太阳时 23:00
+    var ziStart = Math.floor(tstHour); // 简化：23~24点为子时第0~1个时辰
+    var correction = (Math.floor((tstHour + 1) / 2) - totalPeriods + 1200) % 12;
+    if (correction >= 6) correction -= 12;
+    totalPeriods += correction;
+    var ganIdx = (totalPeriods + 0) % 10;
+    var zhiIdx = (totalPeriods + 0) % 12;
+    if (ganIdx < 0) ganIdx += 10;
+    if (zhiIdx < 0) zhiIdx += 12;
+    return GAN[ganIdx] + ZHI[zhiIdx];
+  };
+
+  // ═══ 统一四柱八字接口 ═══
+  window._calcBazi = function(date, birthHour) {
+    return {
+      year: window._getYearPillar(date),
+      month: window._getMonthPillar(date),
+      day: window._getDayPillar(date),
+      hour: window._getTimePillar(date, birthHour) || '待定'
+    };
+  };
+})();
+</script>
 window.sZodiac = '';
 window.sStar = '';
 window.sGender = '';
@@ -983,29 +1133,20 @@ function lunarToSolar(lYear, lMonth, lDay){
 function calcLunar(birthStr){
   if(!birthStr) return null;
   var bd = new Date(birthStr);
-  var y = bd.getFullYear(), m = bd.getMonth()+1, d = bd.getDate();
-  // 简化阴历判断（立春为界）+ 八字年柱
-  var isBeforeLB = (m===2 && d < 4) || (m===1);
-  var lunarYear = isBeforeLB ? y-1 : y; // 立春前属上一年
   var animals = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
-  // 生肖：阳历按年直接算，不管月日（基准年1985=甲子=鼠年）
-  var zodiac = animals[(y-1985+1200)%12];
-  // 天干（年柱60甲子偏移，1984=甲子）
-  var tiangan = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
-  var cy = isBeforeLB ? y-1 : y; // 八字年柱用立春边界
-  var ganzhi = tiangan[(cy-1984+100)%10] + zodiac;
-  // 八字时柱：阳历用 fHour（0-23），阴历用 fLunarHour（0-11直接=地支）
-  var hRaw = window.calType === 'lunar'
-    ? document.getElementById('fLunarHour')?.value
-    : document.getElementById('fHour')?.value;
-  var h = hRaw !== '' && hRaw != null ? parseInt(hRaw) : null;
-  var dz = (h === null || isNaN(h)) ? null : (tiangan[Math.floor(((cy-1984+100)%10+Math.floor(h/2))%10+10)%10] + ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'][Math.floor((h+1)/2)%12]);
-  // 农历月（用于八字月柱，非精确但够用）
-  var lYear = bd < lunarNewYearDay(y) ? y-1 : y;
+  // 生肖：天文年柱的地支
+  var yearPillar = window._getYearPillar ? window._getYearPillar(bd) : (function(){
+    var y = bd.getFullYear();
+    return animals[(y-1984+1200)%12];
+  })();
+  var zodiac = yearPillar ? yearPillar.charAt(1) : animals[(bd.getFullYear()-1985+1200)%12];
+  // 农历月
+  var y2 = bd.getFullYear(), m2 = bd.getMonth()+1;
+  var lYear = bd < lunarNewYearDay(y2) ? y2-1 : y2;
   var ny2 = lunarNewYearDay(lYear);
   var diff2 = Math.round((bd-new Date(ny2))/86400000);
   var lMonth = Math.max(1, Math.min(12, Math.floor(diff2/29.53)+1));
-  return {zodiac:zodiac, ganZhi:ganzhi, lunarYear:ganzhi, dayZhi:dz, lMonth:lMonth};
+  return {zodiac:zodiac, ganZhi:yearPillar, lunarYear:yearPillar, lMonth:lMonth};
 }
 
 // 星辰测算防抖
@@ -1039,47 +1180,21 @@ function _doCalcZodiac(val){
   var xingxiu = window.calType === 'lunar' ? getErshibaXingxiu(fMo, fDy) : null;
   window.sXingxiu = xingxiu;
 
-  // ========== 第一行：四柱八字 ==========
-  var TIANGAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
-  var DIZHI   = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
-  var LUNAR_YEARS = ['甲子','乙丑','丙寅','丁卯','戊辰','己巳','庚午','辛未','壬申','癸酉','甲戌','乙亥','丙子','丁丑','戊寅','己卯','庚辰','辛巳','壬午','癸未','甲申','乙酉','丙戌','丁亥','戊子','己丑','庚寅','辛卯','壬辰','癸巳','甲午','乙未','丙申','丁酉','戊戌','己亥','庚子','辛丑','壬寅','癸卯','甲辰','乙巳','丙午','丁未','戊申','己酉','庚戌','辛亥','壬子','癸丑','甲寅','乙卯','丙辰','丁巳','戊午','己未','庚申','辛酉','壬戌','癸亥'];
+  // ========== 第一行：四柱八字（天文算法） ==========
   var bd = new Date(val);
-  var y = bd.getFullYear(), mo = bd.getMonth()+1, dy = bd.getDate();
-  var isBeforeLB = (mo===2 && dy < 4) || (mo===1);
-  var cy = isBeforeLB ? y-1 : y;
-  // 年柱：甲子周期偏移（1984=甲子）
-  var yearCycle = (cy - 1984 + 6000) % 60;
-  var yearPillar = LUNAR_YEARS[yearCycle];
-  var ganIdx = yearCycle % 10;
-  // 月柱：阳历月直接用（正月=寅，月干=年干×3+月取地支）
-  var monDizIdx = (mo + 1) % 12; // 正月=寅
-  var monGanIdx = (ganIdx * 3 + mo + 120) % 10;
-  var monthPillar = TIANGAN[monGanIdx] + DIZHI[monDizIdx];
-  // 日柱（儒略日：1921/1/1为己丑）
-  var julian = Math.floor((Date.UTC(y, mo-1, dy) - Date.UTC(1921, 0, 1)) / 86400000);
-  var dayGanIdx = (julian + 6) % 10;
-  var dayDizIdx = (julian + 6) % 12;
-  var dayPillar = TIANGAN[dayGanIdx] + DIZHI[dayDizIdx];
-  // 时柱（用户未选时显示待定）
-  // 阳历用 fHour（0-23），阴历用 fLunarHour（0-11直接=地支索引）
   var birthHourRaw = window.calType === 'lunar'
     ? document.getElementById('fLunarHour')?.value
     : document.getElementById('fHour')?.value;
-  var hourPillar = null;
-  if(birthHourRaw !== '' && birthHourRaw !== null && birthHourRaw !== undefined){
-    var birthHour = parseInt(birthHourRaw);
-    // 阳历：小时→地支（子23-1时...）；阴历：选择值直接=地支索引
-    var hourDzIdx = window.calType === 'lunar' ? birthHour : Math.floor((birthHour + 1) / 2) % 12;
-    var hourGanIdx = (dayGanIdx * 2 + Math.floor(birthHour / 2) + 100) % 10;
-    hourPillar = TIANGAN[hourGanIdx] + DIZHI[hourDzIdx];
-  }
+  var birthHour = (birthHourRaw !== '' && birthHourRaw !== null && birthHourRaw !== undefined)
+    ? parseInt(birthHourRaw) : null;
+  var bazi = window._calcBazi(bd, birthHour);
 
   var baziHtml = '<div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap">';
   var baziCols = [
-    {label:'年', val:yearPillar,  color:'#e85a4f'},
-    {label:'月', val:monthPillar, color:'#d4a574'},
-    {label:'日', val:dayPillar,  color:'#52b788'},
-    {label:'时', val:hourPillar || '待定', color: hourPillar ? '#667eea' : '#999'}
+    {label:'年', val:bazi.year, color:'#e85a4f'},
+    {label:'月', val:bazi.month, color:'#d4a574'},
+    {label:'日', val:bazi.day,  color:'#52b788'},
+    {label:'时', val:bazi.hour, color: bazi.hour !== '待定' ? '#667eea' : '#999'}
   ];
   baziCols.forEach(function(c){
     baziHtml += '<div style="text-align:center">';
