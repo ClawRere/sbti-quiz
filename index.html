@@ -733,7 +733,7 @@ window.switchCal = function(type){
     for(var i=0; i<opts.length && i<window._solarYears.length; i++){
       var sy = window._solarYears[i];
       if(type === 'lunar'){
-        opts[i].textContent = LUNAR_YEARS[(sy-4)%60] + '年';
+        opts[i].textContent = LUNAR_YEARS[(sy-4)%60] + '年(' + sy + ')';
       } else {
         opts[i].textContent = sy + '年';
       }
@@ -744,7 +744,7 @@ window.switchCal = function(type){
   if(moSel){
     for(var i=1; i<=12; i++){
       var opt = moSel.querySelector('option[value="'+i+'"]');
-      if(opt) opt.textContent = (type==='lunar' ? LUNAR_MONTHS[i-1] : (i+'月'));
+      if(opt) opt.textContent = (type==='lunar' ? LUNAR_MONTHS[i-1]+'('+i+'月)' : (i+'月'));
     }
   }
   // 更新日期选项文字（简化为初一~三十）
@@ -752,7 +752,7 @@ window.switchCal = function(type){
   if(dySel){
     for(var i=1; i<=31; i++){
       var opt = dySel.querySelector('option[value="'+i+'"]');
-      if(opt) opt.textContent = (type==='lunar' ? LUNAR_DAYS[i-1] : (i+'日'));
+      if(opt) opt.textContent = (type==='lunar' ? LUNAR_DAYS[i-1]+'('+i+'日)' : (i+'日'));
     }
   }
   updateFDate();
