@@ -1160,7 +1160,7 @@ function doResult(){
     var cn = (pt.cn || '').replace(/undefined/g,'');
     var en = (pt.name || '').replace(/undefined/g,'');
 
-    document.getElementById('rName').textContent = (cn && cn !== en) ? cn + ' · ' + en : (cn || en || '');
+    document.getElementById('rName').innerHTML = (cn && cn !== en) ? cn + '<br><span style="font-size:14px;font-weight:500;opacity:0.65">' + en + '</span>' : (cn || en || '');
     document.getElementById('rType').textContent = cn || en || '';
     document.getElementById('rSub').textContent = pt.d;
 
@@ -1237,10 +1237,10 @@ function doResult(){
       cpHtml += '<div class="cp-card">';
       cpHtml += '<div class="cp-avatar">' + cp.icon + '</div>';
       cpHtml += '<div class="cp-info">';
-      cpHtml += '<div class="cp-name">' + cp.name + '</div>';
+      cpHtml += '<div class="cp-name">' + (cp.name||'') + '</div>';
       cpHtml += '<div class="cp-type">' + (cp.name||'') + '</div>';
-      cpHtml += '<div class="cp-compat">契合度：<span>' + cp.compat + '%</span></div>';
-      cpHtml += '<div class="cp-desc">' + cp.desc + '</div>';
+      cpHtml += '<div class="cp-compat">契合度：<span>' + (cp.compat||'') + '%</span></div>';
+      cpHtml += '<div class="cp-desc">' + (cp.desc||'') + '</div>';
       cpHtml += '<div class="cp-tags">' + (cp.tags || []).slice(0, 2).map(function(t){ return '<span class="cp-tag">' + t + '</span>' }).join('') + '</div>';
       cpHtml += '</div></div>';
     });
@@ -1253,8 +1253,8 @@ function doResult(){
       cmpHtml += '<div class="compare-card">';
       cmpHtml += '<div class="compare-header">';
       cmpHtml += '<span class="compare-icon">' + cm.icon + '</span>';
-      cmpHtml += '<span class="compare-name">' + cm.name + '</span>';
-      cmpHtml += '<span class="compare-type">' + (cm.name||'') + '</span>';
+      cmpHtml += '<span class="compare-name">' + (cm.name||'') + '</span>';
+      cmpHtml += '<span class="compare-type" style="background:var(--accent2);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600;margin-left:auto">' + (cm.label||'') + '</span>';
       cmpHtml += '</div>';
       cmpHtml += '<div class="compare-desc">' + (cm.desc||'') + '</div>';
       cmpHtml += '<div class="compare-tags">' + (cm.tags || []).slice(0, 3).map(function(t){ return '<span class="compare-tag">' + t + '</span>' }).join('') + '</div>';
@@ -1273,7 +1273,9 @@ function doResult(){
 
     var radarHtml = '<div class="radar-grid">';
     dims2.forEach(function(dim, idx){
-      var v = Math.min(100, Math.max(1, dims[dim.k] || 1));
+      // 社恐指数 = 社交指数的反向（社交越强则社恐越弱）
+      var raw = (dim.k === 't') ? (100 - (dims.s || 50)) : (dims[dim.k] || 50);
+      var v = Math.min(100, Math.max(1, raw));
       radarHtml += '<div class="radar-item">';
       radarHtml += '<div class="radar-key">' + dim.n + '</div>';
       radarHtml += '<div class="radar-track">';
@@ -1339,8 +1341,8 @@ function doResult(){
           '<div style="font-size:11px;color:#52b788;font-weight:700;margin-bottom:6px;letter-spacing:1px">✦ 他人眼中的你</div>' +
           '<div>' + strengths[0] + '，' + (weakness[0]||strengths[1]||'内心有光的人') + '。</div>' +
         '</div>' +
-        '<div style="margin-bottom:12px">' +
-          '<div style="font-size:11px;color:var(--accent-primary);font-weight:700;margin-bottom:6px;letter-spacing:1px">✦ 性格优势</div>' +
+        '<div style="margin-bottom:12px;padding:12px;background:linear-gradient(135deg,#fff9f0 0%,#fef3e2 100%);border-radius:10px;border-left:3px solid var(--accent-secondary)">' +
+          '<div style="font-size:11px;color:var(--accent-secondary);font-weight:700;margin-bottom:6px;letter-spacing:1px">✦ 性格优势</div>' +
           '<div>' + strengths.slice(0,3).join('、') + '。</div>' +
         '</div>' +
         '<div style="margin-bottom:12px;padding:12px;background:#fef9f3;border-radius:10px;border-left:3px solid var(--accent-secondary)">' +
@@ -1440,7 +1442,7 @@ function doRestart(){
 
       var cn2 = (pt.cn || '').replace(/undefined/g,'');
       var en2 = (pt.name || '').replace(/undefined/g,'');
-      document.getElementById('rName').textContent = (cn2 && cn2 !== en2) ? cn2 + ' · ' + en2 : (cn2 || en2 || '');
+      document.getElementById('rName').innerHTML = (cn2 && cn2 !== en2) ? cn2 + '<br><span style="font-size:14px;font-weight:500;opacity:0.65">' + en2 + '</span>' : (cn2 || en2 || '');
       document.getElementById('rSub').textContent = pt.d;
 
       var tx = pt.cn || pt.name || '';
@@ -1473,10 +1475,10 @@ function doRestart(){
         cmpHtml += '<div class="compare-card">';
         cmpHtml += '<div class="compare-header">';
         cmpHtml += '<span class="compare-icon">' + cm.icon + '</span>';
-        cmpHtml += '<span class="compare-name">' + cm.name + '</span>';
-        cmpHtml += '<span class="compare-type">' + cm.t + '</span>';
+        cmpHtml += '<span class="compare-name">' + (cm.name||'') + '</span>';
+        cmpHtml += '<span class="compare-type" style="background:var(--accent2);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600;margin-left:auto">' + (cm.label||'') + '</span>';
         cmpHtml += '</div>';
-        cmpHtml += '<div class="compare-desc">' + cm.desc + '</div>';
+        cmpHtml += '<div class="compare-desc">' + (cm.desc||'') + '</div>';
         cmpHtml += '<div class="compare-tags">' + (cm.tags || []).slice(0, 3).map(function(t){ return '<span class="compare-tag">' + t + '</span>' }).join('') + '</div>';
         cmpHtml += '</div>';
       });
@@ -1488,12 +1490,10 @@ function doRestart(){
         cpHtml += '<div class="cp-card">';
         cpHtml += '<div class="cp-avatar">' + cp.icon + '</div>';
         cpHtml += '<div class="cp-info">';
-        cpHtml += '<div class="cp-name">' + cp.name + '</div>';
+        cpHtml += '<div class="cp-name">' + (cp.name||'') + '</div>';
         cpHtml += '<div class="cp-type">' + (cp.name||'') + '</div>';
         cpHtml += '<div class="cp-compat">契合度：<span>' + (cp.compat||'') + '%</span></div>';
         cpHtml += '<div class="cp-desc">' + (cp.desc||'') + '</div>';
-        cpHtml += '<div class="cp-compat">契合度：<span>' + cp.compat + '%</span></div>';
-        cpHtml += '<div class="cp-desc">' + cp.desc + '</div>';
         cpHtml += '<div class="cp-tags">' + (cp.tags || []).slice(0, 2).map(function(t){ return '<span class="cp-tag">' + t + '</span>' }).join('') + '</div>';
         cpHtml += '</div></div>';
       });
