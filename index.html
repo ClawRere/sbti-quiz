@@ -166,7 +166,7 @@ body.nosel { -webkit-touch-callout: none }
 .preview-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
 .preview-icon { font-size: 16px; animation: float 3s ease-in-out infinite; }
 .preview-label { font-size: 12px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.5px; }
-.preview-content { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-start; align-items: stretch; }
+.preview-content { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-start; align-items: stretch; margin-bottom: 10px; }
 .preview-tag {
   display: flex; align-items: center; gap: 6px; background: var(--bg-card); border: 1px solid var(--border-light);
   border-radius: var(--radius-xl); padding: 10px 14px; font-size: 14px; font-weight: 600;
@@ -388,13 +388,27 @@ body.nosel { -webkit-touch-callout: none }
           <div class="date-select-wrapper">
             <select id="fDay" class="date-select"><option value="">日</option></select>
           </div>
-          <div class="date-select-wrapper" style="flex:0.7">
-            <select id="fHour" class="date-select" onchange="onBirthDateChange()">
-              <option value="0">子</option><option value="2">丑</option><option value="4">寅</option>
-              <option value="6">卯</option><option value="8">辰</option><option value="10">巳</option>
-              <option value="12" selected>午</option><option value="14">未</option>
-              <option value="16">申</option><option value="18">酉</option><option value="20">戌</option>
-              <option value="22">亥</option>
+        </div>
+        <!-- 时辰行：可选，不填则八字无时柱 -->
+        <div class="date-grid" style="margin-top:8px">
+          <div class="date-select-wrapper">
+            <select id="fHour" class="date-select">
+              <option value="">时</option>
+              <option value="0">0时</option><option value="1">1时</option><option value="2">2时</option>
+              <option value="3">3时</option><option value="4">4时</option><option value="5">5时</option>
+              <option value="6">6时</option><option value="7">7时</option><option value="8">8时</option>
+              <option value="9">9时</option><option value="10">10时</option><option value="11">11时</option>
+              <option value="12">12时</option><option value="13">13时</option><option value="14">14时</option>
+              <option value="15">15时</option><option value="16">16时</option><option value="17">17时</option>
+              <option value="18">18时</option><option value="19">19时</option><option value="20">20时</option>
+              <option value="21">21时</option><option value="22">22时</option><option value="23">23时</option>
+            </select>
+          </div>
+          <div class="date-select-wrapper">
+            <select id="fMinute" class="date-select">
+              <option value="">分</option>
+              <option value="0">0分</option><option value="15">15分</option>
+              <option value="30">30分</option><option value="45">45分</option>
             </select>
           </div>
         </div>
@@ -662,11 +676,9 @@ function getZodiacFromBirth(birthStr){
   if(!birthStr) return null;
   var bd = new Date(birthStr);
   var year = bd.getFullYear();
-  var m = bd.getMonth() + 1, d = bd.getDate();
-  var isBeforeLN = (m === 1) || (m === 2 && d < 20);
-  var cy = isBeforeLN ? year - 1 : year;
+  // 生肖只按年份算，不管月日（1984=甲子=鼠年）
   var animals = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
-  return animals[(cy - 1900) % 12];
+  return animals[(year - 1984) % 12];
 }
 
 function getStarFromBirth(birthStr){
@@ -901,14 +913,14 @@ function calcLunar(birthStr){
   var isBeforeLB = (m===2 && d < 4) || (m===1);
   var cy = isBeforeLB ? y-1 : y;
   var animals = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
-  var zodiac = animals[(cy-1984+1200)%12];
+  // 生肖：只按阳历年，不管月日（1984=甲子=鼠年）
+  var zodiac = animals[(y-1984+1200)%12];
   // 天干（年柱60甲子偏移，1984=甲子）
   var tiangan = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
   var ganzhi = tiangan[(cy-1984+100)%10] + zodiac;
-  // 八字时柱（默认午时，用户可选）
-  var h = parseInt(document.getElementById('fHour')?.value) || 12;
-  var shichen = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'][Math.floor((h+1)/2)%12];
-  var dz = tiangan[Math.floor(((cy-1984+100)%10+Math.floor(h/2))%10+10)%10] + shichen;
+  // 八字时柱（用户未选时则留空；fHour 现在是 0-23 小时）
+  var h = parseInt(document.getElementById('fHour')?.value);
+  var dz = (h === null || isNaN(h)) ? null : (tiangan[Math.floor(((cy-1984+100)%10+Math.floor(h/2))%10+10)%10] + ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'][Math.floor((h+1)/2)%12]);
   // 农历月（用于八字月柱，非精确但够用）
   var lYear = bd < lunarNewYearDay(y) ? y-1 : y;
   var ny2 = lunarNewYearDay(lYear);
@@ -969,18 +981,22 @@ function _doCalcZodiac(val){
   var dayGanIdx = (julian + 6) % 10;
   var dayDizIdx = (julian + 6) % 12;
   var dayPillar = TIANGAN[dayGanIdx] + DIZHI[dayDizIdx];
-  // 时柱（默认午时，用户可选）
-  var birthHour = parseInt(document.getElementById('fHour')?.value) || 12;
-  var hourDzIdx = Math.floor((birthHour + 1) / 2) % 12;
-  var hourGanIdx = (dayGanIdx * 2 + Math.floor(birthHour / 2) + 100) % 10;
-  var hourPillar = TIANGAN[hourGanIdx] + DIZHI[hourDzIdx];
+  // 时柱（用户未选时显示待定）
+  var birthHourRaw = document.getElementById('fHour')?.value;
+  var hourPillar = null;
+  if(birthHourRaw !== '' && birthHourRaw !== null && birthHourRaw !== undefined){
+    var birthHour = parseInt(birthHourRaw);
+    var hourDzIdx = Math.floor((birthHour + 1) / 2) % 12;
+    var hourGanIdx = (dayGanIdx * 2 + Math.floor(birthHour / 2) + 100) % 10;
+    hourPillar = TIANGAN[hourGanIdx] + DIZHI[hourDzIdx];
+  }
 
   var baziHtml = '<div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap">';
   var baziCols = [
     {label:'年', val:yearPillar,  color:'#e85a4f'},
     {label:'月', val:monthPillar, color:'#d4a574'},
     {label:'日', val:dayPillar,  color:'#52b788'},
-    {label:'时', val:hourPillar, color:'#667eea'}
+    {label:'时', val:hourPillar || '待定', color: hourPillar ? '#667eea' : '#999'}
   ];
   baziCols.forEach(function(c){
     baziHtml += '<div style="text-align:center">';
