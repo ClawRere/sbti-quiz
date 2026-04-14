@@ -166,7 +166,7 @@ body.nosel { -webkit-touch-callout: none }
 .preview-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
 .preview-icon { font-size: 16px; animation: float 3s ease-in-out infinite; }
 .preview-label { font-size: 12px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.5px; }
-.preview-content { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-start; align-items: stretch; margin-bottom: 10px; }
+.preview-content { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-start; align-items: stretch; margin-bottom: 16px; }
 .preview-tag {
   display: flex; align-items: center; gap: 6px; background: var(--bg-card); border: 1px solid var(--border-light);
   border-radius: var(--radius-xl); padding: 10px 14px; font-size: 14px; font-weight: 600;
@@ -389,8 +389,8 @@ body.nosel { -webkit-touch-callout: none }
             <select id="fDay" class="date-select"><option value="">日</option></select>
           </div>
         </div>
-        <!-- 时辰行：可选，不填则八字无时柱 -->
-        <div class="date-grid" style="margin-top:8px">
+        <!-- 时辰行：阳历0-23小时（八字用），不填则时柱待定 -->
+        <div class="date-grid" style="margin-top:8px" id="solarHourRow">
           <div class="date-select-wrapper">
             <select id="fHour" class="date-select">
               <option value="">时</option>
@@ -404,11 +404,24 @@ body.nosel { -webkit-touch-callout: none }
               <option value="21">21时</option><option value="22">22时</option><option value="23">23时</option>
             </select>
           </div>
+        </div>
+        <!-- 阴历时辰行：十二时辰（子丑寅卯...），可选，不填则时柱待定 -->
+        <div class="date-grid" style="margin-top:6px;display:none" id="lunarHourRow">
           <div class="date-select-wrapper">
-            <select id="fMinute" class="date-select">
-              <option value="">分</option>
-              <option value="0">0分</option><option value="15">15分</option>
-              <option value="30">30分</option><option value="45">45分</option>
+            <select id="fLunarHour" class="date-select">
+              <option value="">时辰</option>
+              <option value="0">子时 23-1时</option>
+              <option value="1">丑时 1-3时</option>
+              <option value="2">寅时 3-5时</option>
+              <option value="3">卯时 5-7时</option>
+              <option value="4">辰时 7-9时</option>
+              <option value="5">巳时 9-11时</option>
+              <option value="6">午时 11-13时</option>
+              <option value="7">未时 13-15时</option>
+              <option value="8">申时 15-17时</option>
+              <option value="9">酉时 17-19时</option>
+              <option value="10">戌时 19-21时</option>
+              <option value="11">亥时 21-23时</option>
             </select>
           </div>
         </div>
@@ -575,9 +588,6 @@ body.nosel { -webkit-touch-callout: none }
       <button class="act-btn" id="btnCopyLink" onclick="copyShareLink()">🔗 复制分享链接</button>
     </div>
     <div style="margin-top:10px;font-size:12px;color:var(--text-muted);text-align:center">📢 好友点开链接可直接看结果，无需重测</div>
-    <div style="text-align:center;margin-top:16px">
-      <button class="rt-btn" onclick="doRestart()">🔄 重新测试</button>
-    </div>
   </div>
 </div>
 
@@ -678,7 +688,7 @@ function getZodiacFromBirth(birthStr){
   var year = bd.getFullYear();
   // 生肖只按年份算，不管月日（1984=甲子=鼠年）
   var animals = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
-  return animals[(year - 1984) % 12];
+  return animals[(year - 1984 + 1200) % 12];
 }
 
 function getStarFromBirth(birthStr){
@@ -870,6 +880,19 @@ window.switchCal = function(type){
       if(opt) opt.textContent = (type==='lunar' ? (LUNAR_DAYS[i-1]||(i+'日'))+'('+i+'日)' : (i+'日'));
     }
   }
+  // 切换时辰行显示：阳历显示solarHourRow，阴历显示lunarHourRow
+  var solarHrRow = document.getElementById('solarHourRow');
+  var lunarHrRow = document.getElementById('lunarHourRow');
+  if(solarHrRow) solarHrRow.style.display = (type === 'solar') ? '' : 'none';
+  if(lunarHrRow) lunarHrRow.style.display = (type === 'lunar') ? '' : 'none';
+  // 切换时清空另一方的值，避免混用
+  if(type === 'solar'){
+    var lhSel = document.getElementById('fLunarHour');
+    if(lhSel) lhSel.value = '';
+  } else {
+    var shSel = document.getElementById('fHour');
+    if(shSel) shSel.value = '';
+  }
   updateFDate();
 };
 
@@ -918,8 +941,11 @@ function calcLunar(birthStr){
   // 天干（年柱60甲子偏移，1984=甲子）
   var tiangan = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
   var ganzhi = tiangan[(cy-1984+100)%10] + zodiac;
-  // 八字时柱（用户未选时则留空；fHour 现在是 0-23 小时）
-  var h = parseInt(document.getElementById('fHour')?.value);
+  // 八字时柱：阳历用 fHour（0-23），阴历用 fLunarHour（0-11直接=地支）
+  var hRaw = window.calType === 'lunar'
+    ? document.getElementById('fLunarHour')?.value
+    : document.getElementById('fHour')?.value;
+  var h = hRaw !== '' && hRaw != null ? parseInt(hRaw) : null;
   var dz = (h === null || isNaN(h)) ? null : (tiangan[Math.floor(((cy-1984+100)%10+Math.floor(h/2))%10+10)%10] + ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'][Math.floor((h+1)/2)%12]);
   // 农历月（用于八字月柱，非精确但够用）
   var lYear = bd < lunarNewYearDay(y) ? y-1 : y;
@@ -982,11 +1008,15 @@ function _doCalcZodiac(val){
   var dayDizIdx = (julian + 6) % 12;
   var dayPillar = TIANGAN[dayGanIdx] + DIZHI[dayDizIdx];
   // 时柱（用户未选时显示待定）
-  var birthHourRaw = document.getElementById('fHour')?.value;
+  // 阳历用 fHour（0-23），阴历用 fLunarHour（0-11直接=地支索引）
+  var birthHourRaw = window.calType === 'lunar'
+    ? document.getElementById('fLunarHour')?.value
+    : document.getElementById('fHour')?.value;
   var hourPillar = null;
   if(birthHourRaw !== '' && birthHourRaw !== null && birthHourRaw !== undefined){
     var birthHour = parseInt(birthHourRaw);
-    var hourDzIdx = Math.floor((birthHour + 1) / 2) % 12;
+    // 阳历：小时→地支（子23-1时...）；阴历：选择值直接=地支索引
+    var hourDzIdx = window.calType === 'lunar' ? birthHour : Math.floor((birthHour + 1) / 2) % 12;
     var hourGanIdx = (dayGanIdx * 2 + Math.floor(birthHour / 2) + 100) % 10;
     hourPillar = TIANGAN[hourGanIdx] + DIZHI[hourDzIdx];
   }
