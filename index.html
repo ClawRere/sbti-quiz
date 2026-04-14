@@ -431,6 +431,7 @@ body.nosel { -webkit-touch-callout: none }
         <div class="preview-box" id="previewBox">
           <div class="preview-header">
             <span class="preview-icon">✨</span>
+
                         <span class="preview-label">星辰属相 · 系统推算（可调整日期重算）</span>
           </div>
           <div class="preview-content" id="previewTags"></div>
@@ -960,24 +961,28 @@ function solarToLunar(solarY, solarM, solarD){
   var ny = lunarNewYearDay(lYear);
   var diff = Math.round((bd - new Date(ny))/86400000) + 1;
   var lMonth = Math.max(1, Math.min(12, Math.floor(diff/29.53)+1));
-  var dayInMonth = diff - Math.floor((lMonth-1)*29.53);
+  var dayInMonth = diff - Math.round((lMonth-1)*29.53);
   return {ly:lYear, lm:lMonth, ld:dayInMonth};
 }
 // 阴历 → 阳历（返回 {sy,sm,sd}）
 function lunarToSolar(lYear, lMonth, lDay){
-  // 估算：阴历月初大约是农历新年后 lMonth*29.5 天
   var ny = lunarNewYearDay(lYear);
   var approx = new Date(ny.getTime() + Math.round((lMonth-1)*29.53 + lDay-1)*86400000);
-  // 二分搜索精确定位
-  var lo = new Date(approx.getTime() - 5*86400000);
-  var hi = new Date(approx.getTime() + 5*86400000);
-  for(var i=0; i<20; i++){
+  var lo = new Date(approx.getTime() - 7*86400000);
+  var hi = new Date(approx.getTime() + 7*86400000);
+  for(var i=0; i<25; i++){
     var mid = new Date((lo.getTime()+hi.getTime())/2);
     var conv = solarToLunar(mid.getFullYear(), mid.getMonth()+1, mid.getDate());
     var cmp = conv.ly*1000+conv.lm*10+conv.ld - (lYear*1000+lMonth*10+lDay);
-    if(cmp < 0) lo = mid; else hi = mid;
+    if(cmp <= 0) hi = mid; else lo = mid;
   }
-  return {sy:hi.getFullYear(), sm:hi.getMonth()+1, sd:hi.getDate()};
+  // 取 lo 和 hi 中更接近目标的
+  var cLo = solarToLunar(lo.getFullYear(), lo.getMonth()+1, lo.getDate());
+  var cHi = solarToLunar(hi.getFullYear(), hi.getMonth()+1, hi.getDate());
+  var scoreLo = Math.abs(cLo.ly*1000+cLo.lm*10+cLo.ld - (lYear*1000+lMonth*10+lDay));
+  var scoreHi = Math.abs(cHi.ly*1000+cHi.lm*10+cHi.ld - (lYear*1000+lMonth*10+lDay));
+  var best = scoreLo <= scoreHi ? lo : hi;
+  return {sy:best.getFullYear(), sm:best.getMonth()+1, sd:best.getDate()};
 }
 
 function calcLunar(birthStr){
@@ -1405,6 +1410,7 @@ function doResult(){
   var lt = document.getElementById('loadText');
   if(lt) lt.textContent = '正在分析你的十三维度人格画像...';
   setTimeout(function(){
+    try {
     var dims = calc();
     var age = calcAge(document.getElementById('fDate').value);
     window.sAge = age;
@@ -1663,6 +1669,7 @@ function doResult(){
       var newUrl = location.pathname + '?t=' + encodeURIComponent(key) + '&n=' + encodeURIComponent(key);
       history.replaceState(null, '', newUrl);
     }
+    } catch(e){ console.error('doResult error:', e); window._show('sRes'); }
   }, 1200);
 }
 
