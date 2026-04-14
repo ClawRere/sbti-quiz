@@ -680,6 +680,34 @@ function getStarFromBirth(birthStr){
 var ZODIAC_EMOJI = {'鼠':'🐭','牛':'🐮','虎':'🐯','兔':'🐰','龙':'🐉','蛇':'🐍','马':'🐎','羊':'🐑','猴':'🐵','鸡':'🐔','狗':'🐕','猪':'🐷'};
 var STAR_SYMBOLS = {'魔羯':'♑','水瓶':'♒','双鱼':'♓','白羊':'♈','金牛':'♉','双子':'♊','巨蟹':'♋','狮子':'♌','处女':'♍','天秤':'♎','天蝎':'♏','射手':'♐'};
 
+// 黄道十二宫：按阴历月日计算（命宫/财帛宫/兄弟宫...）
+var HUANGDAO_GONGS = ['命宫','兄弟宫','财帛宫','田宅宫','官禄宫','疾厄宫','迁移宫','仆役宫','事业宫','田宅宫','父母宫','福德宫'];
+var HUANGDAO_SYMBOLS = ['🧬','🤝','💰','🏠','🏛️','⚕️','✈️','🤴','🎯','🏠','👴','🌿'];
+function getHuangdaoFromLunar(mo, dy){
+  // 阴历月对应地盘（命宫起），阴历日决定推进步数
+  var basePalace = ((parseInt(mo) - 1) % 12); // 正月=0(子)，二月=1(丑)...
+  var dayOffset = (parseInt(dy) - 1) % 12;    // 初一=0步，初二=1步...
+  var palaceIdx = (basePalace + dayOffset) % 12;
+  return {
+    name: HUANGDAO_GONGS[palaceIdx],
+    symbol: HUANGDAO_SYMBOLS[palaceIdx],
+    desc: HUANGDAO_DESC[HUANGDAO_GONGS[palaceIdx]] || ''
+  };
+}
+var HUANGDAO_DESC = {
+  '命宫': '核心自我，揭示先天性格与命运主线。',
+  '兄弟宫': '人脉资源，影响合作与朋友圈层。',
+  '财帛宫': '财富态度，决定赚钱方式与理财观。',
+  '田宅宫': '家庭根基，关联房产与固定资产。',
+  '官禄宫': '事业野心，展现职场定位与领导力。',
+  '疾厄宫': '健康隐患，揭示身体薄弱环节。',
+  '迁移宫': '远行缘分，影响旅行与外在机遇。',
+  '仆役宫': '人际关系，反映下属与朋友缘分。',
+  '事业宫': '权力欲望，展现权力欲望与野心。',
+  '父母宫': '教养影响，揭示早年成长环境。',
+  '福德宫': '福报运势，反映因果福报与晚景。'
+};
+
 // ═══ 日期选择器初始化 ═══
 // ═══ 甲子年表（简化60甲子循环） ═══
 var LUNAR_YEARS = ['甲子','乙丑','丙寅','丁卯','戊辰','己巳','庚午','辛未','壬申','癸酉',
@@ -816,15 +844,21 @@ function calculateZodiacAndStar(){
   window.sZodiac = lunar ? lunar.zodiac : '';
   window.sStar = starData;
 
+  // 黄道宫（按阴历月日计算）
+  var fMo = parseInt(document.getElementById('fMonth').value) || 1;
+  var fDy = parseInt(document.getElementById('fDay').value) || 1;
+  var huangdao = window.calType === 'lunar' ? getHuangdaoFromLunar(fMo, fDy) : null;
+  window.sHuangdao = huangdao;
+
   var html = '';
   if(lunar){
     var emoji = ZODIAC_EMOJI[lunar.zodiac] || '❓';
-    // 生肖框
+    // 生肖框（阳历计算）
     html += '<div class="preview-tag" style="min-width:120px">';
     html += '<span class="emoji">' + emoji + '</span>';
     html += '<span class="zodiac">' + lunar.zodiac + '年生</span>';
     html += '</div>';
-    // 星座框
+    // 星座框（阳历计算）
     if(starData && starData.name){
       var symbol = STAR_SYMBOLS[starData.name] || '☀️';
       html += '<div class="preview-tag" style="min-width:120px">';
@@ -837,11 +871,11 @@ function calculateZodiacAndStar(){
   var previewBox = document.getElementById('previewBox');
   if(previewTags) previewTags.innerHTML = html;
 
-  // 阴历/八字单独一行
+  // 阴历/八字/黄道宫单独一行
   var html2 = '';
   if(lunar){
     if(window.calType === 'lunar'){
-      // 阴历模式：显示输入的阴历年月日（汉字+数字）
+      // 阴历模式：显示输入的阴历月日 + 黄道宫
       var moIdx = parseInt(starData && starData.month || 1) - 1;
       var dayIdx = parseInt(starData && starData.day || 1) - 1;
       var moNum = moIdx + 1;
@@ -854,8 +888,15 @@ function calculateZodiacAndStar(){
       html2 += '<span style="font-size:12px">📅</span>';
       html2 += '<span style="font-size:13px">' + LUNAR_DAYS[dayIdx] + '(' + dayNum + '日)</span>';
       html2 += '</div>';
+      // 黄道宫（阴历计算）
+      if(huangdao){
+        html2 += '<div class="preview-tag" style="min-width:130px">';
+        html2 += '<span style="font-size:12px">' + huangdao.symbol + '</span>';
+        html2 += '<span style="font-size:13px">' + huangdao.name + '</span>';
+        html2 += '</div>';
+      }
     } else {
-      // 阳历模式：显示阴历转换结果
+      // 阳历模式：显示阴历转换结果 + 八字
       html2 += '<div class="preview-tag" style="min-width:130px">';
       html2 += '<span style="font-size:12px">🌙</span>';
       html2 += '<span style="font-size:13px">阴历' + lunar.lunarYear + '年</span>';
@@ -1184,12 +1225,15 @@ function doResult(){
 
     document.getElementById('rAgeTag').style.display = 'block';
     var starName = (window.sStar && window.sStar.name) ? window.sStar.name : '';
+    var huangdaoData = window.sHuangdao;
     var lunar = window.sZodiac ? calcLunar(document.getElementById('fDate').value) : null;
-    document.getElementById('rAgeTag').querySelector('.section-title').textContent =
+    var sexTag = window.sGender ? ' · ' + window.sGender : '';
+    document.getElementById('rAgeTag').querySelector('.section-title').innerHTML =
       '👤 出生于 ' + document.getElementById('fDate').value +
       (window.sZodiac ? ' · ' + (ZODIAC_EMOJI[window.sZodiac]||'') + ' ' + window.sZodiac + '年生' : '') +
       (starName ? ' · ' + (STAR_SYMBOLS[starName]||'') + ' ' + starName + '座' : '') +
-      (window.sGender ? ' · ' + window.sGender : '');
+      (huangdaoData ? ' · ' + (huangdaoData.symbol||'') + ' ' + huangdaoData.name + '命' : '') +
+      sexTag;
 
     document.getElementById('rDesc').innerHTML = (pt.d ? '<p style="font-size:15px;line-height:1.9;color:var(--text-secondary);letter-spacing:0.4px;padding:8px 0;border-left:3px solid var(--accent-primary);padding-left:14px;font-style:italic">「' + pt.d + '」</p>' : '');
 
@@ -1308,12 +1352,20 @@ function doResult(){
     // 性格标签取卦名配色
     var XLR_COLOR = { '留连':'#8e7cc3','速喜':'#e85a4f','赤口':'#d4a574','小吉':'#52b788','空亡':'#667eea','大安':'#52b788' };
     var xlrColor = XLR_COLOR[xlrName] || 'var(--accent-primary)';
+    // 阴历时追加黄道宫解读
+    var huangdaoExtra = '';
+    if(window.calType === 'lunar' && window.sHuangdao){
+      huangdaoExtra = '<div style="font-size:12px;color:var(--accent-secondary);margin-top:4px;font-weight:600">' +
+        '🏛️ 黄道' + window.sHuangdao.name + ' · ' + window.sHuangdao.symbol + '</div>' +
+        '<div style="font-size:12px;color:var(--text-secondary);margin-top:4px;line-height:1.6;max-width:280px;margin-left:auto;margin-right:auto">' + window.sHuangdao.desc + '</div>';
+    }
     document.getElementById('rMeihua').style.display = 'block';
     document.getElementById('rMeihuaDetail').innerHTML =
       '<div style="text-align:center;padding:8px 0 4px">' +
         '<div style="display:inline-block;background:' + xlrColor + ';color:#fff;border-radius:50%;width:64px;height:64px;line-height:64px;font-size:22px;font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,0.12)">' + xlrName + '</div>' +
         '<div style="font-size:13px;color:' + xlrColor + ';margin-top:8px;font-weight:600;letter-spacing:1px">' + (window.calType==='lunar'?'梅花卦':'小六壬') + ' · ' + xlrName + '</div>' +
         '<div style="font-size:13px;color:var(--text-secondary);margin-top:6px;line-height:1.7;letter-spacing:0.5px;max-width:300px;margin-left:auto;margin-right:auto">「' + xlrLine + '」</div>' +
+        huangdaoExtra +
       '</div>';
 
     // ═══ 性格画像（动态生成，不再重复 d2） ═══
@@ -1456,9 +1508,19 @@ function doRestart(){
       var xlr2 = (yc2 + fMo2 + fDy2) % 6;
       var XLRS = ['留连','速喜','赤口','小吉','空亡','大安'];
       var XLRC = { '留连':'#8e7cc3','速喜':'#e85a4f','赤口':'#d4a574','小吉':'#52b788','空亡':'#667eea','大安':'#52b788' };
+      var XLRD2 = {
+        '留连': '时机未熟，凡事多有拖延纠缠。静待转机，切忌躁进。',
+        '速喜': '喜事将近，人情通达。心有所念，缘分将至。',
+        '赤口': '口舌暗涌，是非将近。谨言慎行，避锋为上。',
+        '小吉': '小小顺遂，稳中有进。低调行事，积少成多。',
+        '空亡': '事多阻滞，缘分浅薄。宜守不宜动，静待时机。',
+        '大安': '诸事大吉，平安无事。气运亨通，宜稳中求进。'
+      };
       var xn2 = XLRS[xlr2] || '大安';
+      var xc2 = XLRC[xn2] || 'var(--accent-primary)';
+      var xd2 = XLRD2[xn2] || '';
       document.getElementById('rMeihua').style.display = 'block';
-      document.getElementById('rMeihuaDetail').innerHTML = '<div style="text-align:center;padding:8px 0 4px"><div style="display:inline-block;background:' + XLRC[xn2] + ';color:#fff;border-radius:50%;width:64px;height:64px;line-height:64px;font-size:22px;font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,0.12)">' + xn2 + '</div><div style="font-size:13px;color:' + XLRC[xn2] + ';margin-top:8px;font-weight:600;letter-spacing:1px">' + xn2 + '</div></div>';
+      document.getElementById('rMeihuaDetail').innerHTML = '<div style="text-align:center;padding:8px 0 4px"><div style="display:inline-block;background:' + xc2 + ';color:#fff;border-radius:50%;width:64px;height:64px;line-height:64px;font-size:22px;font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,0.12)">' + xn2 + '</div><div style="font-size:13px;color:' + xc2 + ';margin-top:8px;font-weight:600;letter-spacing:1px">' + xn2 + '</div><div style="font-size:13px;color:var(--text-secondary);margin-top:6px;line-height:1.7;letter-spacing:0.5px;max-width:300px;margin-left:auto;margin-right:auto">「' + xd2 + '」</div></div>';
       document.getElementById('rDesc').innerHTML = pt.d ? '<p style="font-size:15px;line-height:1.9;color:var(--text-secondary);letter-spacing:0.4px;padding:8px 0;border-left:3px solid var(--accent-primary);padding-left:14px;font-style:italic">「' + pt.d + '」</p>' : '';
 
       document.getElementById('rPersonal').innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:16px">🔒 完整性格画像仅本人测试后可见</div>';
