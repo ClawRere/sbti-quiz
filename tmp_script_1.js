@@ -87,9 +87,9 @@ function getZodiacFromBirth(birthStr){
   const bd=new Date(birthStr);
   const year=bd.getFullYear();
   const m=bd.getMonth()+1,d=bd.getDate();
-  // 立春为生肖分界（2月4日），此前属上一年（1984=甲子=鼠年）
+  // 阳历按年直接算生肖（基准年1985=甲子=鼠年）
   const animals=['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
-  return animals[(year-1984+1200)%12];
+  return animals[(year-1985+1200)%12];
 }
 
 // 初始化日期选择器（原生 date input）
