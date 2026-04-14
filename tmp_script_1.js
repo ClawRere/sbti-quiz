@@ -87,9 +87,9 @@ function getZodiacFromBirth(birthStr){
   const bd=new Date(birthStr);
   const year=bd.getFullYear();
   const m=bd.getMonth()+1,d=bd.getDate();
-  // 农历新年通常在1.21-2.20，若在此之前则属相是上一年
-  const isBeforeLN=(m===1)||(m===2&&d<20);
-  const cy=isBeforeLN?year-1:year;
+  // 立春为生肖分界（2月4日），此前属上一年（1984=甲子=鼠年）
+  const isBeforeLB=(m===1)||(m===2&&d<4);
+  const cy=isBeforeLB?year-1:year;
   const animals=['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
   return animals[(cy-1984+1200)%12];
 }
