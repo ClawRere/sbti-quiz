@@ -81,15 +81,13 @@ function calcAge(birthStr){
   return age;
 }
 
-// 根据出生日期推算生肖（近似：中国农历新年大约在1月21-2月20日）
+// 根据出生日期推算生肖（阳历按年直接算，基准年1984=甲子=鼠）
 function getZodiacFromBirth(birthStr){
   if(!birthStr)return null;
   const bd=new Date(birthStr);
   const year=bd.getFullYear();
-  const m=bd.getMonth()+1,d=bd.getDate();
-  // 阳历按年直接算生肖（基准年1985=甲子=鼠年）
   const animals=['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
-  return animals[(year-1985+1200)%12];
+  return animals[(year-1984+1200)%12];
 }
 
 // 初始化日期选择器（原生 date input）
