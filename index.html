@@ -901,7 +901,7 @@ function calcLunar(birthStr){
   var isBeforeLB = (m===2 && d < 4) || (m===1);
   var cy = isBeforeLB ? y-1 : y;
   var animals = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
-  var zodiac = animals[(cy-1983+1200)%12];
+  var zodiac = animals[(cy-1984+1200)%12];
   // 天干（年柱60甲子偏移，1984=甲子）
   var tiangan = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
   var ganzhi = tiangan[(cy-1984+100)%10] + zodiac;
