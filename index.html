@@ -166,11 +166,11 @@ body.nosel { -webkit-touch-callout: none }
 .preview-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
 .preview-icon { font-size: 16px; animation: float 3s ease-in-out infinite; }
 .preview-label { font-size: 12px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.5px; }
-.preview-content { display: flex; gap: 12px; flex-wrap: wrap; }
+.preview-content { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-start; align-items: stretch; }
 .preview-tag {
   display: flex; align-items: center; gap: 6px; background: var(--bg-card); border: 1px solid var(--border-light);
-  border-radius: var(--radius-xl); padding: 10px 16px; font-size: 14px; font-weight: 600;
-  box-shadow: var(--shadow-sm); transition: all 0.3s; min-width: auto; justify-content: center;
+  border-radius: var(--radius-xl); padding: 10px 14px; font-size: 14px; font-weight: 600;
+  box-shadow: var(--shadow-sm); transition: all 0.3s; flex: 0 0 auto; justify-content: center; min-width: 120px;
 }
 .preview-tag:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
 .preview-tag .emoji { font-size: 20px; animation: float 2.5s ease-in-out infinite; }
@@ -235,7 +235,7 @@ body.nosel { -webkit-touch-callout: none }
 }
 .result-name { font-size: 32px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .result-type { font-size: 14px; color: var(--accent-primary); font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
-.result-sub { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px; }
+.result-sub { font-size: 14px; color: var(--text-secondary); line-height: 1.9; margin-bottom: 20px; letter-spacing: 0.3px; }
 .dim-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
 .dim-label { font-size: 13px; color: var(--text-secondary); width: 72px; flex-shrink: 0; text-align: right; }
 .dim-bar { flex: 1; height: 10px; background: var(--bg-secondary); border-radius: 5px; overflow: hidden; }
@@ -359,7 +359,7 @@ body.nosel { -webkit-touch-callout: none }
     </div>
     <button class="btn" type="button" onclick="window._show('sInfo')">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.8.9</div>
+    <div class="hero-version">v1.9.1</div>
   </div>
 </div>
 
@@ -372,11 +372,13 @@ body.nosel { -webkit-touch-callout: none }
       <div class="q-sub">基本信息越准，人格画像越真</div>
       <div class="form-row">
 <label>🎂 出生日期</label>
-        <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:6px">
-          <div style="display:flex;background:var(--bg-secondary);border-radius:20px;padding:2px;font-size:12px">
-            <div id="calSolar" onclick="window.switchCal('solar')" style="padding:4px 12px;border-radius:20px;cursor:pointer;transition:all 0.2s;font-weight:600">阳历</div>
-            <div id="calLunar" onclick="window.switchCal('lunar')" style="padding:4px 12px;border-radius:20px;cursor:pointer;transition:all 0.2s">阴历</div>
+        <div style="display:flex;justify-content:center;margin-bottom:10px">
+          <div style="display:flex;background:var(--bg-secondary);border-radius:20px;padding:2px;font-size:13px;width:160px">
+            <div id="calSolar" onclick="window.switchCal('solar')" style="flex:1;text-align:center;padding:6px 0;border-radius:20px;cursor:pointer;transition:all 0.2s;font-weight:600">🌞 阳历</div>
+            <div id="calLunar" onclick="window.switchCal('lunar')" style="flex:1;text-align:center;padding:6px 0;border-radius:20px;cursor:pointer;transition:all 0.2s">🌙 阴历</div>
           </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:6px">
           <div class="date-select-wrapper">
             <select id="fYear" class="date-select"><option value="">年</option></select>
           </div>
@@ -450,10 +452,8 @@ body.nosel { -webkit-touch-callout: none }
       <div class="result-sub" id="rSub"></div>
     </div>
 
-    <!-- 可能的类型列表（v2.0 新功能） -->
-    <div class="card" id="rPossibilityCard">
-      <div class="section-title">🎯 可能的类型 · Top 3</div>
-      <div id="rPossibilityList"></div>
+    <!-- 全球人格占比 -->
+    <div class="card" id="rPossibilityCard" style="text-align:center">
     </div>
 
     <!-- 一句话金句 -->
@@ -835,16 +835,18 @@ function calculateZodiacAndStar(){
   var html2 = '';
   if(lunar){
     if(window.calType === 'lunar'){
-      // 阴历模式：显示输入的阴历年月日
+      // 阴历模式：显示输入的阴历年月日（汉字+数字）
       var moIdx = parseInt(starData && starData.month || 1) - 1;
       var dayIdx = parseInt(starData && starData.day || 1) - 1;
+      var moNum = moIdx + 1;
+      var dayNum = dayIdx + 1;
       html2 += '<div class="preview-tag" style="min-width:130px">';
       html2 += '<span style="font-size:12px">🌙</span>';
-      html2 += '<span style="font-size:13px">阴历' + lunar.lunarYear + '年 ' + LUNAR_MONTHS[moIdx] + '</span>';
+      html2 += '<span style="font-size:13px">阴历' + lunar.lunarYear + '年 ' + LUNAR_MONTHS[moIdx] + '(' + moNum + '月)</span>';
       html2 += '</div>';
       html2 += '<div class="preview-tag" style="min-width:130px">';
       html2 += '<span style="font-size:12px">📅</span>';
-      html2 += '<span style="font-size:13px">' + LUNAR_DAYS[dayIdx] + '</span>';
+      html2 += '<span style="font-size:13px">' + LUNAR_DAYS[dayIdx] + '(' + dayNum + '日)</span>';
       html2 += '</div>';
     } else {
       // 阳历模式：显示阴历转换结果
@@ -1135,22 +1137,18 @@ function doResult(){
     var matchResults = matchType(dims);
     var pt = matchResults.length > 0 ? matchResults[0].type : TYPES[Object.keys(TYPES)[0]];
 
-    // 展示可能的类型（只显示 >=60% 的，标签化紧凑展示）
-    var possibleHtml = '';
-    var shown = 0;
-    matchResults.forEach(function(item, idx){
-      if(item.pct < 60) return; // 只显示 60% 以上的
-      var rareTag = item.rare ? '<span style="background:#f0e6ff;color:#8e7cc3;padding:1px 6px;border-radius:6px;font-size:10px;margin-left:4px">稀有</span>' : '';
-      var name = item.type.cn || item.type.name || item.key;
-      possibleHtml += '<div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;font-size:12px;border-bottom:1px solid var(--border-light)">';
-      possibleHtml += '<span style="font-weight:600">' + name + rareTag + '</span>';
-      possibleHtml += '<span style="color:var(--accent-primary);font-weight:700">' + item.pct + '%</span></div>';
-      shown++;
-    });
-    // 可能类型整体卡片：≥1条才显示，0条隐藏
+    // 「全世界x%的人是此人格」（用 base_rate 或前三名概率推算，≥1条才显示）
+    var topPct = matchResults.length > 0 ? matchResults[0].pct : 0;
+    // 全球占比 = topPct / 500（softmax总和100%，换算成全球罕见度）
+    var worldPct = (pt.base_rate || 2.5).toFixed(1);
     var possCard = document.getElementById('rPossibilityCard');
-    if(possCard) possCard.style.display = shown > 0 ? 'block' : 'none';
-    document.getElementById('rPossibilityList').innerHTML = possibleHtml;
+    if(possCard){
+      possCard.style.display = 'block';
+      possCard.innerHTML = '<div style="padding:16px 0">'
+        + '<div style="font-size:30px;font-weight:800;color:var(--accent-primary);margin-bottom:6px">' + worldPct + '%</div>'
+        + '<div style="font-size:13px;color:var(--text-secondary)">全世界有 <b>' + worldPct + '%</b> 的人与你拥有相同人格基因</div>'
+        + '</div>';
+    }
 
     var cn = (pt.cn || '').replace(/undefined/g,'');
     var en = (pt.name || '').replace(/undefined/g,'');
@@ -1170,7 +1168,7 @@ function doResult(){
     }
 
     var tx = pt.cn || pt.name || '';
-    document.getElementById('rTx').innerHTML = (tx ? '<p style="font-size:15px;color:var(--accent-primary);font-weight:600;margin-bottom:10px">' + tx + '</p>' : '') + (pt.d2 || '');
+    document.getElementById('rTx').innerHTML = (tx ? '<p style="font-size:15px;color:var(--accent-primary);font-weight:600;margin-bottom:10px;letter-spacing:0.5px">' + tx + '</p>' : '') + (pt.d2 ? pt.d2.replace(/([。！？，；：、])/g,'$1 ') : '');
 
     document.getElementById('rAdvice').textContent = pt.tips || '';
 
@@ -1186,7 +1184,7 @@ function doResult(){
       (starName ? ' · ' + (STAR_SYMBOLS[starName]||'') + ' ' + starName + '座' : '') +
       (window.sGender ? ' · ' + window.sGender : '');
 
-    document.getElementById('rDesc').innerHTML = (pt.d2 ? '<p style="font-size:14px;line-height:1.7;color:var(--text-secondary);margin-bottom:10px">' + pt.d2 + '</p>' : '') + (pt.r2 ? '<p style="font-size:13px;color:var(--accent-primary)">⚠️ 注意：' + pt.r2 + '</p>' : '');
+    document.getElementById('rDesc').innerHTML = (pt.d2 ? '<p style="font-size:14px;line-height:2;color:var(--text-secondary);margin-bottom:10px;letter-spacing:0.4px">' + pt.d2.replace(/([。！？，；：、])/g,'$1 ') + '</p>' : '') + (pt.r2 ? '<p style="font-size:13px;color:var(--accent-primary)">⚠️ 注意：' + pt.r2 + '</p>' : '');
 
     // 人格标签（含 zy_tags）
     var tagHtml = '';
@@ -1208,10 +1206,9 @@ function doResult(){
     oppPairs.forEach(function(pair){
       var v1 = Math.min(100, Math.max(0, dims[pair.k] || 0));
       var v2 = Math.min(100, Math.max(0, dims[pair.nk] || 0));
-      var total = v1 + v2 || 1;
-      // 标签：n 在左（=v1=左侧条），nn 在右（=v2=右侧条）
-      var leftW = (v1 / total) * 50;
-      var rightW = (v2 / total) * 50;
+      // 左右各自独立，分别 0~100% 填充，满分 = 满整侧
+      var leftW = v1 / 2;  // 最大 50% 宽度（占左半边）
+      var rightW = v2 / 2; // 最大 50% 宽度（占右半边）
       barsHtml += '<div class="opp-row">';
       barsHtml += '<div class="opp-header">';
       barsHtml += '<span class="opp-label" style="color:' + pair.c + '">' + pair.n + '</span>';
