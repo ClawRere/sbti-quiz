@@ -934,10 +934,10 @@ function calcLunar(birthStr){
   var y = bd.getFullYear(), m = bd.getMonth()+1, d = bd.getDate();
   // 简化阴历判断（立春为界）+ 八字年柱
   var isBeforeLB = (m===2 && d < 4) || (m===1);
-  var cy = isBeforeLB ? y-1 : y;
+  var lunarYear = isBeforeLB ? y-1 : y; // 立春前属上一年
   var animals = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
-  // 生肖：只按阳历年，不管月日（1984=甲子=鼠年）
-  var zodiac = animals[(y-1984+1200)%12];
+  // 生肖：用农历年（立春为界，1984=甲子=鼠年）
+  var zodiac = animals[(lunarYear-1984+1200)%12];
   // 天干（年柱60甲子偏移，1984=甲子）
   var tiangan = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
   var ganzhi = tiangan[(cy-1984+100)%10] + zodiac;
@@ -1113,10 +1113,13 @@ function showPreview(){
 
   calculateZodiacAndStar();
 
+  // 等防抖（100ms）+计算完成后再 re-enable，避免快速点清掉 timeout
   setTimeout(function(){
+    if(_bzTimer) clearTimeout(_bzTimer);
+    _doCalcZodiac(document.getElementById('fDate').value);
     btn.innerHTML = '🔮 星辰属相测算';
     btn.disabled = false;
-  }, 800);
+  }, 300);
 }
 
 function beginQuiz(){
