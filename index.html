@@ -926,7 +926,8 @@ function beginQuiz(){
 // ═══ 分享链接 ═══
 function getShareUrl(pt, utm){
   var base = location.href.split('?')[0].split('#')[0];
-  var p = { t: pt.t, n: pt.cn || pt.name, src: utm || 'share' };
+  var key = pt.cn || pt.name || pt.key || '';
+  var p = { t: key, n: key, src: utm || 'share' };
   return base + '?' + Object.keys(p).map(function(k){ return k + '=' + encodeURIComponent(p[k]) }).join('&');
 }
 
@@ -1159,8 +1160,8 @@ function doResult(){
     var cn = (pt.cn || '').replace(/undefined/g,'');
     var en = (pt.name || '').replace(/undefined/g,'');
 
-    document.getElementById('rName').textContent = (cn && cn !== en) ? cn + ' · ' + en : (cn || en || pt.t || '');
-    document.getElementById('rType').textContent = pt.t;
+    document.getElementById('rName').textContent = (cn && cn !== en) ? cn + ' · ' + en : (cn || en || '');
+    document.getElementById('rType').textContent = cn || en || '';
     document.getElementById('rSub').textContent = pt.d;
 
     // 金句（≤20字）
@@ -1366,8 +1367,8 @@ function doResult(){
 
     var params = new URLSearchParams(location.search);
     if(!params.get('t')){
-      var n = cn || en || pt.t || '';
-      var newUrl = location.pathname + '?t=' + encodeURIComponent(pt.t || '') + '&n=' + encodeURIComponent(n);
+      var key = cn || en || '';
+      var newUrl = location.pathname + '?t=' + encodeURIComponent(key) + '&n=' + encodeURIComponent(key);
       history.replaceState(null, '', newUrl);
     }
   }, 1200);
@@ -1423,19 +1424,15 @@ function doRestart(){
     var t = params.get('t'), n = params.get('n'), src = params.get('src');
 
     if(t && n){
-      var keys = Object.keys(TYPES);
-      var pt = null;
-      for(var ki = 0; ki < keys.length; ki++){
-        if(TYPES[keys[ki]].t === t){ pt = TYPES[keys[ki]]; break }
-      }
-      if(!pt) pt = TYPES[keys[0]];
+      var pt = TYPES[t] || null;
+      if(!pt) pt = TYPES[Object.keys(TYPES)[0]];
       var dims = calc();
 
       document.title = n + '的中式人格 · 中式命格测试';
       document.getElementById('rBadge').textContent = n + '的中式人格';
       document.getElementById('rAgeTag').style.display = 'block';
       document.getElementById('rAgeTag').querySelector('.section-title').textContent = '👀 这是好友分享的结果';
-      document.getElementById('rType').textContent = pt.t;
+      document.getElementById('rType').textContent = cn2 || en2 || '';
 
       var gq2 = document.getElementById('rGoldenQuote');
       var gt2 = document.getElementById('rGoldenText');
