@@ -359,7 +359,7 @@ body.nosel { -webkit-touch-callout: none }
     </div>
     <button class="btn" type="button" onclick="window._show('sInfo')">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">v1.9.1</div>
+    <div class="hero-version">v1.9.8</div>
   </div>
 </div>
 
@@ -915,20 +915,48 @@ function calculateZodiacAndStar(){
   var xingxiu = window.calType === 'lunar' ? getErshibaXingxiu(fMo, fDy) : null;
   window.sXingxiu = xingxiu;
 
-  // ========== 第一行：阴历年/月/日 ==========
-  var html = '';
-  if(lunar){
-    var lunarMo = parseInt(starData && starData.month || 1);
-    var lunarDy = parseInt(starData && starData.day || 1);
-    var lunarMoTxt = LUNAR_MONTHS[lunarMo-1] || '正';
-    var lunarDyTxt = LUNAR_DAYS[lunarDy-1] || '初一';
-    html += '<div class="preview-tag" style="min-width:160px">';
-    html += '<span style="font-size:12px">🌙</span>';
-    html += '<span style="font-size:13px">阴历' + lunar.lunarYear + '年 ' + lunarMoTxt + lunarDyTxt + '</span>';
-    html += '</div>';
-  }
+  // ========== 第一行：四柱八字 ==========
+  var TIANGAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+  var DIZHI   = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  var bd = new Date(val);
+  var y = bd.getFullYear(), mo = bd.getMonth()+1, dy = bd.getDate(), h = bd.getHours();
+  // 年柱（立春为界）
+  var isBeforeLB = (mo===2 && dy < 4) || (mo===1);
+  var cy = isBeforeLB ? y-1 : y;
+  var ganIdx = (cy - 4) % 10;
+  var dzIdx  = (cy - 4) % 12;
+  var yearPillar = TIANGAN[ganIdx] + DIZHI[dzIdx];
+  // 月柱（按阴历月，若为阳历模式则用 solar month 近似）
+  var useMonth = (window.calType === 'lunar') ? (parseInt(document.getElementById('fMonth').value)||1) : mo;
+  var monGanIdx = (ganIdx + (useMonth - 1)) % 10;
+  var monDizIdx = (useMonth + 1) % 12; // 正月=寅
+  var monthPillar = TIANGAN[monGanIdx] + DIZHI[monDizIdx];
+  // 日柱（儒略日简化）
+  var julian = Math.floor((Date.UTC(y, mo-1, dy) - Date.UTC(1921, 0, 1)) / 86400000);
+  var dayGanIdx = julian % 10;
+  var dayDizIdx = julian % 12;
+  var dayPillar = TIANGAN[dayGanIdx] + DIZHI[dayDizIdx];
+  // 时柱
+  var hourDzIdx = Math.floor((h + 1) / 2) % 12;
+  var hourGanIdx = (dayGanIdx * 2 + Math.floor(h / 2)) % 10;
+  var hourPillar = TIANGAN[hourGanIdx] + DIZHI[hourDzIdx];
+
+  var baziHtml = '<div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap">';
+  var baziCols = [
+    {label:'年', val:yearPillar,  color:'#e85a4f'},
+    {label:'月', val:monthPillar, color:'#d4a574'},
+    {label:'日', val:dayPillar,  color:'#52b788'},
+    {label:'时', val:hourPillar, color:'#667eea'}
+  ];
+  baziCols.forEach(function(c){
+    baziHtml += '<div style="text-align:center">';
+    baziHtml += '<div style="font-size:11px;color:' + c.color + ';font-weight:600;margin-bottom:2px">' + c.label + '柱</div>';
+    baziHtml += '<div style="background:' + c.color + ';color:#fff;border-radius:8px;padding:4px 10px;font-size:15px;font-weight:700;letter-spacing:2px">' + c.val + '</div>';
+    baziHtml += '</div>';
+  });
+  baziHtml += '</div>';
   var previewTags = document.getElementById('previewTags');
-  if(previewTags) previewTags.innerHTML = html;
+  if(previewTags) previewTags.innerHTML = baziHtml;
 
   // ========== 第二行：生肖 + 星座 ==========
   var html2 = '';
@@ -1365,10 +1393,10 @@ function doResult(){
       cmpHtml += '<div class="compare-header">';
       cmpHtml += '<span class="compare-icon">' + cm.icon + '</span>';
       cmpHtml += '<span class="compare-name">' + (cm.name||'') + '</span>';
-      cmpHtml += '<span class="compare-type" style="background:var(--accent2);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600;margin-left:auto">' + (cm.label||'') + '</span>';
+      cmpHtml += '<span class="compare-type" style="background:var(--accent-primary);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600;margin-left:auto">' + (cm.label||'') + '</span>';
       cmpHtml += '</div>';
       cmpHtml += '<div class="compare-desc">' + (cm.desc||'') + '</div>';
-      cmpHtml += '<div class="compare-tags">' + (cm.tags || []).slice(0, 3).map(function(t){ return '<span class="compare-tag">' + t + '</span>' }).join('') + '</div>';
+      cmpHtml += '<div class="compare-tags">' + (cm.tags || []).slice(0, 3).map(function(t){ return '<span style="background:var(--bg-secondary);color:var(--text-secondary);padding:3px 8px;border-radius:12px;font-size:11px;border:1px solid var(--border-light);margin-right:4px">' + t + '</span>' }).join('') + '</div>';
       cmpHtml += '</div>';
     });
     document.getElementById('rCompareList').innerHTML = cmpHtml;
@@ -1471,8 +1499,8 @@ function doResult(){
           '<div style="font-size:11px;color:var(--accent-secondary);font-weight:700;margin-bottom:6px;letter-spacing:1px">✦ 性格优势</div>' +
           '<div>' + strengths.slice(0,3).join('、') + '。</div>' +
         '</div>' +
-        '<div style="margin-bottom:12px;padding:12px;background:#fef9f3;border-radius:10px;border-left:3px solid var(--accent-secondary)">' +
-          '<div style="font-size:11px;color:var(--accent-secondary);font-weight:700;margin-bottom:6px;letter-spacing:1px">✦ 性格盲点</div>' +
+        '<div style="margin-bottom:12px;padding:12px;background:linear-gradient(135deg,#fff0f0 0%,#ffe8e8 100%);border-radius:10px;border-left:3px solid #e85a4f">' +
+          '<div style="font-size:11px;color:#e85a4f;font-weight:700;margin-bottom:6px;letter-spacing:1px">✦ 性格盲点</div>' +
           '<div>' + weakness.slice(0,2).join('；') + '。</div>' +
         '</div>' +
         '<div style="padding:12px;background:#f5f0ff;border-radius:10px;border-left:3px solid var(--accent-tertiary)">' +
@@ -1614,10 +1642,10 @@ function doRestart(){
         cmpHtml += '<div class="compare-header">';
         cmpHtml += '<span class="compare-icon">' + cm.icon + '</span>';
         cmpHtml += '<span class="compare-name">' + (cm.name||'') + '</span>';
-        cmpHtml += '<span class="compare-type" style="background:var(--accent2);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600;margin-left:auto">' + (cm.label||'') + '</span>';
+        cmpHtml += '<span class="compare-type" style="background:var(--accent-primary);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600;margin-left:auto">' + (cm.label||'') + '</span>';
         cmpHtml += '</div>';
         cmpHtml += '<div class="compare-desc">' + (cm.desc||'') + '</div>';
-        cmpHtml += '<div class="compare-tags">' + (cm.tags || []).slice(0, 3).map(function(t){ return '<span class="compare-tag">' + t + '</span>' }).join('') + '</div>';
+        cmpHtml += '<div class="compare-tags">' + (cm.tags || []).slice(0, 3).map(function(t){ return '<span style="background:var(--bg-secondary);color:var(--text-secondary);padding:3px 8px;border-radius:12px;font-size:11px;border:1px solid var(--border-light);margin-right:4px">' + t + '</span>' }).join('') + '</div>';
         cmpHtml += '</div>';
       });
       document.getElementById('rCompare').innerHTML = cmpHtml;
