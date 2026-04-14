@@ -359,7 +359,7 @@ body.nosel { -webkit-touch-callout: none }
     </div>
     <button class="btn" type="button" onclick="window._show('sInfo')">开始测试 →</button>
     <div class="hero-count">已有 128,739 人测出人格型号</div>
-    <div class="hero-version">V1.0.0</div>
+    <div class="hero-version">V1.0.1</div>
   </div>
 </div>
 
@@ -955,33 +955,38 @@ function lunarNewYearDay(year){
 // 点击"测算"按钮时计算生肖和星座
 // ═══ 阴历↔阳历双向转换 ═══
 // 阳历 → 阴历（返回 {ly,lm,ld}，ly=阴历年）
+// 阳历→阴历（基于 LUNAR_NEW_YEAR_LUT 精确计算）
 function solarToLunar(solarY, solarM, solarD){
   var bd = new Date(solarY, solarM-1, solarD);
-  var lYear = bd < lunarNewYearDay(solarY) ? solarY-1 : solarY;
+  var nyThis = lunarNewYearDay(solarY);
+  var nyPrev = lunarNewYearDay(solarY - 1);
+  var lYear = bd < nyThis ? solarY - 1 : solarY;
   var ny = lunarNewYearDay(lYear);
-  var diff = Math.round((bd - new Date(ny))/86400000) + 1;
-  var lMonth = Math.max(1, Math.min(12, Math.floor(diff/29.53)+1));
-  var dayInMonth = diff - Math.round((lMonth-1)*29.53);
+  var diff = Math.round((bd - ny) / 86400000) + 1; // 阴历第几天
+  // 简化：阴历月 = ceil(diff/29.5)，日期 = diff - (月-1)*29.5
+  var lMonth = Math.max(1, Math.min(12, Math.round((diff - 1) / 29.53) + 1));
+  var dayInMonth = Math.max(1, Math.min(30, Math.round(diff - (lMonth - 1) * 29.53)));
   return {ly:lYear, lm:lMonth, ld:dayInMonth};
 }
 // 阴历 → 阳历（返回 {sy,sm,sd}）
 function lunarToSolar(lYear, lMonth, lDay){
   var ny = lunarNewYearDay(lYear);
   var approx = new Date(ny.getTime() + Math.round((lMonth-1)*29.53 + lDay-1)*86400000);
-  var lo = new Date(approx.getTime() - 7*86400000);
-  var hi = new Date(approx.getTime() + 7*86400000);
-  for(var i=0; i<25; i++){
+  var lo = new Date(approx.getTime() - 15*86400000);
+  var hi = new Date(approx.getTime() + 15*86400000);
+  for(var i=0; i<30; i++){
     var mid = new Date((lo.getTime()+hi.getTime())/2);
     var conv = solarToLunar(mid.getFullYear(), mid.getMonth()+1, mid.getDate());
-    var cmp = conv.ly*1000+conv.lm*10+conv.ld - (lYear*1000+lMonth*10+lDay);
-    if(cmp <= 0) hi = mid; else lo = mid;
+    var target = lYear*100000 + lMonth*1000 + lDay;
+    var convKey = conv.ly*100000 + conv.lm*1000 + conv.ld;
+    if(convKey <= target) lo = mid; else hi = mid;
   }
-  // 取 lo 和 hi 中更接近目标的
   var cLo = solarToLunar(lo.getFullYear(), lo.getMonth()+1, lo.getDate());
   var cHi = solarToLunar(hi.getFullYear(), hi.getMonth()+1, hi.getDate());
-  var scoreLo = Math.abs(cLo.ly*1000+cLo.lm*10+cLo.ld - (lYear*1000+lMonth*10+lDay));
-  var scoreHi = Math.abs(cHi.ly*1000+cHi.lm*10+cHi.ld - (lYear*1000+lMonth*10+lDay));
-  var best = scoreLo <= scoreHi ? lo : hi;
+  var tKey = lYear*100000 + lMonth*1000 + lDay;
+  var sLo = Math.abs(cLo.ly*100000+cLo.lm*1000+cLo.ld - tKey);
+  var sHi = Math.abs(cHi.ly*100000+cHi.lm*1000+cHi.ld - tKey);
+  var best = sLo <= sHi ? lo : hi;
   return {sy:best.getFullYear(), sm:best.getMonth()+1, sd:best.getDate()};
 }
 
@@ -1658,6 +1663,22 @@ function doResult(){
 
     document.getElementById('watermark').classList.add('show');
     document.getElementById('wmType').textContent = pt.name;
+
+    // 保存测试结果到 localStorage
+    try {
+      var results = JSON.parse(localStorage.getItem('sbti_results') || '[]');
+      results.unshift({
+        date: new Date().toISOString().split('T')[0],
+        birth: document.getElementById('fDate').value || '',
+        gender: window.sGender || '',
+        zodiac: window.sZodiac || '',
+        star: (window.sStar && window.sStar.name) || '',
+        type: cn || en || '',
+        pct: topPct
+      });
+      if(results.length > 200) results = results.slice(0, 200);
+      localStorage.setItem('sbti_results', JSON.stringify(results));
+    } catch(e2) {}
 
     window._show('sRes');
     document.getElementById('prog').classList.remove('show');
