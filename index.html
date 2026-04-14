@@ -893,6 +893,30 @@ window.switchCal = function(type){
     var shSel = document.getElementById('fHour');
     if(shSel) shSel.value = '';
   }
+  // 切换时双向转换日期
+  var yrSel = document.getElementById('fYear');
+  var moSel = document.getElementById('fMonth');
+  var dySel = document.getElementById('fDay');
+  if(yrSel && moSel && dySel){
+    var curYr = parseInt(yrSel.value);
+    var curMo = parseInt(moSel.value);
+    var curDy = parseInt(dySel.value);
+    if(curYr && curMo && curDy){
+      if(type === 'lunar'){
+        // 阳历→阴历
+        var lc = solarToLunar(curYr, curMo, curDy);
+        yrSel.value = lc.ly;
+        moSel.value = lc.lm;
+        dySel.value = Math.min(lc.ld, 31);
+      } else {
+        // 阴历→阳历
+        var sc = lunarToSolar(curYr, curMo, curDy);
+        yrSel.value = sc.sy;
+        moSel.value = sc.sm;
+        dySel.value = Math.min(sc.sd, 31);
+      }
+    }
+  }
   updateFDate();
 };
 
@@ -928,6 +952,34 @@ function lunarNewYearDay(year){
 }
 
 // 点击"测算"按钮时计算生肖和星座
+// ═══ 阴历↔阳历双向转换 ═══
+// 阳历 → 阴历（返回 {ly,lm,ld}，ly=阴历年）
+function solarToLunar(solarY, solarM, solarD){
+  var bd = new Date(solarY, solarM-1, solarD);
+  var lYear = bd < lunarNewYearDay(solarY) ? solarY-1 : solarY;
+  var ny = lunarNewYearDay(lYear);
+  var diff = Math.round((bd - new Date(ny))/86400000) + 1;
+  var lMonth = Math.max(1, Math.min(12, Math.floor(diff/29.53)+1));
+  var dayInMonth = diff - Math.floor((lMonth-1)*29.53);
+  return {ly:lYear, lm:lMonth, ld:dayInMonth};
+}
+// 阴历 → 阳历（返回 {sy,sm,sd}）
+function lunarToSolar(lYear, lMonth, lDay){
+  // 估算：阴历月初大约是农历新年后 lMonth*29.5 天
+  var ny = lunarNewYearDay(lYear);
+  var approx = new Date(ny.getTime() + Math.round((lMonth-1)*29.53 + lDay-1)*86400000);
+  // 二分搜索精确定位
+  var lo = new Date(approx.getTime() - 5*86400000);
+  var hi = new Date(approx.getTime() + 5*86400000);
+  for(var i=0; i<20; i++){
+    var mid = new Date((lo.getTime()+hi.getTime())/2);
+    var conv = solarToLunar(mid.getFullYear(), mid.getMonth()+1, mid.getDate());
+    var cmp = conv.ly*1000+conv.lm*10+conv.ld - (lYear*1000+lMonth*10+lDay);
+    if(cmp < 0) lo = mid; else hi = mid;
+  }
+  return {sy:hi.getFullYear(), sm:hi.getMonth()+1, sd:hi.getDate()};
+}
+
 function calcLunar(birthStr){
   if(!birthStr) return null;
   var bd = new Date(birthStr);
@@ -936,8 +988,8 @@ function calcLunar(birthStr){
   var isBeforeLB = (m===2 && d < 4) || (m===1);
   var lunarYear = isBeforeLB ? y-1 : y; // 立春前属上一年
   var animals = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
-  // 生肖：阳历按年直接算，不管月日（1984=甲子=鼠年）
-  var zodiac = animals[(y-1984+1200)%12];
+  // 生肖：阳历按年直接算，不管月日（基准年1985=甲子=鼠年）
+  var zodiac = animals[(y-1985+1200)%12];
   // 天干（年柱60甲子偏移，1984=甲子）
   var tiangan = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
   var cy = isBeforeLB ? y-1 : y; // 八字年柱用立春边界
