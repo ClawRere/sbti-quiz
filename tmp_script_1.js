@@ -91,7 +91,7 @@ function getZodiacFromBirth(birthStr){
   const isBeforeLN=(m===1)||(m===2&&d<20);
   const cy=isBeforeLN?year-1:year;
   const animals=['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
-  return animals[(cy-1984)%12];
+  return animals[(cy-1984+1200)%12];
 }
 
 // 初始化日期选择器（原生 date input）
